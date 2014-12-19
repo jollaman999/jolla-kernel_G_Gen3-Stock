@@ -100,7 +100,7 @@
 #include "u_bam_data.c"
 #include "f_hid.h"
 #include "f_hid_android_keyboard.c"
-#include "f_hid_android_mouse.c
+#include "f_hid_android_mouse.c"
 #include "f_mbim.c"
 #ifdef CONFIG_USB_G_LGE_ANDROID_AUTORUN
 #include "f_charge_only.c"
@@ -2216,7 +2216,7 @@ static struct android_usb_function *supported_functions[] = {
 #endif
 /* MSE-ADD-E iC Data Transfer 2012/05/22 */
 	&uasp_function,
-	&hid_funtion,
+	&hid_function,
 	NULL
 };
 
