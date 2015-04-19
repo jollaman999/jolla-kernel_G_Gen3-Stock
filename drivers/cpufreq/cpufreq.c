@@ -32,6 +32,12 @@
 
 #include <trace/events/power.h>
 
+// Dynamic thermal control - By jollaman999
+#ifdef CONFIG_DYNAMIC_THERMAL_CONTROL
+extern bool cpufreq_max_changed_by_user;
+extern bool cpufreq_max_changed_by_msm_thermal;
+#endif
+
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
  * level driver of CPUFreq support, and its spinlock. This lock
@@ -442,7 +448,33 @@ static ssize_t store_##file_name					\
 }
 
 store_one(scaling_min_freq, min);
+// Dynamic thermal control - By jollaman999
+#ifdef CONFIG_DYNAMIC_THERMAL_CONTROL
+static ssize_t store_scaling_max_freq
+(struct cpufreq_policy *policy, const char *buf, size_t count)
+{
+	unsigned int ret = -EINVAL;
+	struct cpufreq_policy new_policy;
+
+	ret = cpufreq_get_policy(&new_policy, policy->cpu);
+	if (ret)
+		return -EINVAL;
+
+	ret = sscanf(buf, "%u", &new_policy.max);
+	if (ret != 1)
+		return -EINVAL;
+
+	ret = __cpufreq_set_policy(policy, &new_policy);
+	policy->user_policy.max = policy->max;
+
+	cpufreq_max_changed_by_user = true;
+	cpufreq_max_changed_by_msm_thermal = false;
+
+	return ret ? ret : count;
+}
+#else
 store_one(scaling_max_freq, max);
+#endif
 
 /**
  * show_cpuinfo_cur_freq - current CPU frequency as detected by hardware
