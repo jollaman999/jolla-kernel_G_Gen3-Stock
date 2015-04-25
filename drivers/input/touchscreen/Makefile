@@ -115,3 +115,5 @@ endif
 
 obj-$(CONFIG_TOUCHSCREEN_ATMEL_MAXT224E)	 += atmel_ts.o
 
+obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE)		+= sweep2wake.o
+obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE)	+= doubletap2wake.o
