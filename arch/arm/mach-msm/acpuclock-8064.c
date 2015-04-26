@@ -439,7 +439,28 @@ static struct acpu_level tbl_PVS6_2000MHz_factory_1026[] __initdata = {
 };
 
 #endif //             
+
+/*
+ * ==== jollaman999 ====
+ * - Underclock-
+ * 13500*n
+ * { 13500*n, HFPLL, 2, n->HEX }, L2(0), Voltage }
+ *
+ * - Overclock -
+ * 27000*n
+ * { 27000*n, HFPLL, 1, n->HEX }, L2(15), Voltage }
+ *
+ * - Increase this value after you added new frequency -
+ * Default value of 'arch/arm/mach-msm/acpuclock-krait.c'
+ * static struct cpufreq_frequency_table freq_table[NR_CPUS][35];
+ *
+ * - Also increase this value after you added overclock frequency -
+ * Default value of 'arch/arm/mach-msm/msm_dcvs.c'
+ * #define DCVS_MAX_NUM_FREQS 15
+ */
 static struct acpu_level tbl_slow[] __initdata = {
+	{ 1, {   162000, HFPLL, 2, 0x0C }, L2(0),   925000 },
+	{ 1, {   270000, HFPLL, 2, 0x14 }, L2(0),   950000 },
 	{ 1, {   384000, PLL_8, 0, 0x00 }, L2(0),   950000 },
 	{ 0, {   432000, HFPLL, 2, 0x20 }, L2(5),   975000 },
 	{ 1, {   486000, HFPLL, 2, 0x24 }, L2(5),   975000 },
@@ -466,6 +487,8 @@ static struct acpu_level tbl_slow[] __initdata = {
 };
 
 static struct acpu_level tbl_nom[] __initdata = {
+	{ 1, {   162000, HFPLL, 2, 0x0C }, L2(0),   875000 },
+	{ 1, {   270000, HFPLL, 2, 0x14 }, L2(0),   900000 },
 	{ 1, {   384000, PLL_8, 0, 0x00 }, L2(0),   900000 },
 	{ 0, {   432000, HFPLL, 2, 0x20 }, L2(5),   925000 },
 	{ 1, {   486000, HFPLL, 2, 0x24 }, L2(5),   925000 },
@@ -492,6 +515,8 @@ static struct acpu_level tbl_nom[] __initdata = {
 };
 
 static struct acpu_level tbl_fast[] __initdata = {
+	{ 1, {   162000, HFPLL, 2, 0x0C }, L2(0),   825000 },
+	{ 1, {   270000, HFPLL, 2, 0x14 }, L2(0),   850000 },
 	{ 1, {   384000, PLL_8, 0, 0x00 }, L2(0),   850000 },
 	{ 0, {   432000, HFPLL, 2, 0x20 }, L2(5),   875000 },
 	{ 1, {   486000, HFPLL, 2, 0x24 }, L2(5),   875000 },
