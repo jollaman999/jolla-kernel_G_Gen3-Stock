@@ -1005,7 +1005,11 @@ void acpuclk_set_vdd(unsigned int khz, int vdd_uv) {
  * - Default value -
  * static struct cpufreq_frequency_table freq_table[NR_CPUS][35];
  */
+#ifdef CONFIG_CPU_OVERCLOCK
+static struct cpufreq_frequency_table freq_table[NR_CPUS][44];
+#else
 static struct cpufreq_frequency_table freq_table[NR_CPUS][37];
+#endif /* CONFIG_CPU_OVERCLOCK */
 
 static void __init cpufreq_table_init(void)
 {
