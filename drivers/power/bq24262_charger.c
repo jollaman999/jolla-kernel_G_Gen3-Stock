@@ -72,7 +72,7 @@ enum {
 static int dpm_count;
 #endif
 
-//#ifdef CONFIG_LGE_CHARGER_TEMP_SCENARIO
+//                                       
 //#include <mach/lge_charging_scenario.h>
 //#define MONITOR_BATTEMP_POLLING_PERIOD          (10*HZ)
 #define MONITOR_BATTEMP_POLLING_PERIOD          (60*1000)
@@ -1100,7 +1100,7 @@ static int bq24262_get_prop_batt_status(struct bq24262_chip *chip)
 	int capacity = bq24262_get_prop_batt_capacity(chip);
     int batt_status = POWER_SUPPLY_STATUS_DISCHARGING;
 
-#if 0 /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+#if 0 /*                                    */
 	if (chip->usb_present && chip->pseudo_ui_chg)
 		return POWER_SUPPLY_STATUS_CHARGING;
 #endif
@@ -1269,11 +1269,11 @@ static int bq24262_batt_power_get_property(struct power_supply *psy,
 		break;
 #if 0
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
-		/* it makes ibat max set following themral mitigation.
-		 * But, SMB349 cannot control ibat current like PMIC.
-		 * if LGE charging scenario make charging thermal control,
-		 * it is good interface to use LG mitigation level.
-		 */
+		/*                                                    
+                                                       
+                                                            
+                                                     
+   */
 		val->intval = 0;
 		break;
 #endif
@@ -1322,11 +1322,11 @@ static int bq24262_batt_power_set_property(struct power_supply *psy,
 		break;
 #if 0
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
-		/* it makes ibat max set following themral mitigation.
-		 * But, SMB349 cannot control ibat current like PMIC.
-		 * if LGE charging scenario make charging thermal control,
-		 * it is good interface to use LG mitigation level.
-		 */
+		/*                                                    
+                                                       
+                                                            
+                                                     
+   */
 		break;
 #endif
 	default:
@@ -1517,7 +1517,7 @@ static void bq24262_charging_setting(struct bq24262_chip *chip)
 	/* When facebattery mode and  charging set 2, charging current set 900mA
 	* set : echo 1 1 100 40 4100 80 2 > /sys/class/power_supply/battery/pseudo_batt
 	*/
-	/* LGE-PM START Set current 900mA */
+	/*                                */
 	if((chip->usb_online && bq24262_is_charger_present(chip))
 		&& ((pseudo_batt_info_new.mode == 1)
 		&& (pseudo_batt_info_new.charging == 2))){
@@ -1525,7 +1525,7 @@ static void bq24262_charging_setting(struct bq24262_chip *chip)
 		ret_ibat = bq24262_set_ibat_max(chip, INPUT_CURRENT_LIMIT_900mA);
 		chip->set_chg_step = INPUT_CURRENT_LIMIT_900mA;
 	}
-	/* LGE-PM END Set current 900mA */
+	/*                              */
 
 	pr_debug("%s\n",__func__);
 	power_supply_changed(chip->usb_psy);
@@ -1541,6 +1541,13 @@ static void bq24262_batt_external_power_changed(struct power_supply *psy)
 					struct bq24262_chip, batt_psy);
 
 	pr_debug("%s \n",__func__);
+
+	if (chargerlogo_state) {
+		wake_lock_timeout(&chip->uevent_wake_lock, HZ*10);
+	}
+	else {
+		wake_lock_timeout(&chip->uevent_wake_lock, HZ*2);
+	}
 
 //	power_supply_changed(chip->usb_psy);
 //	power_supply_changed(&chip->ac_psy);
@@ -1953,7 +1960,7 @@ static ssize_t at_vcoin_show(struct device *dev,
 DEVICE_ATTR(at_charge, 0644, at_chg_status_show, at_chg_status_store);
 DEVICE_ATTR(at_current1, 0644, at_current_limit_show, NULL);
 DEVICE_ATTR(at_chcomp1, 0644, at_chg_complete_show, at_chg_complete_store);
-DEVICE_ATTR(at_pmrst1, 0644, at_pmic_reset_show, NULL);
+DEVICE_ATTR(at_pmrst1, 0640, at_pmic_reset_show, NULL);
 DEVICE_ATTR(at_otg, 0644, at_otg_status_show, at_otg_status_store);
 DEVICE_ATTR(at_vcoin, 0644, at_vcoin_show, NULL);
 
@@ -2009,11 +2016,11 @@ static int bq24262_chg_is_battery_too_hot_or_too_cold(void *data,int batt_temp, 
 
 			chg_batt_temp_state = CHG_BATT_STOP_CHARGING_STATE;
 			/*
-			 * kiwone.seo@lge.com 2011-0609
-			 * for show charging ani.although charging is stopped : charging scenario
-			 */
+                                  
+                                                                            
+    */
 /* CONFIG_PM_S submit ATnT temp scenario kwangjae1.lee */
-			/* Change termal scenario to LGE ver 1.6 - charge Icon under -10 */
+			/*                                                               */
 			if (batt_temp_level == CHG_BATT_TEMP_LEVEL_1)
 			{
 				pseudo_ui_charging = 0;
@@ -2059,9 +2066,9 @@ static int bq24262_chg_is_battery_too_hot_or_too_cold(void *data,int batt_temp, 
 			chg_batt_temp_state = CHG_BATT_STOP_CHARGING_STATE;
 			dcreasing_charging = 1;
 			/*
-			 * kiwone.seo@lge.com 2011-0609
-			 * for show charging ani.although charging is stopped : charging scenario
-			 */
+                                  
+                                                                            
+    */
 			if (batt_temp_level == CHG_BATT_TEMP_LEVEL_1)
 			{
 				pseudo_ui_charging = 0;
@@ -2129,7 +2136,7 @@ static int bq24262_chg_is_battery_too_hot_or_too_cold(void *data,int batt_temp, 
 		}
 		else {
 			chg_batt_temp_state = CHG_BATT_STOP_CHARGING_STATE;
-			/* Change termal scenario to LGE ver 1.6 - charge Icon under -10 */
+			/*                                                               */
 			if (batt_temp_level == CHG_BATT_TEMP_LEVEL_1)
 			{
 				dcreasing_charging = 0;
@@ -2153,7 +2160,7 @@ static int bq24262_chg_is_battery_too_hot_or_too_cold(void *data,int batt_temp, 
 
 				chg_batt_temp_state = CHG_BATT_STOP_CHARGING_STATE;
 
-				/* Change termal scenario to LGE ver 1.6 - charge Icon under -10 */
+				/*                                                               */
 				if (batt_temp_level == CHG_BATT_TEMP_LEVEL_1)
 				{
 					pseudo_ui_charging = 0;
@@ -2252,7 +2259,7 @@ static void bq24262_monitor_batt_temp(struct work_struct *work)
 	}
 
 	if (stop_charging == 1 && last_stop_charging == 0) {
-		/* When stop charging, next step do not resume charing kwangjae1.lee@lge.com */
+		/*                                                                           */
 		if(wake_lock_active(&chip->eoc_wake_lock)) {
 			printk(KERN_INFO "[PM] monitor_batt_temp: Charging stop & wake lock by Temperature Scenario\n");
 			wake_lock(&chip->monitor_batt_temp_wake_lock);
@@ -2270,7 +2277,7 @@ static void bq24262_monitor_batt_temp(struct work_struct *work)
 		}
 	}
 	else if (stop_charging == 0 && last_stop_charging == 1) {
-		/* When stop charging, next step do not resume charing kwangjae1.lee@lge.com*/
+		/*                                                                          */
 		bq24262_set_input_i_limit(chip, chip->set_chg_step);
 		bq24262_set_ibat_max(chip, chip->chg_current_ma);
                 bq24262_enable_charging(chip, true);
@@ -3555,7 +3562,7 @@ static int bq24262_probe(struct i2c_client *client,
 		goto err_hw_init;
 	}
 
-#if 0 //def CONFIG_LGE_PM
+#if 0 //                 
 		/* Initialize wake lock for deliver Uevent before suspend */
 		/* Move it to before IRQ request because very very rarely it can be called by IRQ before initialized */
 		wake_lock_init(&chip->deliver_uevent_wake_lock,WAKE_LOCK_SUSPEND, "deliver_uevent");
@@ -3569,7 +3576,7 @@ static int bq24262_probe(struct i2c_client *client,
 #if 0
 	wake_lock_init(&chip->uevent_wake_lock,
 		       WAKE_LOCK_SUSPEND, "bq24262_chg_uevent");
- /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+ /*                                    */
 	wake_lock_init(&chip->lcs_wake_lock,
 			WAKE_LOCK_SUSPEND, "LGE charging scenario");
 #endif
@@ -3622,7 +3629,7 @@ static int bq24262_probe(struct i2c_client *client,
 	INIT_DELAYED_WORK(&chip->irq_work, bq24262_irq_worker);
 	INIT_DELAYED_WORK(&chip->dpm_detect_work, bq24262_dpm_detect_work);
 
-#if 1 /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+#if 1 /*                                    */
 	wake_lock_init(&chip->monitor_batt_temp_wake_lock,
 					WAKE_LOCK_SUSPEND,"bq24262_monitor_batt_temp");
 	wake_lock_init(&chip->eoc_wake_lock, WAKE_LOCK_SUSPEND, "bq24262_irq_worker");
@@ -3686,7 +3693,7 @@ static int bq24262_probe(struct i2c_client *client,
 	last_batt_current = DEFAULT_CURRENT;
 #endif
 
-#if 1 /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+#if 1 /*                                    */
 	schedule_delayed_work(&chip->battemp_work,
 		5*HZ);
 #endif
@@ -3714,7 +3721,7 @@ err_init_batt_psy:
 	wake_lock_destroy(&chip->chg_wake_lock);
 	wake_lock_destroy(&chip->uevent_wake_lock);
 
-#if 0 /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+#if 0 /*                                    */
 	wake_lock_destroy(&chip->lcs_wake_lock);
 #endif
 err_hw_init:
@@ -3744,7 +3751,7 @@ static int bq24262_remove(struct i2c_client *client)
 	wake_lock_destroy(&chip->chg_wake_lock);
 	wake_lock_destroy(&chip->uevent_wake_lock);
 	wake_lock_destroy(&chip->monitor_batt_temp_wake_lock);
-#if 0 /*def CONFIG_LGE_CHARGER_TEMP_SCENARIO*/
+#if 0 /*                                    */
 	wake_lock_destroy(&chip->lcs_wake_lock);
 #endif
 

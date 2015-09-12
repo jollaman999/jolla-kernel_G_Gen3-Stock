@@ -2,7 +2,7 @@
  *
  * MSM MDP Interface (used by framebuffer core)
  *
- * Copyright (c) 2007-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2007-2014, The Linux Foundation. All rights reserved.
  * Copyright (C) 2007 Google Incorporated
  *
  * This software is licensed under the terms of the GNU General Public
@@ -44,7 +44,7 @@
 #endif
 #include "mipi_dsi.h"
 
-#if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_HD_PT)
+#ifdef CONFIG_HAS_EARLYSUSPEND
 #undef CONFIG_HAS_EARLYSUSPEND
 #endif
 
@@ -557,8 +557,8 @@ extern uint32 p_lg_qc_lcdc_lut[];
 extern int g_kcal_r;
 extern int g_kcal_g;
 extern int g_kcal_b;
-#endif /* CONFIG_LGE_KCAL_QLUT */
-#endif /* CONFIG_LGE_QC_LCDC_LUT */
+#endif /*                      */
+#endif /*                        */
 
 static int mdp_lut_hw_update(struct fb_cmap *cmap)
 {
@@ -570,6 +570,11 @@ static int mdp_lut_hw_update(struct fb_cmap *cmap)
 	c[1] = cmap->blue;
 	c[2] = cmap->red;
 
+	if (cmap->start > MDP_HIST_LUT_SIZE || cmap->len > MDP_HIST_LUT_SIZE ||
+			(cmap->start + cmap->len > MDP_HIST_LUT_SIZE)) {
+		pr_err("mdp_lut_hw_update invalid arguments\n");
+		return -EINVAL;
+	}
 	for (i = 0; i < cmap->len; i++) {
 #ifdef CONFIG_LGE_QC_LCDC_LUT
 		if (g_qlut_change_by_kernel) {
@@ -2462,27 +2467,36 @@ static int mdp_on(struct platform_device *pdev)
 
 	pr_info("%s:+\n", __func__);
 
-	#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined (CONFIG_MACH_APQ8064_AWIFI) || defined (CONFIG_MACH_APQ8064_GK_KR) || defined (CONFIG_MACH_APQ8064_ALTEV)
 	if (!(mfd->cont_splash_done)) {
+#if defined (CONFIG_MACH_APQ8064_GK_KR)
+		down(&mfd->sem);
+		mfd->bl_level = 0;
+		msm_fb_set_backlight(mfd, 0);
+		up(&mfd->sem);
+#else
 		if (mfd->panel.type == MIPI_VIDEO_PANEL)
 			mdp4_dsi_video_splash_done();
+#endif
 
 		/* Clks are enabled in probe.
 		Disabling clocks now */
 		mdp_clk_ctrl(0);
+#if !defined (CONFIG_MACH_APQ8064_GK_KR)
 		mfd->cont_splash_done = 1;
+#endif
 	}
-  #endif
+#endif
   
 	if(mfd->index == 0)
 		mdp_iommu_max_map_size = mfd->max_map_size;
 
-  #ifndef CONFIG_MACH_LGE
+#ifndef CONFIG_MACH_LGE
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
 
 	ret = panel_next_on(pdev);
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
-	#endif
+#endif
 
 	if (mdp_rev >= MDP_REV_40) {
 		mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
@@ -2520,12 +2534,12 @@ static int mdp_on(struct platform_device *pdev)
 		atomic_set(&vsync_cntrl.suspend, 1);
 	}
 
-	#ifdef CONFIG_MACH_LGE
+#ifdef CONFIG_MACH_LGE
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_ON, FALSE);
 
 	ret = panel_next_on(pdev);
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
-	#endif
+#endif
 
 	mdp_histogram_ctrl_all(TRUE);
 	if (ret == 0)
@@ -2869,12 +2883,14 @@ static ssize_t fps_store(struct device *dev, struct device_attribute *attr, cons
 		mdp4_stat.weight = 0;
 		mdp4_stat.bucket = 0;
 		mdp4_stat.skip_count = 0;
+		mdp4_stat.skip_first = false;
 		pr_info("Disable frame skip.\n");
 	} else {
 		mdp4_stat.enable_skip_vsync = 1;
 		mdp4_stat.skip_value = (60<<16)/fps;
 		mdp4_stat.weight = (1<<16);
 		mdp4_stat.bucket = 0;
+		mdp4_stat.skip_first = false;
 		pr_info("Enable frame skip: Set to %lu fps.\n", fps);
 	}
 
@@ -3017,7 +3033,7 @@ static int mdp_probe(struct platform_device *pdev)
 	}
 
 	if (mdp_pdata) {
-	#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined (CONFIG_MACH_APQ8064_AWIFI) || defined (CONFIG_MACH_APQ8064_GK_KR) || defined (CONFIG_MACH_APQ8064_ALTEV)
 		if (mdp_pdata->cont_splash_enabled &&
 				 mfd->panel_info.pdest == DISPLAY_1) {
 			char *cp;
@@ -3061,7 +3077,7 @@ static int mdp_probe(struct platform_device *pdev)
 			MDP_OUTP(MDP_BASE + 0x90008,
 					mfd->copy_splash_phys);
 		}
-    #endif
+#endif
 		mfd->cont_splash_done = (1 - mdp_pdata->cont_splash_enabled);
 	}
 
@@ -3332,6 +3348,8 @@ static int mdp_probe(struct platform_device *pdev)
 			pdata->off = mdp4_overlay_writeback_off;
 			mfd->dma_fnc = mdp4_writeback_overlay;
 			mfd->dma = &dma_wb_data;
+			mutex_init(&mfd->writeback_mutex);
+			mutex_init(&mfd->unregister_mutex);
 			mdp4_display_intf_sel(EXTERNAL_INTF_SEL, DTV_INTF);
 		}
 		break;

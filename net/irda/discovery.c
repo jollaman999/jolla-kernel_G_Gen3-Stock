@@ -69,14 +69,14 @@ void irlmp_add_discovery(hashbin_t *cachelog, discovery_t *new)
 
 	spin_lock_irqsave(&cachelog->hb_spinlock, flags);
 
-/* LGE_CHANGE
- * Wwhen using msm_serial_hs_lite driver,
- * echo canceling in irda protocol stack does not work properly
- * due to the watermarks which generate interrupt.
- * So, workaround to disable echo when discovery time should be made.
- * 
- * We can detect out echo packets by checking daddr is same as saddr.
- * 2012-02-03, chaeuk.lee@lge.com
+/*           
+                                         
+                                                               
+                                                  
+                                                                     
+   
+                                                                     
+                                 
  */
 #ifdef CONFIG_LGE_IRDA
 	if (new->data.daddr == new->data.saddr ) {

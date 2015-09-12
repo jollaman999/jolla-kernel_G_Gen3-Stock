@@ -311,7 +311,7 @@ struct pm8xxx_adc_chan_result {
 	int64_t		measurement;
 	int64_t		physical;
 #ifdef CONFIG_LGE_CHARGER_TEMP_SCENARIO
-/* battery of therm H/W register level reading kwangjae1.lee@lge.com */
+/*                                                                   */
 	int64_t		adc_value;
 #endif
 };

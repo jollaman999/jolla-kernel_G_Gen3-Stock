@@ -470,8 +470,8 @@ struct input_keymap_entry {
 
 #define KEY_MICMUTE		248	/* Mute / unmute the microphone */
 
-#if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)  || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
-#define KEY_QUICK_CLIP	250 /*LGE Quick clip button*/
+#if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)  || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
+#define KEY_QUICK_CLIP	250 /*                     */
 #endif
 /* Code 255 is reserved for special needs of AT keyboard driver */
 
@@ -1520,7 +1520,7 @@ void input_inject_event(struct input_handle *handle, unsigned int type, unsigned
 
 static inline void input_report_key(struct input_dev *dev, unsigned int code, int value)
 {
-#if 1 // LGE Key cancel
+#if 1 //               
 	input_event(dev, EV_KEY, code, value);
 #else // orig
 	input_event(dev, EV_KEY, code, !!value);

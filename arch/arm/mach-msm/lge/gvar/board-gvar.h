@@ -79,8 +79,6 @@ extern struct regulator_init_data msm8064_saw_regulator_pdata_8821_s1;
 struct mmc_platform_data;
 int __init apq8064_add_sdcc(unsigned int controller,
 		struct mmc_platform_data *plat);
-int __init apq8064_add_uio(void);
-
 extern void __init register_i2c_backlight_devices(void);
 extern void __init lge_add_sound_devices(void);
 void apq8064_init_mmc(void);
@@ -88,9 +86,9 @@ void apq8064_init_gpiomux(void);
 void apq8064_init_pmic(void);
 
 extern struct msm_camera_board_info apq8064_camera_board_info;
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 extern struct msm_camera_board_info apq8064_camera_board_info_revE;
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 /* Enabling flash LED for camera */
 extern struct msm_camera_board_info apq8064_lge_camera_board_info;
@@ -147,10 +145,10 @@ void __init configure_apq8064_pm8917_power_grid(void);
 #define I2C_SLAVE_ADDR_IMX091       (0x0D)
 #define I2C_SLAVE_ADDR_IMX091_ACT   (0x18)
 #define I2C_SLAVE_ADDR_IMX119       (0x6E)
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #define I2C_SLAVE_ADDR_IMX132       (0x6C)	
 #define I2C_SLAVE_ADDR_CE1702       (0x78)	//(0x3C)	
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #define I2C_SLAVE_ADDR_FLASH        (0xA6 >> 1)
 
 void apq8064_init_fb(void);
@@ -205,7 +203,7 @@ void __init configure_apq8064_pm8917_power_grid(void);
 
 #define SX150X_GPIO(_expander, _pin) (SX150X_EXP##_expander##_GPIO_BASE + _pin)
 
-/* LGE_CHANGE, 2013-0313, lee.sangchul@lge.com, cmcc use maxim fuel gauge 17048 */
+/*                                                                              */
 #ifdef CONFIG_BATTERY_MAX17048
 #define MAX17048_FUELGAUGE_I2C_ADDR				0x36
 void __init lge_add_i2c_pm_subsystem_devices(void);

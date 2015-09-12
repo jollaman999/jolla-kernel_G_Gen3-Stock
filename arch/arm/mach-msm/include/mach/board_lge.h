@@ -115,11 +115,11 @@ struct kcal_platform_data {
 #endif
 
 #ifdef CONFIG_LGE_PM
-/* LGE_S kwangjae1.lee@lge.com 2012-06-11 Add bms debugger */
+/*                                                         */
 struct bms_batt_info_type{
 	int mode;
 };
-/* LGE_E kwangjae1.lee@lge.com 2012-06-11 Add bms debugger */
+/*                                                         */
 struct pseudo_batt_info_type {
 	int mode;
 	int id;
@@ -208,4 +208,9 @@ void __init lge_add_boot_time_checker(void);
 #ifdef CONFIG_LGE_ECO_MODE
 void __init lge_add_lge_kernel_devices(void);
 #endif
-#endif // __ASM_ARCH_MSM_BOARD_LGE_H
+
+#ifdef CONFIG_LGE_FOTA_SILENT_RESET
+int lge_get_bootreason(void);
+#endif
+
+#endif //                           

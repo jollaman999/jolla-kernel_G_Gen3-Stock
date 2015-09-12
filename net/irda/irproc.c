@@ -57,10 +57,10 @@ static const struct irda_entry irda_dirs[] = {
 	{"irlmp",	&irlmp_seq_fops},
 	{"irlap",	&irlap_seq_fops},
 	{"irias",	&irias_seq_fops},
-/* LGE_CHANGE
- * added new procfs file to export current line status to user space
- * which is requested by NTT DOCOMO OBEX application
- * 2012-02-08, chaeuk.lee@lge.com
+/*           
+                                                                    
+                                                    
+                                 
  */
 #ifdef CONFIG_LGE_IRDA
 	{"line_check",	&line_check_seq_fops},

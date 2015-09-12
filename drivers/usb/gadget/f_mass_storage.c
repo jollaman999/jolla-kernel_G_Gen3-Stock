@@ -268,10 +268,10 @@
  * of the Gadget, USB Mass Storage, and SCSI protocols.
  */
 
-/* 
- * DGMS MC-C05702-7 : Apply Autorun
- * CONFIG_USB_G_LGE_ANDROID_AUTORUN
- * CONFIG_USB_G_LGE_ANDROID_AUTORUN_LGE
+/*
+                                   
+                                   
+                                       
  */
 
 /* #define VERBOSE_DEBUG */
@@ -322,9 +322,9 @@ static const char fsg_string_interface[] = "Mass Storage";
 
 #define FUNCTION_NAME "cdrom_storage"
 
-/* Belows are LGE-customized SCSI cmd and
- * sub-cmd for autorun processing.
- * 2011-03-09, hyunhui.park@lge.com
+/*                                       
+                                  
+                                   
  */
 #define SC_LGE_SPE              0xF1
 #define SUB_CODE_MODE_CHANGE    0x01
@@ -338,6 +338,9 @@ static const char fsg_string_interface[] = "Mass Storage";
 #define TYPE_MOD_CHG_TO_TET     0x09
 #define TYPE_MOD_CHG_TO_FDG     0x0A
 #define TYPE_MOD_CHG_TO_PTP     0x0B
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION_VZW
+#define TYPE_MOD_CHG_TO_MUL     0x0C
+#endif
 #define TYPE_MOD_CHG2_TO_ACM    0x81
 #define TYPE_MOD_CHG2_TO_UMS    0x82
 #define TYPE_MOD_CHG2_TO_MTP    0x83
@@ -346,6 +349,9 @@ static const char fsg_string_interface[] = "Mass Storage";
 #define TYPE_MOD_CHG2_TO_TET    0x87
 #define TYPE_MOD_CHG2_TO_FDG    0x88
 #define TYPE_MOD_CHG2_TO_PTP    0x89
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION_VZW
+#define TYPE_MOD_CHG2_TO_MUL    0x8A
+#endif
 /* ACK TO SEND HOST PC */
 #define ACK_STATUS_TO_HOST      0x10
 #define ACK_SW_REV_TO_HOST      0x12
@@ -359,7 +365,13 @@ static const char fsg_string_interface[] = "Mass Storage";
 #define SUB_ACK_STATUS_CGO      0x04
 #define SUB_ACK_STATUS_TET      0x05
 #define SUB_ACK_STATUS_PTP      0x06
-#endif /* CONFIG_USB_G_LGE_ANDROID_AUTORUN */
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION
+/*For multiple configuration, but actually ISO don't know this.
+ *TODO : Need to clear this interface.
+ */
+#define SUB_ACK_STATUS_MUL      0x07
+#endif
+#endif /*                                  */
 
 #include "storage_common.c"
 
@@ -373,9 +385,9 @@ struct fsg_dev;
 struct fsg_common;
 
 #ifdef CONFIG_USB_G_LGE_ANDROID_AUTORUN
-/* Belows are uevent string to communicate with
- * android framework and application.
- * 2011-03-09, hyunhui.park@lge.com
+/*                                             
+                                     
+                                   
  */
 static char *envp_ack[2] = {"AUTORUN=ACK", NULL};
 
@@ -392,6 +404,9 @@ static char *envp_mode[][2] = {
 	{"AUTORUN=change_ptp", NULL},
 	{"AUTORUN=query_value", NULL},
 	{"AUTORUN=device_info", NULL},
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION_VZW
+	{"AUTORUN=change_mul", NULL},
+#endif
 };
 #endif
 #ifdef CONFIG_USB_G_LGE_ANDROID_AUTORUN_LGE
@@ -410,6 +425,9 @@ enum chg_mode_state{
 	MODE_STATE_PTP,
 	MODE_STATE_GET_VALUE,
 	MODE_STATE_PROBE_DEV,
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION_VZW
+	MODE_STATE_MUL,
+#endif
 };
 
 enum check_mode_state {
@@ -420,6 +438,9 @@ enum check_mode_state {
 	ACK_STATUS_CGO = SUB_ACK_STATUS_CGO,
 	ACK_STATUS_TET = SUB_ACK_STATUS_TET,
 	ACK_STATUS_PTP = SUB_ACK_STATUS_PTP,
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION
+	ACK_STATUS_MUL = SUB_ACK_STATUS_MUL,
+#endif
 	ACK_STATUS_ERR,
 };
 
@@ -528,7 +549,7 @@ struct fsg_common {
 	char inquiry_string[8 + 16 + 4 + 1];
 
 #ifdef CONFIG_USB_G_LGE_ANDROID_AUTORUN
-	/* LGE-customized USB mode */
+	/*                         */
 	enum chg_mode_state mode_state;
 #endif
 
@@ -1426,8 +1447,8 @@ static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 }
 
 #ifdef CONFIG_USB_G_LGE_ANDROID_AUTORUN
-/* Add function which handles LGE-customized command from PC.
- * 2011-03-09, hyunhui.park@lge.com
+/*                                                           
+                                   
  */
 static int do_ack_status(struct fsg_common *common, struct fsg_buffhd *bh, u8 ack)
 {
@@ -1469,7 +1490,7 @@ static int do_get_sw_ver(struct fsg_common *common, struct fsg_buffhd *bh)
 	memset(buf, 0, 9);
 	strcpy(buf, sw_ver);
 	pr_info("[AUTORUN] %s: sw_ver: %s\n", __func__, buf);
-	return strlen(buf);
+	return 7;
 }
 
 static int do_get_serial(struct fsg_common *common, struct fsg_buffhd *bh)
@@ -1506,24 +1527,12 @@ static int do_get_model(struct fsg_common *common, struct fsg_buffhd *bh)
 static int do_get_sub_ver(struct fsg_common *common, struct fsg_buffhd *bh)
 {
 	u8	*buf = (u8 *) bh->buf;
-	char sub_ver[3] = {0, };
+	char sub_ver[2] = {0, };
 	/* msm_get_SUB_VER_type(sub_ver); */
 	if (lgeusb_get_sub_ver(sub_ver) < 0)
 		sub_ver[0] = '0';
-	if (strlen(sub_ver) > 1) {
-		if (sub_ver[0] == '0')
-			*buf = sub_ver[1] - '0';
-		else if (sub_ver[0] == '1')
-			*buf = 'a' + sub_ver[1] - '0' - 87;
-		else if (sub_ver[0] == '2')
-			*buf = 'k' + sub_ver[1] - '0' - 87;
-		else if (sub_ver[0] == '3' && (sub_ver[1] < '6' &&  sub_ver[1] >= '0'))
-			*buf = 'u' + sub_ver[1] - '0' - 87;
-		else
-			*buf = 0;
-	} else
-		*buf = sub_ver[0] - '0';
-	pr_info("[AUTORUN] %s: sub_ver: %d\n", __func__, (char)*buf);
+	*buf = sub_ver[0];
+	pr_info("[AUTORUN] %s: sub_ver: %c\n", __func__, (char)*buf);
 	return 1;
 }
 #endif
@@ -2371,6 +2380,12 @@ static int do_scsi_command(struct fsg_common *common)
 			case TYPE_MOD_CHG2_TO_PTP:
 				common->mode_state = MODE_STATE_PTP;
 				break;
+#ifdef CONFIG_USB_G_LGE_MULTIPLE_CONFIGURATION_VZW
+                        case TYPE_MOD_CHG_TO_MUL:
+                        case TYPE_MOD_CHG2_TO_MUL:
+                                common->mode_state = MODE_STATE_MUL;
+                                break;
+#endif
 			default:
 				common->mode_state = MODE_STATE_UNKNOWN;
 			}
@@ -2453,7 +2468,7 @@ static int do_scsi_command(struct fsg_common *common)
 			break;
 		} /* switch (common->cmnd[1]) */
 		break;
-#endif /* CONFIG_USB_G_LGE_ANDROID_AUTORUN */
+#endif /*                                  */
 
 	case MODE_SELECT:
 		common->data_size_from_cmnd = common->cmnd[4];
@@ -3588,7 +3603,7 @@ static int fsg_bind(struct usb_configuration *c, struct usb_function *f)
 	i = usb_interface_id(c, f);
 	if (i < 0)
 		return i;
-	
+
 	fsg_intf_desc.bInterfaceNumber = i;
 	fsg->interface_number = i;
 
@@ -3823,7 +3838,7 @@ fsg_config_from_params(struct fsg_config *cfg,
 {
 	struct fsg_lun_config *lun;
 	unsigned i;
-	
+
 	/* Configure LUNs */
 	cfg->nluns =
 		min(params->luns ?: (params->file_count ?: 1u),

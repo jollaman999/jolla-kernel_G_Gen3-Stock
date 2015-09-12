@@ -229,9 +229,9 @@ int pm8xxx_hsed_bias_control(enum pm8xxx_hsed_bias bias, bool enable);
 void pm8921_turn_on_19p2mhz_clk_ext(void);
 #endif
 
-/*LGE_CHANGE_S 2012-08-11 jungwoo.yun@lge.com */
+/*                                            */
 int pm8921_usb_pwr_enable(int enable);
-/*LGE_CHANGE_E 2012-08-11 jungwoo.yun@lge.com */
+/*                                            */
 
 /**
  * pm8xxx_read_register - Read a PMIC register

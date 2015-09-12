@@ -57,10 +57,10 @@
 #define I2C_RUMI (1 << 2)
 #define I2C_SIM  (1 << 3)
 #define I2C_LIQUID (1 << 4)
-/* LGE_UPDATE_S. 02242012. jihyun.lee@lge.com
-   Add mach_mask for I2C */
+/*                                           
+                         */
 #define I2C_J1V (1 << 5)
-/* LGE_UPDATE_E */
+/*              */
 
 struct i2c_registry {
 	u8                     machs;
@@ -172,7 +172,6 @@ static struct fsa8008_platform_data lge_hs_pdata = {
 	.gpio_key    = GPIO_EAR_KEY_INT,
 
 	.set_headset_mic_bias = NULL,
-	.gpio_detect_can_wakeup = true,
 
 	.latency_for_detection = 75,
 };
@@ -218,7 +217,7 @@ static int __init lge_hsd_fsa8008_init(void)
         lge_bd_rev = lge_get_board_revno();
 
         if (lge_bd_rev >= bd_rev) {
-            lge_hs_pdata.set_headset_mic_bias = set_headset_mic_bias_l29; //[AUDIO_BSP], 20120730, sehwan.lee@lge.com PMIC L29 Control(because headset noise)
+            lge_hs_pdata.set_headset_mic_bias = set_headset_mic_bias_l29; //                                                                                 
             printk(KERN_INFO "lge_bd_rev : %d, >= bd_rev : %d, so set set_headset_mic_bias = NULL!!!\n", lge_bd_rev, bd_rev);
         }
         else {

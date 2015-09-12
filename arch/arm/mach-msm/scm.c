@@ -17,7 +17,6 @@
 #include <linux/errno.h>
 #include <linux/err.h>
 #include <linux/init.h>
-#include <linux/delay.h>
 
 #include <asm/cacheflush.h>
 
@@ -29,9 +28,6 @@
 #define SCM_EINVAL_ARG		-2
 #define SCM_ERROR		-1
 #define SCM_INTERRUPTED		1
-#define SCM_EBUSY		-55
-#define SCM_EBUSY_WAIT_MS	30
-#define SCM_EBUSY_MAX_RETRY	200
 
 static DEFINE_MUTEX(scm_lock);
 
@@ -128,8 +124,6 @@ static int scm_remap_error(int err)
 		return -EOPNOTSUPP;
 	case SCM_ENOMEM:
 		return -ENOMEM;
-	case SCM_EBUSY:
-		return SCM_EBUSY;
 	}
 	return -EINVAL;
 }
@@ -299,7 +293,7 @@ int scm_call(u32 svc_id, u32 cmd_id, const void *cmd_buf, size_t cmd_len,
 		void *resp_buf, size_t resp_len)
 {
 	struct scm_command *cmd;
-	int ret, retry_count = 0;
+	int ret;
 	size_t len = SCM_BUF_LEN(cmd_len, resp_len);
 
 	if (cmd_len > len || resp_len > len)
@@ -309,17 +303,8 @@ int scm_call(u32 svc_id, u32 cmd_id, const void *cmd_buf, size_t cmd_len,
 	if (!cmd)
 		return -ENOMEM;
 
-// QCT patch - Retry scm_call when the secure world is busy - Vikram Mulukutla <markivx@codeaurora.org>
-	do {
-		memset(cmd, 0, PAGE_ALIGN(len));
-		ret = scm_call_common(svc_id, cmd_id, cmd_buf, cmd_len,
-					resp_buf, resp_len, cmd, len);
-		if (ret == SCM_EBUSY)
-			msleep(SCM_EBUSY_WAIT_MS);
-
-	} while (ret == SCM_EBUSY && (retry_count++ < SCM_EBUSY_MAX_RETRY));
-// QCT patch - Retry scm_call when the secure world is busy - Vikram Mulukutla <markivx@codeaurora.org>
-
+	ret = scm_call_common(svc_id, cmd_id, cmd_buf, cmd_len, resp_buf,
+				resp_len, cmd, len);
 	kfree(cmd);
 	return ret;
 }

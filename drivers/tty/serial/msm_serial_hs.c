@@ -1092,7 +1092,7 @@ unsigned int msm_hs_tx_empty(struct uart_port *uport)
 }
 EXPORT_SYMBOL(msm_hs_tx_empty);
 
-//LG_BTUI : chanha.park@lge.com : Added bluesleep interface - [S]
+//                                                               
 #ifdef CONFIG_LGE_BLUESLEEP
 struct uart_port* msm_hs_get_bt_uport(unsigned int line)
 {
@@ -1130,8 +1130,8 @@ int msm_hs_get_bt_uport_clock_state(struct uart_port *uport)
 	return ret;
 }
 EXPORT_SYMBOL(msm_hs_get_bt_uport_clock_state);
-#endif/*CONFIG_LGE_BLUESLEEP*/
-//LG_BTUI : chanha.park@lge.com : Added bluesleep interface - [E]
+#endif/*                    */
+//                                                               
 
 /*
  *  Standard API, Stop transmitter.
@@ -1168,7 +1168,7 @@ static void msm_hs_stop_rx_locked(struct uart_port *uport)
 			
 			spin_lock(&uport->lock);
 	}
-//[minwoo2.kim@lge.com, 2013/04/22][e]
+//                                    
 /*
 NEED TO CHECK
 ES1 Qualcomm patch

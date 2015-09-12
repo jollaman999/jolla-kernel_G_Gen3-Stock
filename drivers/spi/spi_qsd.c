@@ -48,11 +48,11 @@
 static int spi_cpu_state = 0;
 #endif
 
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifdef SPI_LGE_THREAD_FEATURE
 static int spi_thread(void *dd);
 #endif
-// LGE_BROADCAST_ONESEG }
+//                       
 
 static int msm_spi_pm_resume_runtime(struct device *device);
 static int msm_spi_pm_suspend_runtime(struct device *device);
@@ -482,7 +482,7 @@ static void msm_spi_setup_dm_transfer(struct msm_spi *dd)
 		if (bytes_sent < 0)
 			bytes_sent = 0;
 	}
-/* LGE_BROADCAST_ONESEG { */
+/*                        */
 	/* We'll send in chunks of SPI_MAX_LEN if larger than
 	 * 4K bytes for targets that have only 12 bits in
 	 * QUP_MAX_OUTPUT_CNT register. If the target supports
@@ -636,10 +636,10 @@ static int msm_spi_dm_send_next(struct msm_spi *dd)
 
 	/* On targets which does not support infinite mode,
 	   We need to send more chunks, if we sent max last time  */
-/* LGE_BROADCAST_ONESEG { */
+/*                        */
 	if (dd->tx_bytes_remaining > dd->max_trfr_len) {
 		dd->tx_bytes_remaining -= dd->max_trfr_len;
-/* LGE_BROADCAST_ONESEG } */
+/*                        */
 		if (msm_spi_set_state(dd, SPI_OP_STATE_RESET))
 			return 0;
 		dd->read_len = dd->write_len = 0;
@@ -737,8 +737,10 @@ static irqreturn_t msm_spi_input_irq(int irq, void *dev_id)
 		if ((!dd->read_buf || op & SPI_OP_MAX_INPUT_DONE_FLAG) &&
 		    (!dd->write_buf || op & SPI_OP_MAX_OUTPUT_DONE_FLAG)) {
 			msm_spi_ack_transfer(dd);
-			if (atomic_inc_return(&dd->rx_irq_called) == 1)
-				return IRQ_HANDLED;
+			if (dd->rx_unaligned_len == 0) {
+				if (atomic_inc_return(&dd->rx_irq_called) == 1)
+					return IRQ_HANDLED;
+			}
 			msm_spi_complete(dd);
 			return IRQ_HANDLED;
 		}
@@ -1408,20 +1410,20 @@ error:
 }
 
 /* workqueue - pull messages from queue & process */
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifndef SPI_LGE_THREAD_FEATURE
 static void msm_spi_workq(struct work_struct *work)
-#else // in case of SPI_LGE_THREAD_FEATURE
+#else //                                  
 static void msm_spi_workq(struct msm_spi *d)
 #endif	
 {
 #ifndef SPI_LGE_THREAD_FEATURE
 	struct msm_spi      *dd =
 		container_of(work, struct msm_spi, work_data);
-#else // in case of SPI_LGE_THREAD_FEATURE
+#else //                                  
 	struct msm_spi      *dd = d;
 #endif	
-/* LGE_BROADCAST_ONESEG } */
+/*                        */
 	unsigned long        flags;
 	u32                  status_error = 0;
 
@@ -1524,17 +1526,17 @@ static int msm_spi_transfer(struct spi_device *spi, struct spi_message *msg)
 
 	spin_lock_irqsave(&dd->queue_lock, flags);
 	list_add_tail(&msg->queue, &dd->queue);
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifdef SPI_LGE_THREAD_FEATURE
 	dd->spi_isr_sig++;
 #endif
 	spin_unlock_irqrestore(&dd->queue_lock, flags);
 #ifndef SPI_LGE_THREAD_FEATURE	
 	queue_work(dd->workqueue, &dd->work_data);
-#else // in case of SPI_LGE_THREAD_FEATURE
+#else //                                  
 	wake_up(&dd->spi_isr_wait);
 #endif	
-// LGE_BROADCAST_ONESEG }
+//                       
 	return 0;
 }
 
@@ -2065,7 +2067,7 @@ skip_dma_resources:
 	spin_lock_init(&dd->queue_lock);
 	mutex_init(&dd->core_lock);
 	INIT_LIST_HEAD(&dd->queue);
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifndef SPI_LGE_THREAD_FEATURE	
 	INIT_WORK(&dd->work_data, msm_spi_workq);
 #endif
@@ -2080,7 +2082,7 @@ skip_dma_resources:
 	dd->thread = kthread_run(spi_thread, (void*)dd, dev_name(master->dev.parent));
 	printk("msm_spi_probe : %s created\n", dev_name(master->dev.parent));
 #endif
-// LGE_BROADCAST_ONESEG }
+//                       
 
 	if (!devm_request_mem_region(&pdev->dev, dd->mem_phys_addr,
 					dd->mem_size, SPI_DRV_NAME)) {
@@ -2243,7 +2245,7 @@ err_probe_clk_get:
 	}
 err_probe_rlock_init:
 err_probe_reqmem:
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifndef SPI_LGE_THREAD_FEATURE
 	destroy_workqueue(dd->workqueue);
 #else
@@ -2252,7 +2254,7 @@ err_probe_reqmem:
 #ifndef SPI_LGE_THREAD_FEATURE	
 err_probe_workq:
 #endif	
-// LGE_BROADCAST_ONESEG }
+//                       
 err_probe_res:
 	spi_master_put(master);
 err_probe_exit:
@@ -2408,13 +2410,13 @@ static int __devexit msm_spi_remove(struct platform_device *pdev)
 	pm_runtime_set_suspended(&pdev->dev);
 	clk_put(dd->clk);
 	clk_put(dd->pclk);
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifndef SPI_LGE_THREAD_FEATURE
 	destroy_workqueue(dd->workqueue);
 #else
 	kthread_stop(dd->thread);
 #endif
-// LGE_BROADCAST_ONESEG }
+//                       
 	platform_set_drvdata(pdev, 0);
 	spi_unregister_master(master);
 	spi_master_put(master);
@@ -2422,7 +2424,7 @@ static int __devexit msm_spi_remove(struct platform_device *pdev)
 	return 0;
 }
 
-// LGE_BROADCAST_ONESEG {
+//                       
 #ifdef SPI_LGE_THREAD_FEATURE
 static int spi_thread(void *dd)
 {
@@ -2470,7 +2472,7 @@ static int spi_thread(void *dd)
 	return 0;
 }
 #endif
-// LGE_BROADCAST_ONESEG }
+//                       
 
 static struct of_device_id msm_spi_dt_match[] = {
 	{

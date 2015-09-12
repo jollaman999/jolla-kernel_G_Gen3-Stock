@@ -130,7 +130,7 @@ static ssize_t power_supply_show_property(struct device *dev,
 	else if (off >= POWER_SUPPLY_PROP_MODEL_NAME)
 		return sprintf(buf, "%s\n", value.strval);
 #endif
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	else if (off >= POWER_SUPPLY_PROP_VCHG)
 		return sprintf(buf, "%d\n", value.intval);
 	else if (off >= POWER_SUPPLY_PROP_IUSB)
@@ -351,12 +351,12 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(real_present),
 /*2012-07-11 Add battery present check in the testmode */
 #ifdef CONFIG_BATTERY_MAX17047
-/*doosan.baek@lge.com 20121108 Add battery condition */
+/*                                                   */
 	POWER_SUPPLY_ATTR(battery_condition),
 	POWER_SUPPLY_ATTR(battery_age),
 #endif
 #endif
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	POWER_SUPPLY_ATTR(usb_in_voltage),
 	POWER_SUPPLY_ATTR(usb_in_ampere),
 #endif

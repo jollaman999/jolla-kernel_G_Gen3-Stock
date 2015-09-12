@@ -137,20 +137,20 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_PSEUDO_BATT,
     POWER_SUPPLY_PROP_BLOCK_CHARGING,
     POWER_SUPPLY_PROP_EXT_PWR_CHECK,
-/* LGE_S kwangjae1.lee@lge.com 2012-06-11 Add bms debugger */
+/*                                                         */
 //    POWER_SUPPLY_PROP_BMS_BATT,
-/* LGE_E kwangjae1.lee@lge.com 2012-06-11 Add bms debugger */
+/*                                                         */
 
 /*2012-07-11 Add battery present check in the testmode */
 	POWER_SUPPLY_PROP_REAL_BATT_PRESENT,
 /*2012-07-11 Add battery present check in the testmode */
 #ifdef CONFIG_BATTERY_MAX17047
-/*doosan.baek@lge.com 20121108 Add battery condition */
+/*                                                   */
     POWER_SUPPLY_PROP_BATTERY_CONDITION,
     POWER_SUPPLY_PROP_BATTERY_AGE,
 #endif
 #endif
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	POWER_SUPPLY_PROP_VCHG,
 	POWER_SUPPLY_PROP_IUSB,
 #endif
@@ -312,7 +312,7 @@ static inline bool power_supply_is_amp_property(enum power_supply_property psp)
 	case POWER_SUPPLY_PROP_CURRENT_MAX:
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
 	case POWER_SUPPLY_PROP_CURRENT_AVG:
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	case POWER_SUPPLY_PROP_VCHG:
 	case POWER_SUPPLY_PROP_IUSB:
 #endif

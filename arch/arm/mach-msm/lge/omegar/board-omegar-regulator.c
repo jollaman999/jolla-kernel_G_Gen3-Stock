@@ -69,9 +69,9 @@ VREG_CONSUMERS(L8) = {
 	REGULATOR_SUPPLY("cam_vana",		"4-006c"),
 	REGULATOR_SUPPLY("cam_vana",		"4-0034"),
 	REGULATOR_SUPPLY("cam_vana",		"4-0020"),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_isp_ram",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 };
 VREG_CONSUMERS(L9) = {
 	REGULATOR_SUPPLY("8921_l9",		NULL),
@@ -86,15 +86,15 @@ VREG_CONSUMERS(L10) = {
 VREG_CONSUMERS(L11) = {
 	REGULATOR_SUPPLY("8921_l11",		NULL),
 	REGULATOR_SUPPLY("dsi1_avdd",		"mipi_dsi.1"),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_vana",		"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 };
 VREG_CONSUMERS(L12) = {
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 	REGULATOR_SUPPLY("cam2_vdig",		"4-006c"), /* GSBI4, Slave Addr: 0x6c, imx132 */
-/* LGE_CHANGE_E, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #else
 	REGULATOR_SUPPLY("cam_vdig",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vdig",		"4-0010"),
@@ -132,9 +132,9 @@ VREG_CONSUMERS(L16) = {
 };
 VREG_CONSUMERS(L17) = {
 	REGULATOR_SUPPLY("8921_l17",		NULL),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_isp_sys",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 };
 VREG_CONSUMERS(L18) = {
 	REGULATOR_SUPPLY("8921_l18",		NULL),
@@ -144,9 +144,9 @@ VREG_CONSUMERS(L18) = {
 };
 VREG_CONSUMERS(L21) = {
 	REGULATOR_SUPPLY("8921_l21",		NULL),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_vaf",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 };
 VREG_CONSUMERS(L22) = {
 	REGULATOR_SUPPLY("8921_l22",		NULL),
@@ -154,9 +154,9 @@ VREG_CONSUMERS(L22) = {
 };
 VREG_CONSUMERS(L23) = {
 	REGULATOR_SUPPLY("8921_l23",		NULL),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_isp_camif",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("pll_vdd",		"pil_qdsp6v4.1"),
 	REGULATOR_SUPPLY("pll_vdd",		"pil_qdsp6v4.2"),
 	REGULATOR_SUPPLY("HSUSB_1p8",		"msm_ehci_host.0"),
@@ -189,10 +189,10 @@ VREG_CONSUMERS(L28) = {
 };
 VREG_CONSUMERS(L29) = {
 	REGULATOR_SUPPLY("8921_l29",		NULL),
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 	REGULATOR_SUPPLY("cam1_isp_host",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
 	REGULATOR_SUPPLY("cam2_vio",	"4-006c"), /* GSBI4, Slave Addr: 0x6c, imx132 */
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 };
 VREG_CONSUMERS(S2) = {
 	REGULATOR_SUPPLY("8921_s2",		NULL),
@@ -245,9 +245,9 @@ VREG_CONSUMERS(S7) = {
 };
 VREG_CONSUMERS(S8) = {
 	REGULATOR_SUPPLY("8921_s8",		NULL),
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_isp_core",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 };
 VREG_CONSUMERS(LVS1) = {
 	REGULATOR_SUPPLY("8921_lvs1",		NULL),
@@ -264,9 +264,9 @@ VREG_CONSUMERS(LVS4) = {
 VREG_CONSUMERS(LVS5) = {
 	REGULATOR_SUPPLY("8921_lvs5",		NULL),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_vio",	"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	REGULATOR_SUPPLY("cam_vio",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vio",		"4-0010"),
@@ -352,9 +352,9 @@ VREG_CONSUMERS(LVS2) = {
 	REGULATOR_SUPPLY("iris_vdddig",		"wcnss_wlan.0"),
 #endif
 
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	REGULATOR_SUPPLY("cam1_vdig",		"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 };
 #ifdef CONFIG_HDMI_MVS
 VREG_CONSUMERS(HDMI_MVS) = {
@@ -737,9 +737,9 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
     RPM_SMPS(S7, 0, 0, 0, 1300000, 1300000, NULL, 100000, 3p20, NONE, NONE),
 #endif
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	RPM_SMPS(S8, 0, 1, 0, 1150000, 1150000, NULL, 100000, 1p60, NONE, NONE),
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	RPM_SMPS(S8, 0, 1, 0, 2200000, 2200000, NULL,      0, 1p60, NONE, NONE),
 #endif
@@ -757,31 +757,31 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L6,  0, 1, 0, 2950000, 2950000, NULL,          0,     0),
 	RPM_LDO(L7,  0, 1, 0, 1850000, 2950000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	RPM_LDO(L8,  0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	RPM_LDO(L8,  0, 1, 0, 2800000, 2800000, NULL,          0,     0),
 #endif
 	RPM_LDO(L9,  0, 1, 0, 3000000, 3000000, NULL,          0,     0),
 	RPM_LDO(L10, 0, 1, 0, 2800000, 2800000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	RPM_LDO(L11, 0, 1, 0, 2850000, 2850000, NULL,          0,     0),
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	RPM_LDO(L11, 0, 1, 0, 3000000, 3000000, NULL,          0,     0),
 #endif
 	RPM_LDO(L12, 0, 1, 0, 1200000, 1200000, "8921_s4",     0,     0),
 	RPM_LDO(L13, 0, 0, 0, 2220000, 2220000, NULL,          0,     0),
 	RPM_LDO(L14, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-//sangwooha.ha@lge.com 20120813 GK bring up ==> LCD issue fix
+//                                                           
 	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL,          0,    19),
 	RPM_LDO(L16, 0, 1, 0, 2800000, 2800000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	RPM_LDO(L17, 0, 1, 0, 2800000, 2800000, NULL,          0,     0),
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	RPM_LDO(L17, 0, 1, 0, 2000000, 2000000, NULL,          0,     0),
 #endif
@@ -791,13 +791,13 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L18, 0, 1, 0, 1300000, 1800000, "8921_s4",     0,     0),
 #endif
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 	RPM_LDO(L21, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #else
 	RPM_LDO(L21, 0, 1, 0, 1050000, 1050000, NULL,          0,     0),
 #endif
-//sangwooha.ha@lge.com 20120813 GK bring up ==> LCD issue fix
+//                                                           
 	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
 	RPM_LDO(L23, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
 	RPM_LDO(L24, 0, 1, 1,  750000, 1150000, "8921_s1", 10000, 10000),
@@ -805,9 +805,9 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L27, 0, 0, 0, 1100000, 1100000, "8921_s7",     0,     0),
 	RPM_LDO(L28, 0, 1, 0, 1050000, 1050000, "8921_s7",     0,     0),
 #if defined(CONFIG_MACH_LGE)
- /* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+ /*                                                                                     */
 	RPM_LDO(L29, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 #else
 	RPM_LDO(L29, 0, 1, 0, 2000000, 2000000, NULL,          0,     0),
 #endif

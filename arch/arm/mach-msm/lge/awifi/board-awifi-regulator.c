@@ -71,13 +71,13 @@ VREG_CONSUMERS(L8) = {
 	REGULATOR_SUPPLY("cam_vana",		"4-006c"),
 	REGULATOR_SUPPLY("cam_vana",		"4-0034"),
 	REGULATOR_SUPPLY("cam_vana",		"4-0020"),
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI[START]
-#if defined(CONFIG_MACH_APQ8064_AWIFI)&& defined(CONFIG_ANDROID_SW_IRRC)
+//                                                                                     
+#if (defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)) && defined(CONFIG_ANDROID_SW_IRRC)
 	REGULATOR_SUPPLY("sw_irrc",		NULL),
 #elif defined(CONFIG_LGE_IRRC)
 	REGULATOR_SUPPLY("hw_irrc",		NULL)
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI[END]
+//                                                                                   
 };
 VREG_CONSUMERS(L9) = {
 	REGULATOR_SUPPLY("8921_l9",		NULL),
@@ -94,13 +94,13 @@ VREG_CONSUMERS(L11) = {
 	REGULATOR_SUPPLY("dsi1_avdd",		"mipi_dsi.1"),
 #if defined(CONFIG_MACH_LGE)
 	REGULATOR_SUPPLY("cam1_vana",		"4-0020"), /* GSBI4, Slave Addr: 0x20, s5k4e5ya */
-	REGULATOR_SUPPLY("cam1_vana",		"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+	REGULATOR_SUPPLY("cam1_vana",		"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//*                                                                                   */
 #endif
 };
 VREG_CONSUMERS(L12) = {
 #if defined(CONFIG_MACH_LGE)
 	REGULATOR_SUPPLY("cam1_vdig_revA",		"4-0020"), /* GSBI4, Slave Addr: 0x20, s5k4e5ya */
-	REGULATOR_SUPPLY("cam1_vdig",	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+	REGULATOR_SUPPLY("cam1_vdig",	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//*                                                                                   */
 #else //Qualcomm original
 	REGULATOR_SUPPLY("cam_vdig",		"4-001a"),
 	REGULATOR_SUPPLY("cam_vdig",		"4-0048"),
@@ -139,11 +139,11 @@ VREG_CONSUMERS(L16) = {
 };
 VREG_CONSUMERS(L17) = {
 	REGULATOR_SUPPLY("8921_l17",		NULL),
-/* LGE_CHANGE_S, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
+/*                                                                      */
 #ifndef CONFIG_MACH_APQ8064_ALTEV		
 	REGULATOR_SUPPLY("cam2_vana",		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
 #endif	
-/* LGE_CHANGE_E, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
+/*                                                                      */
 };
 VREG_CONSUMERS(L18) = {
 	REGULATOR_SUPPLY("8921_l18",		NULL),
@@ -153,8 +153,8 @@ VREG_CONSUMERS(L18) = {
 };
 VREG_CONSUMERS(L21) = {
 	REGULATOR_SUPPLY("8921_l21",		NULL),
-//2013-04-25 goensoo.kim@lge.com	For awifi touch driver [START]
-#if !defined (CONFIG_MACH_APQ8064_GK_KR) && defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                             
+#if !defined (CONFIG_MACH_APQ8064_GK_KR) && (defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV))
 		REGULATOR_SUPPLY("touch_io",		NULL),
 #endif
 };
@@ -163,12 +163,12 @@ VREG_CONSUMERS(L22) = {
 #ifdef CONFIG_MACH_APQ8064_GK_KR
 		REGULATOR_SUPPLY("touch_io",		NULL),
 #endif
-//2013-04-25 goensoo.kim@lge.com	For awifi touch driver [END]
-/* LGE_CHANGE_S, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
+//                                                           
+/*                                                                      */
 #ifdef CONFIG_MACH_APQ8064_ALTEV
 	REGULATOR_SUPPLY("cam2_vana",		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
 #endif	
-/* LGE_CHANGE_E, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
+/*                                                                      */
 };
 VREG_CONSUMERS(L23) = {
 	REGULATOR_SUPPLY("8921_l23",		NULL),
@@ -281,7 +281,7 @@ VREG_CONSUMERS(LVS5) = {
 	REGULATOR_SUPPLY("8921_lvs5",		NULL),
 #if defined(CONFIG_MACH_LGE)
 	REGULATOR_SUPPLY("cam1_vio",	"4-0020"), /* GSBI4, Slave Addr: 0x20, s5k4e5ya */
-	REGULATOR_SUPPLY("cam1_vio",	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+	REGULATOR_SUPPLY("cam1_vio",	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//*                                                                                   */
 	REGULATOR_SUPPLY("cam2_i2c",	"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
 #else //Qualcomm original
 	REGULATOR_SUPPLY("cam_vio",		"4-001a"),
@@ -785,20 +785,16 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #else
 	RPM_LDO(L11, 0, 1, 0, 3000000, 3000000, NULL,          0,     0),
 #endif
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
+/*                                                      */
 	RPM_LDO(L12, 0, 1, 0, 1500000, 1500000, "8921_s4",     0,     0),
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 	RPM_LDO(L13, 0, 0, 0, 2220000, 2220000, NULL,          0,     0),
 	RPM_LDO(L14, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-//sangwooha.ha@lge.com 20120813 GK bring up ==> LCD issue fix
+//                                                           
 	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL,          0,    19),
 	RPM_LDO(L16, 0, 1, 0, 2800000, 2800000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-#if defined(CONFIG_MACH_APQ8064_ALTEV)
-	RPM_LDO(L17, 1, 1, 0, 3000000, 3000000, NULL,          0,     0),
-#else
 	RPM_LDO(L17, 0, 1, 0, 2850000, 2850000, NULL,          0,     0),
-#endif
 #else
 	RPM_LDO(L17, 0, 1, 0, 2000000, 2000000, NULL,          0,     0),
 #endif
@@ -812,19 +808,15 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #else
 	RPM_LDO(L21, 0, 1, 0, 1050000, 1050000, NULL,          0,     0),
 #endif
-//sangwooha.ha@lge.com 20120813 GK bring up ==> LCD issue fix
-/* LGE_CHANGE_S, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
+//                                                           
+/*                                                                      */
 #if defined(CONFIG_MACH_APQ8064_ALTEV)
 	RPM_LDO(L22, 0, 1, 0, 2850000, 2850000, NULL,          0,     0),
 #else
 	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
 #endif	
-/* LGE_CHANGE_E, For VK810 vt camera, 2013-10-11, gayoung85.lee@lge.com */
-#if defined(CONFIG_MACH_APQ8064_ALTEV)
-	RPM_LDO(L23, 1, 1, 0, 1800000, 1800000, NULL,          0,     0),
-#else
+/*                                                                      */
 	RPM_LDO(L23, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
-#endif
 	RPM_LDO(L24, 0, 1, 1,  750000, 1150000, "8921_s1", 10000, 10000),
 	RPM_LDO(L25, 1, 1, 0, 1250000, 1250000, "8921_s1", 10000, 10000),
 	RPM_LDO(L27, 0, 0, 0, 1100000, 1100000, "8921_s7",     0,     0),

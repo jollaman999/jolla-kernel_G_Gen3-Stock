@@ -66,6 +66,7 @@
 #define DEVICE_NAME_LENGTH \
 	(sizeof(DEVICE_BASE_NAME) + MAX_DEVICE_DIGITS)
 
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #define STEP_PBL_FAIL		1
 #define STEP_9008_FAIL		2
 #define STEP_UNMEASURABLE_FAIL	3
@@ -88,6 +89,7 @@ module_param(root_failure_step, int, S_IRUGO | S_IWUSR);
 void update_failure_case(void);
 int get_error_step(int *phase, int phase_size);
 int translate_failure(void);
+#endif
 
 #define RD_BUF_SIZE			100
 #define SFR_MAX_RETRIES		10
@@ -422,8 +424,10 @@ static void mdm_setup_vddmin_gpios(void)
 	return;
 }
 
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #define MAX_SSR_REASON_LEN 81U
 char ssr_reason[MAX_SSR_REASON_LEN];
+#endif
 
 static void mdm_restart_reason_fn(struct work_struct *work)
 {
@@ -452,7 +456,9 @@ static void mdm_restart_reason_fn(struct work_struct *work)
 						SFR_MAX_RETRIES);
 			} else {
 				pr_err("mdm restart reason: %s\n", sfr_buf);
-                        sprintf(ssr_reason, "%s\n", sfr_buf);
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
+                                sprintf(ssr_reason, "%s\n", sfr_buf);
+#endif
 				break;
 			}
 		}
@@ -474,7 +480,9 @@ static void mdm2ap_status_check(struct work_struct *work)
 			pr_err("%s: MDM2AP_STATUS did not go high on mdm id %d\n",
 				   __func__, mdev->mdm_data.device_id);
 			if (!disable_boot_timeout) {
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 			mdm2ap_status_error_timer = 3;
+#endif
 				mdm_start_ssr(mdev);
 			}
 		}
@@ -536,6 +544,7 @@ static long mdm_modem_ioctl(struct file *filp, unsigned int cmd,
 	case WAKE_CHARM:
 		pr_info("%s: Powering on mdm id %d\n",
 				__func__, mdev->mdm_data.device_id);
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		if((mdm2ap_status_error_timer == 3 || mdm2ap_status_error_timer <= 0) &&
 			(mdm2ap_errfatal_error_timer == 3 || mdm2ap_errfatal_error_timer <= 0)) {
 			if(mdm_drv->pdata->early_power_on &&
@@ -551,6 +560,7 @@ static long mdm_modem_ioctl(struct file *filp, unsigned int cmd,
 				now_early_booting = 0;
 			}
 		}
+#endif
 		mdm_ops->power_on_mdm_cb(mdm_drv);
 		break;
 	case CHECK_FOR_BOOT:
@@ -570,8 +580,10 @@ static long mdm_modem_ioctl(struct file *filp, unsigned int cmd,
 		} else {
 			pr_info("%s: normal boot of mdm id %d done\n",
 					__func__, mdev->mdm_data.device_id);
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 			modem_boot_check = 0x7;
 			printk("modem_boot_check : %d", modem_boot_check);
+#endif
 			mdm_drv->mdm_boot_status = 0;
 		}
 		atomic_set(&mdm_drv->mdm_ready, 1);
@@ -653,6 +665,14 @@ static long mdm_modem_ioctl(struct file *filp, unsigned int cmd,
 			   __func__, ret);
 		put_user(ret, (unsigned long __user *) arg);
 		break;
+#ifdef CONFIG_LGE_PM_SHUTDOWN_MDM_IN_CHARGERLOGO
+   case FORCE_SHUTDOWN_CHARM:
+        pr_debug("%s FORCE_SHUTDOWN_CHARM\n", __func__);
+        gpio_direction_output(mdm_drv->ap2mdm_soft_reset_gpio,1);
+        mdelay(250);
+        gpio_direction_output(mdm_drv->ap2mdm_soft_reset_gpio,0);
+        break;
+#endif
 	default:
 		pr_err("%s: invalid ioctl cmd = %d\n", __func__, _IOC_NR(cmd));
 		ret = -EINVAL;
@@ -704,7 +724,9 @@ static irqreturn_t mdm_errfatal(int irq, void *dev_id)
 		(gpio_get_value(mdm_drv->mdm2ap_status_gpio) == 1)) {
 		pr_info("%s: Received err fatal from mdm id %d\n",
 				__func__, mdev->mdm_data.device_id);
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
                 mdm2ap_errfatal_error_timer = 3;
+#endif
 		mdm_start_ssr(mdev);
 	}
 	return IRQ_HANDLED;
@@ -816,10 +838,12 @@ static irqreturn_t mdm_pblrdy_change(int irq, void *dev_id)
 			__func__, mdev->mdm_data.device_id,
 			pblrdy);
 
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	if(pblrdy == 1) {
 		modem_boot_check = 0x3;
 		printk("modem_boot_check : %d", modem_boot_check);
 	}
+#endif
 	return IRQ_HANDLED;
 }
 
@@ -845,6 +869,7 @@ static int mdm_subsys_shutdown(const struct subsys_desc *crashed_subsys)
 		msleep(mdm_drv->pdata->ramdump_delay_ms);
 	}
 	if (!mdm_drv->mdm_unexpected_reset_occurred) {
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		if((mdm2ap_status_error_timer == 3 || mdm2ap_status_error_timer <= 0) &&
 			(mdm2ap_errfatal_error_timer == 3 || mdm2ap_errfatal_error_timer <= 0)) {	
 			update_failure_case();
@@ -854,6 +879,7 @@ static int mdm_subsys_shutdown(const struct subsys_desc *crashed_subsys)
 			__func__, mdm2ap_status_error_timer, mdm2ap_errfatal_error_timer);
 		mdm2ap_status_error_timer--;
 		mdm2ap_errfatal_error_timer--;
+#endif
 		mdm_ops->reset_mdm_cb(mdm_drv);
 		/* Update gpio configuration to "booting" config. */
 		mdm_update_gpio_configs(mdev, GPIO_UPDATE_BOOTING_CONFIG);
@@ -863,6 +889,7 @@ static int mdm_subsys_shutdown(const struct subsys_desc *crashed_subsys)
 	return 0;
 }
 
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 void update_failure_case(void)
 {
 	failure_step[failure_step_count % 100] = translate_failure();
@@ -882,7 +909,7 @@ int translate_failure(void)
 	char *modem_enumeration_path = "/sys/module/usbcore/parameters/modem_enumeration_check";
 	char buf[100];
 	struct file *f;
-	int ret;
+	int ret = STEP_ERROR;
 	
 	f = filp_open(modem_enumeration_path, O_RDONLY, 0);
 
@@ -917,10 +944,10 @@ int translate_failure(void)
 		if(modem_boot_check == 0x7) ret = STEP_CRASH;
 	}
 
-	if (mdm2ap_status_error_timer == 3) return STEP_9048_FAIL;      // hardcoding : sometimes mismatched pattern discovered.
-	if (mdm2ap_errfatal_error_timer == 3) return STEP_CRASH;	// hardcoding : sometimes mismatched pattern discovered.
+	if (mdm2ap_status_error_timer == 3) ret = STEP_9048_FAIL;      // hardcoding : sometimes mismatched pattern discovered.
+	if (mdm2ap_errfatal_error_timer == 3) ret = STEP_CRASH;	// hardcoding : sometimes mismatched pattern discovered.
 
-	return STEP_ERROR;
+	return ret;
 }
 
 int get_error_step(int *phase, int phase_size) 
@@ -940,6 +967,7 @@ int get_error_step(int *phase, int phase_size)
 
 	return final_result;
 }
+#endif
 
 static int mdm_subsys_powerup(const struct subsys_desc *crashed_subsys)
 {
@@ -957,6 +985,7 @@ static int mdm_subsys_powerup(const struct subsys_desc *crashed_subsys)
 	if (mdm_drv->pdata->ps_hold_delay_ms > 0)
 		msleep(mdm_drv->pdata->ps_hold_delay_ms);
 
+#if defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	if((mdm2ap_status_error_timer == 3 || mdm2ap_status_error_timer <= 0) &&
 		(mdm2ap_errfatal_error_timer == 3 || mdm2ap_errfatal_error_timer <= 0)) {
 		update_failure_case();
@@ -966,6 +995,7 @@ static int mdm_subsys_powerup(const struct subsys_desc *crashed_subsys)
 		__func__, mdm2ap_status_error_timer, mdm2ap_errfatal_error_timer);
 	mdm2ap_status_error_timer--;
 	mdm2ap_errfatal_error_timer--;
+#endif
 
 	mdm_ops->power_on_mdm_cb(mdm_drv);
 	mdm_drv->boot_type = CHARM_NORMAL_BOOT;

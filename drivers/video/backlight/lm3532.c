@@ -104,10 +104,10 @@ EXPORT_SYMBOL(wireless_backlight_state);
 static void lm3532_hw_reset(void)
 {
 	int gpio = main_lm3532_dev->gpio;
-	/* LGE_CHANGE
-	  * Fix GPIO Setting Warning
-	  * 2011. 12. 14, kyunghoo.ryu@lge.com
-	  */
+	/*           
+                             
+                                       
+   */
 
 	if (gpio_is_valid(gpio)) {
 		gpio_direction_output(gpio, 1);
@@ -154,10 +154,10 @@ static int lm3532_write_reg(struct i2c_client *client, unsigned char reg, unsign
 
 static int exp_min_value = 150;
 static int cal_value;
-/* LGE_CHANGE
-* This is a mapping table from android brightness bar value
-* to backlilght driver value.
-* 2012-02-28, baryun.hwang@lge.com
+/*           
+                                                           
+                             
+                                  
 */
 #if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
 static char mapped_value[256] = {

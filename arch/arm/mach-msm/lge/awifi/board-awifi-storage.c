@@ -130,7 +130,7 @@ static struct msm_mmc_pad_pull sdc1_pad_pull_off_cfg[] = {
 
 /* SDC3 pad data */
 static struct msm_mmc_pad_drv sdc3_pad_drv_on_cfg[] = {
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	{TLMM_HDRV_SDC3_CLK, GPIO_CFG_12MA},
 	{TLMM_HDRV_SDC3_CMD, GPIO_CFG_12MA},
 	{TLMM_HDRV_SDC3_DATA, GPIO_CFG_12MA}
@@ -367,8 +367,9 @@ void __init apq8064_init_mmc(void)
 					ARRAY_SIZE(sdc1_sup_clk_rates_all);
 		}
 		apq8064_add_sdcc(1, apq8064_sdc1_pdata);
-		apq8064_add_uio();
 	}
+
+	msm_add_uio();
 
 	if (apq8064_sdc2_pdata)
 		apq8064_add_sdcc(2, apq8064_sdc2_pdata);

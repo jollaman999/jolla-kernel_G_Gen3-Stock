@@ -213,13 +213,13 @@ enum msm_camera_vreg_name_t {
 	CAM_VIO,
 	CAM_VANA,
 	CAM_VAF,
-/*LGE_CHANGE_S, For GK/GV 13M & 2.4M camera driver, 2012.09.11, gayoung85.lee@lge.com */	
+/*                                                                                    */	
 	CAM_ISP_CORE,
 	CAM_ISP_HOST,
 	CAM_ISP_RAM,
 	CAM_ISP_CAMIF,
 	CAM_ISP_SYS,
-/*LGE_CHANGE_E, For GK/GV 13M & 2.4M camera driver, 2012.09.11, gayoung85.lee@lge.com */	
+/*                                                                                    */	
 };
 
 struct msm_camera_sensor_platform_info {

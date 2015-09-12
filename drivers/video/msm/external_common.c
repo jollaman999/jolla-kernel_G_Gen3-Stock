@@ -757,15 +757,15 @@ static ssize_t external_common_rda_connected(struct device *dev,
 	return ret;
 }
 
-/* LGE_CHANGE
- * hpd won't be on when booting is completed with the cable connected.
- * HDMI needs to be informed completion of booting,
- * so that hpd is re-processed after HDMI is ready.
- * [PROCESS]
- * property 'dev.bootcomplete'=1
- * -> write 1 to '/sys/devices/virtual/graphics/fb1/hdmi_boot_completed'
- * -> call hdmi_common_boot_completed()
- * 2012-09-14, chaeuk.lee@lge.com
+/*           
+                                                                      
+                                                   
+                                                   
+            
+                                
+                                                                        
+                                       
+                                 
  */
 #ifdef CONFIG_MACH_LGE
 static ssize_t hdmi_common_wta_boot_completed(struct device *dev,

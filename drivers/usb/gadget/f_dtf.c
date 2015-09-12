@@ -282,10 +282,10 @@ static struct file_operations dtf_fops =
 	.release=			dtf_if_close
 };
 
-#define D_DTF_MINOR_NUMBER  249		//LGE customize Global Minor Number
+#define D_DTF_MINOR_NUMBER  249		//                                 
 
 static struct miscdevice dtf_device = {
-	.minor = D_DTF_MINOR_NUMBER,	//LGE customize Global Minor Number
+	.minor = D_DTF_MINOR_NUMBER,	//                                 
 	.name = dtf_shortname,
 	.fops = &dtf_fops,
 };

@@ -779,7 +779,7 @@ const struct cntry_locales_custom bcm_wifi_translate_custom_table[] = {
            {"HU",    "GB",     0},
            {"ID",     "QA",    0},
            {"IE",     "GB",     0},
-           {"IL",     "IL",      10},
+           {"IL",     "IL",      0},
            {"IM",    "GB",     0},
            {"IN",    "RU",     1},
            {"IQ",    "IL",      10},
@@ -997,17 +997,26 @@ static struct mmc_platform_data *apq8064_sdc4_pdata;
 
 void __init apq8064_init_mmc(void)
 {
-	if (apq8064_sdc1_pdata) {
-		/* 8064 v2 supports upto 200MHz clock on SDC1 slot */
-		if (SOCINFO_VERSION_MAJOR(socinfo_get_version()) >= 2) {
-			apq8064_sdc1_pdata->sup_clk_table =
-					sdc1_sup_clk_rates_all;
-			apq8064_sdc1_pdata->sup_clk_cnt	=
-					ARRAY_SIZE(sdc1_sup_clk_rates_all);
+	if ((machine_is_apq8064_rumi3()) || machine_is_apq8064_sim()) {
+		if (apq8064_sdc1_pdata) {
+			if (machine_is_apq8064_sim())
+				apq8064_sdc1_pdata->disable_bam = true;
+			apq8064_sdc1_pdata->disable_runtime_pm = true;
+			apq8064_sdc1_pdata->disable_cmd23 = true;
 		}
-		apq8064_add_sdcc(1, apq8064_sdc1_pdata);
-		apq8064_add_uio();
+		if (apq8064_sdc3_pdata) {
+			if (machine_is_apq8064_sim())
+				apq8064_sdc3_pdata->disable_bam = true;
+			apq8064_sdc3_pdata->disable_runtime_pm = true;
+			apq8064_sdc3_pdata->disable_cmd23 = true;
+		}
 	}
+
+	if (apq8064_sdc1_pdata)
+		apq8064_add_sdcc(1, apq8064_sdc1_pdata);
+	}
+
+	msm_add_uio();
 
 	if (apq8064_sdc2_pdata)
 		apq8064_add_sdcc(2, apq8064_sdc2_pdata);

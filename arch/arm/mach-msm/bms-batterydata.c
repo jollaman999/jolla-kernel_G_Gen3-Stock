@@ -13,7 +13,7 @@
 #include <linux/mfd/pm8xxx/batterydata-lib.h>
 
 #ifdef CONFIG_LGE_PM
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 
 static struct single_row_lut fcc_temp = {
 	.x		= {-20, 0, 25, 40, 60},
@@ -210,7 +210,7 @@ static struct pc_temp_ocv_lut pc_temp_ocv = {
 		}
 };
 
-struct bms_battery_data LGE_2200_PMH_data/*LGE_PMH_LGU+_L20_data*/ = {
+struct bms_battery_data LGE_2200_PMH_data/*                     */ = {
 		.fcc						= 2200,
 		.fcc_temp_lut		  		= &fcc_temp,
 		.fcc_sf_lut 				= &fcc_sf,
@@ -332,9 +332,9 @@ struct bms_battery_data LGE_2200_PMH_data = {
 	.default_rbatt_mohm	= 165,
 };
 #endif
-/* LGE_E  2200mAh rbatt table from QCT */
+/*                                     */
 
-/* LGE_S  2100mAh rbatt table from QCT */
+/*                                     */
 //receive from 2012_08_09
 static struct single_row_lut lge_2100_fcc_temp = {
 	.x		= {-20, 0, 25, 40, 60},
@@ -445,9 +445,9 @@ struct bms_battery_data LGE_2100_PMH_data = {
 	.rbatt_sf_lut		  = &lge_2100_rbatt_sf,
 	.default_rbatt_mohm	  = 182, //206, //106,
 };
-/* LGE_E  2100mAh rbatt table from QCT */
+/*                                     */
 
-/* LGE_S  1900mAh rbatt table from QCT */
+/*                                     */
 static struct single_row_lut lge_1840_fcc_temp = {
 	.x		= {-20, 0, 25, 40, 65},
 	.y		= {1834, 1854, 1869, 1872, 1868},
@@ -560,9 +560,9 @@ struct bms_battery_data lge_1840_data = {
 	.rbatt_sf_lut		= &lge_1840_rbatt_sf,
 	.default_rbatt_mohm	= 111,
 };
-/* LGE_S  1900mAh rbatt table from QCT QCT*/
+/*                                        */
 
-/* LGE_S  1900mAh table from LG-Chemistry*/
+/*                                       */
 static struct single_row_lut lge_1900_fcc_temp = {
 	.x	= {-20, 0, 25, 40, 65},
 	.y	= {1899, 1899, 1900, 1890, 1909},
@@ -635,7 +635,7 @@ static struct pc_temp_ocv_lut  lge_1900_pc_temp_ocv = {
 	},
 };
 
-/* LGE_S  On LG-Chemistry added  1900mAh rbatt table QCT*/
+/*                                                      */
 static struct sf_lut lge_1900_rbatt_sf = {
 	.rows		= 19,
 	.cols		= 5,
@@ -666,7 +666,7 @@ static struct sf_lut lge_1900_rbatt_sf = {
 				{1261, 324, 100, 68, 57},
 	}
 };
-/* LGE_E  On LG-Chemistry added  1900mAh rbatt table QCT*/
+/*                                                      */
 
 struct bms_battery_data  lge_1900_data = {
 	.fcc                = 1900,
@@ -674,14 +674,14 @@ struct bms_battery_data  lge_1900_data = {
 	.fcc_sf_lut         = &lge_1900_fcc_sf,
 	.pc_temp_ocv_lut    = &lge_1900_pc_temp_ocv,
 	.pc_sf_lut          = &lge_1900_pc_sf,
-/* LGE_S  On LG-Chemistry added  1900mAh rbatt table QCT*/
+/*                                                      */
 	.rbatt_sf_lut       = &lge_1900_rbatt_sf,
 	.default_rbatt_mohm	= 200,
-/* LGE_E  On LG-Chemistry added  1900mAh rbatt table QCT*/
+/*                                                      */
 };
-/* LGE_S  1900mAh table from LG-Chemistry*/
+/*                                       */
 
-#else	//#define CONFIG_LGE_PM
+#else	//                     
 
 static struct single_row_lut fcc_temp = {
 	.x		= {-20, 0, 25, 40, 65},
@@ -769,7 +769,7 @@ static struct sf_lut rbatt_sf = {
 				{170899, 127211, 98968, 88907, 77102},
 	}
 };
-#endif	//#define CONFIG_LGE_PM
+#endif	//                     
 
 struct bms_battery_data palladium_1500_data = {
 	.fcc			= 1500,

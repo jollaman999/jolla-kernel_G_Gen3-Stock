@@ -94,7 +94,7 @@ static inline unsigned ecm_bitrate(struct usb_gadget *g)
 #define LOG2_STATUS_INTERVAL_MSEC	5	/* 1 << 5 == 32 msec */
 
 #ifdef CONFIG_USB_G_LGE_ANDROID
-#define ECM_STATUS_BYTECOUNT		64	/* LGE United host driver */
+#define ECM_STATUS_BYTECOUNT		64	/*                        */
 #define ECM_STATUS_NOTIFY_REQ_LEN   16
 #else
 #define ECM_STATUS_BYTECOUNT		16	/* 8 byte header + data */
@@ -246,7 +246,7 @@ static struct usb_descriptor_header *ecm_fs_function[] = {
 #else
 	(struct usb_descriptor_header *) &fs_ecm_in_desc,
 	(struct usb_descriptor_header *) &fs_ecm_out_desc,
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	NULL,
 };
 
@@ -303,7 +303,7 @@ static struct usb_descriptor_header *ecm_hs_function[] = {
 #else
 	(struct usb_descriptor_header *) &hs_ecm_in_desc,
 	(struct usb_descriptor_header *) &hs_ecm_out_desc,
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	NULL,
 };
 
@@ -380,7 +380,7 @@ static struct usb_descriptor_header *ecm_ss_function[] = {
 	(struct usb_descriptor_header *) &ss_ecm_bulk_comp_desc,
 	(struct usb_descriptor_header *) &ss_ecm_out_desc,
 	(struct usb_descriptor_header *) &ss_ecm_bulk_comp_desc,
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	NULL,
 };
 

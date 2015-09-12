@@ -28,15 +28,6 @@
 #include <mach/board_lge.h>
 #include <linux/earlysuspend.h>
 
-
-#define MAX_LEVEL		0xFF	//255 out of 255(android)
-#define MIN_LEVEL 		0x6E	//110 out of 255(android)
-#define max_brightness_lm3530	0x7B //105 out of 125(cal value)
-#define min_brightness_lm3530	0x36
-
-
-
-
 #define I2C_BL_NAME "lm3530"
 
 #define BL_ON	1
@@ -111,39 +102,56 @@ static int lm3530_write_reg(struct i2c_client *client,
 	return ret;
 }
 
-static char mapped_value[146] = {
-	1 	,1 	,1 	,1 	,1 	,1 	,1 	,1 	,1 	,1 	,1 	,1 	,2 	,2 	,2,
-	2 	,2 	,2 	,2 	,2 	,2 	,2 	,2 	,3 	,3 	,3 	,3 	,3 	,3 	,3,
-	4 	,4 	,4 	,4 	,4 	,4 	,5 	,5 	,5 	,6 	,6 	,6 	,7	,7 	,7,
-	8 	,8 	,8 	,9 	,9 	,9 	,10	,10	,11	,11	,11	,12	,12	,13	,13,
-	14 	,14 ,15	,15	,16	,16	,16	,17	,17	,18	,18	,19	,19	,19	,20,
-	20 	,21 ,22	,22	,23	,24	,24	,25	,26	,26	,27	,28	,29	,30	,30 ,
-	31 	,32 ,33	,34	,34	,35	,36	,37	,38	,39	,40	,41	,41	,42	,43,
-	44 	,45 ,46	,47	,48	,49	,50	,51	,52	,53	,54	,56	,57	,58	,59,
-	60 	,61 ,62	,63	,65	,66	,67	,69	,70	,71	,72	,73	,74	,76	,78,
-	79 	,80 ,82	,83	,85	,87	,88	,90	,91	,92	,94 };
+static char mapped_value[256] = {
+	1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  /* 09 */
+	1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  /* 19 */
+	1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  /* 29 */
+	2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  /* 39 */
+	3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  /* 49 */
+	3,  3,  3,  3,  4,  4,  4,  4,  4,  4,  /* 59 */
+	4,  4,  4,  4,  5,  5,  5,  5,  5,  5,  /* 69 */
+	6,  6,  6,  6,  6,  7,  7,  7,  7,  7,  /* 79 */
+	8,  8,  8,  8,  8,  9,  9,  9,  9,  9,  /* 89 */
+	9,  10, 10, 11, 11, 11, 11, 11, 11, 11, /* 99 */
+	12, 12, 13, 13, 13, 13, 14, 14, 14, 15, /* 109 */
+	15, 15, 15, 16, 16, 16, 16, 16, 17, 17, /* 119 */
+	17, 17, 18, 18, 18, 19, 19, 19, 19, 19, /* 129 */
+	20, 20, 20, 20, 21, 21, 21, 22, 22, 22, /* 139 */
+	23, 23, 24, 24, 24, 25, 25, 26, 26, 26, /* 149 */
+	27, 27, 28, 28, 29, 29, 30, 30, 31, 31, /* 159 */
+	31, 32, 32, 33, 33, 34, 34, 35, 35, 35, /* 169 */
+	36, 36, 37, 38, 38, 39, 39, 40, 40, 40, /* 179 */
+	41, 41, 42, 42, 43, 43, 44, 44, 45, 46, /* 189 */
+	46, 47, 47, 48, 49, 49, 50, 50, 51, 51, /* 199 */
+	52, 52, 53, 54, 55, 56, 56, 57, 57, 58, /* 209 */
+	59, 59, 60, 60, 61, 61, 62, 63, 64, 65, /* 219 */
+	65, 66, 67, 68, 69, 69, 70, 70, 71, 72, /* 229 */
+	72, 73, 73, 74, 75, 76, 77, 78, 79, 79, /* 239 */
+	80, 81, 82, 83, 84, 85, 86, 87, 87, 89, /* 249 */
+	90, 90, 91, 91, 92, 94                  /* 255 */
+};
 
 static void lm3530_set_main_current_level(struct i2c_client *client, int level)
 {
 	struct lm3530_device *dev = i2c_get_clientdata(client);
 	int cal_value = 0;
+	int min_brightness = dev->min_brightness;
 	int max_brightness = dev->max_brightness;
+
 	dev->bl_dev->props.brightness = level;
 
 	mutex_lock(&main_lm3530_dev->bl_mutex);
 
 	if (level != 0) {
-		if (level > 0 && level < MIN_LEVEL)
-			cal_value = 0;
-		else if (level >= MIN_LEVEL && level <= MAX_LEVEL)
-		{
-			cal_value = mapped_value[level-MIN_LEVEL];
-		}
-		else if (level > MAX_LEVEL)
+		if (level <= min_brightness)
+			cal_value = min_brightness;
+		else if (level > min_brightness && level <= max_brightness)
+			cal_value = mapped_value[level];
+		else if (level > max_brightness)
 			cal_value = max_brightness;
 
-		lm3530_write_reg(client, 0xA0, cal_value);
-		printk(KERN_INFO "%s() :level is : %d, cal_value is :* %d\n", __func__, level, cal_value);
+        lm3530_write_reg(client, 0xA0, cal_value);
+        printk(KERN_INFO "%s() :level is : %d, cal_value is :* %d\n", __func__, level, cal_value);
 	}
 	else {
 		lm3530_write_reg(client, 0x10, 0x00);
@@ -152,7 +160,7 @@ static void lm3530_set_main_current_level(struct i2c_client *client, int level)
 
 	cur_main_lcd_level = cal_value;
 	cur_write_level    = level;
-	pr_info("write_value is : %d, cal_value is : %d\n",cur_write_level, cur_main_lcd_level);
+
 	mutex_unlock(&main_lm3530_dev->bl_mutex);
 }
 
@@ -200,8 +208,11 @@ void lm3530_backlight_off(struct early_suspend * h)
 
 void lm3530_lcd_backlight_set_level(int level)
 {
-	if (level > MAX_LEVEL)
-		level = MAX_LEVEL;
+	struct i2c_client *client = lm3530_i2c_client;
+	struct lm3530_device *dev = i2c_get_clientdata(client);
+
+	if (level > dev->max_brightness)
+		level = dev->max_brightness;
 
 	if (lm3530_i2c_client != NULL) {
 		if (level == 0)
@@ -233,6 +244,7 @@ static ssize_t lcd_backlight_show_level(struct device *dev,
 
 	r = snprintf(buf, PAGE_SIZE, "write_value is : %d, cal_value is : %d\n",
 			cur_write_level, cur_main_lcd_level);
+
 	return r;
 }
 
@@ -332,10 +344,11 @@ static int __devinit lm3530_probe(struct i2c_client *i2c_dev,
 
 	memset(&props, 0, sizeof(struct backlight_properties));
 	props.type = BACKLIGHT_RAW;
-	props.max_brightness = max_brightness_lm3530;
+	props.max_brightness = pdata->max_brightness;
+
 	bl_dev = backlight_device_register(I2C_BL_NAME, &i2c_dev->dev, NULL,
 			&lm3530_bl_ops, &props);
-	bl_dev->props.max_brightness = max_brightness_lm3530;
+	bl_dev->props.max_brightness = pdata->max_brightness;
 	bl_dev->props.brightness = pdata->default_brightness;
 	bl_dev->props.power = FB_BLANK_UNBLANK;
 

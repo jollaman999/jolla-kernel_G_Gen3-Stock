@@ -30,12 +30,12 @@
 #else
 #include <linux/mfd/pm8xxx/pm8921-charger.h>
 #endif
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 #include <linux/mfd/pm8xxx/pm8xxx-adc.h>
 #if defined (CONFIG_LGE_PM) || defined (CONFIG_LGE_PM_BATTERY_ID_CHECKER)
 #include <mach/board_lge.h>
 #endif
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 #define RCOMP_BL44JN	(0xB8)	/* Default Value for LGP970 Battery */
 #define RCOMP_BL53QH	(0x44)  /* Default Value for BL-53QH Battery */
 #define MONITOR_LEVEL	(2)
@@ -91,14 +91,14 @@ struct max17048_chip {
 	int orig_capacity;
 #endif
 	max17048_status status;	/* State Of max17048 */
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 	u8			starting_rcomp;
 	int			temp_co_hot;
 	int			temp_co_cold;
-/* END: hiro.kwon@lge.com 2011-12-22 */
-/* BEGIN: mansu.lee@lge.com 2012-01-16 Implement quickstart for Test Mode and SOC Accurency */
+/*                                   */
+/*                                                                                          */
 	//struct max17048_ocv_to_soc_data	*cal_data;
-/* END: mansu.lee@lge.com 2012-01-16 */
+/*                                   */
 };
 
 #if 0
@@ -136,14 +136,14 @@ static struct max17048_calibration_data with_charger[] = {
 };
 #endif
 
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt  [START] */
+/*                                                                           */
 extern int lge_battery_info;
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt [END] */
+/*                                                                        */
 static struct max17048_chip *reference;
 
-/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+/*                                                              */
 extern int lge_power_test_flag;
-/* 120307 mansu.lee@lge.com Implement */
+/*                                    */
 
 int need_to_quickstart;
 EXPORT_SYMBOL(need_to_quickstart);
@@ -200,7 +200,7 @@ static int max17048_reset(struct i2c_client *client)
 {
 	struct max17048_chip *chip = i2c_get_clientdata(client);
 #ifdef CONFIG_LGE_PM
-	/* mansu.lee@lge.com 2012-01-16 use quickstart instead of reset */
+	/*                                                              */
 	max17048_write_reg(client, MAX17048_MODE_REG, 0x4000);
 #else
 	max17048_write_reg(client, MAX17048_CMD_REG, 0x5400);
@@ -308,7 +308,7 @@ static int max17048_get_capacity_from_soc(int *orig_soc)
 	buf[0] = (reference->soc & 0x0000FF00) >> 8;
 	buf[1] = (reference->soc & 0x000000FF);
 
-/* START : dukyong.kim@lge.com 2012-03-17 Display All SOC 0 ~ 100% */
+/*                                                                 */
 	batt_soc = ((buf[0] * 256) + buf[1]) * 19531; /* 0.001953125 */
 	pr_info("%s: batt_soc is %d(0x%02x:0x%02x):%ld\n", __func__, (int)(batt_soc/10000000), buf[0], buf[1], batt_soc);
 
@@ -325,7 +325,7 @@ static int max17048_get_capacity_from_soc(int *orig_soc)
 	if(batt_soc > 100)
 		batt_soc = 100;
 
-/* END : dukyong.kim@lge.com 2012-03-17 Display All SOC 0 ~ 100% */
+/*                                                               */
 	return batt_soc;
 }
 #else
@@ -346,7 +346,7 @@ static int max17048_get_capacity_from_soc(void)
 	buf[0] = (reference->soc & 0x0000FF00) >> 8;
 	buf[1] = (reference->soc & 0x000000FF);
 
-/* START : dukyong.kim@lge.com 2012-03-17 Display All SOC 0 ~ 100% */
+/*                                                                 */
 	batt_soc = ((buf[0] * 256) + buf[1]) * 19531; /* 0.001953125 */
 	pr_info("%s: batt_soc is %d(0x%02x:0x%02x):%ld\n", __func__, (int)(batt_soc/10000000), buf[0], buf[1], batt_soc);
 
@@ -365,7 +365,7 @@ static int max17048_get_capacity_from_soc(void)
 	if(batt_soc > 100)
 		batt_soc = 100;
 
-/* END : dukyong.kim@lge.com 2012-03-17 Display All SOC 0 ~ 100% */
+/*                                                               */
 	return batt_soc;
 }
 #endif
@@ -374,7 +374,7 @@ static int max17048_get_capacity_from_soc(void)
 static int max17048_need_quickstart(int charging)
 {
 #if 0
-/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+/*                                                              */
 #ifdef CONFIG_BATTERY_MAX17048
 	struct max17048_ocv_to_soc_data *data;
 	int i = 0;
@@ -478,7 +478,7 @@ static int max17048_need_quickstart(int charging)
 	/* calculate diff */
 	expected = (vol - data[i].intercept) / data[i].gradient;
 #endif
-/* 120307 mansu.lee@lge.com */
+/*                          */
 
 	if (expected > 100)
 		expected = 100;
@@ -553,9 +553,9 @@ static int max17048_update(struct i2c_client *client)
 	int orig_cap;
 #endif
 
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 	max17048_set_rcomp_by_temperature();
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 
 #if 0 /*For Debug */
 {
@@ -695,7 +695,7 @@ static irqreturn_t max17048_interrupt_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+/*                                                              */
 void max17048_power_quickstart(void)
 {
 	int charging = 0;
@@ -722,7 +722,7 @@ void max17048_power_quickstart(void)
 		max17048_need_quickstart(charging);
 	}while(need_to_quickstart != 0);
 }
-/* 120307 mansu.lee@lge.com */
+/*                          */
 
 ssize_t max17048_show_volt(struct device *dev,
 			 struct device_attribute *attr,
@@ -732,7 +732,7 @@ ssize_t max17048_show_volt(struct device *dev,
 	if (reference == NULL)
 		return snprintf(buf, PAGE_SIZE, "ERROR\n");
 #ifdef CONFIG_MACH_APQ8064_ALTEV
-	/* 120317 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 	if(lge_power_test_flag == 1){
 		cancel_delayed_work(&reference->work);
 
@@ -749,10 +749,10 @@ ssize_t max17048_show_volt(struct device *dev,
 
 		return snprintf(buf, PAGE_SIZE, "%d\n", voltage);
 	}
-	/* 120317 mansu.lee@lge.com */
+	/*                          */
 #else
 #ifdef CONFIG_BATTERY_MAX17048
-	/* 120317 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 	if(lge_power_test_flag == 1){
 		cancel_delayed_work(&reference->work);
 
@@ -769,7 +769,7 @@ ssize_t max17048_show_volt(struct device *dev,
 
 		return snprintf(buf, PAGE_SIZE, "%d\n", voltage);
 	}
-	/* 120317 mansu.lee@lge.com */
+	/*                          */
 #endif
 #endif
 	return snprintf(buf, PAGE_SIZE, "%d\n", (reference->vcell * 5) >> 2);
@@ -810,7 +810,7 @@ ssize_t max17048_show_soc(struct device *dev,
 	if (reference == NULL)
 		return snprintf(buf, PAGE_SIZE, "ERROR\n");
 #ifdef CONFIG_MACH_APQ8064_ALTEV
-	/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 	if(lge_power_test_flag == 1){
 		cancel_delayed_work(&reference->work);
 
@@ -839,10 +839,10 @@ ssize_t max17048_show_soc(struct device *dev,
 
 		return snprintf(buf, PAGE_SIZE, "%d\n", level);
 	}
-	/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 #else
 #ifdef CONFIG_BATTERY_MAX17048
-	/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 	if(lge_power_test_flag == 1){
 		cancel_delayed_work(&reference->work);
 
@@ -871,14 +871,14 @@ ssize_t max17048_show_soc(struct device *dev,
 
 		return snprintf(buf, PAGE_SIZE, "%d\n", level);
 	}
-	/* 120307 mansu.lee@lge.com Implement Power test SOC quickstart */
+	/*                                                              */
 #endif
 #endif
-	/* START: mansu.lee@lge.com, 2011-12-23 change the level value */
+	/*                                                             */
 	/* accordig to battery SOC calculate method change. */
 
 	level = reference->capacity;
-	/* END: mansu.lee@lge.com */
+	/*                        */
 
 	return snprintf(buf, PAGE_SIZE, "%d\n", level);
 }
@@ -969,7 +969,7 @@ int max17048_do_calibrate(void)
 }
 EXPORT_SYMBOL(max17048_do_calibrate);
 
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 int max17048_set_rcomp_by_temperature(void)
 {
 	u8 startingRcomp = reference->starting_rcomp;
@@ -1024,7 +1024,7 @@ int max17048_set_rcomp_by_temperature(void)
 	}
 	return 0;
 }
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 
 EXPORT_SYMBOL(max17048_set_rcomp_by_temperature);
 int max17048_set_alert_level(int alert_level)
@@ -1033,7 +1033,7 @@ int max17048_set_alert_level(int alert_level)
 }
 EXPORT_SYMBOL(max17048_set_alert_level);
 /* End SYMBOLS */
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt  [START] */
+/*                                                                           */
 int max17048_set_operation(void)
 {
 	int ret = ENABLE_MAX17048_WORK;
@@ -1082,15 +1082,15 @@ int max17048_set_operation(void)
 	return ret;
 
 }
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt [END] */
+/*                                                                        */
 
 static int max17048_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)
 {
 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 	struct max17048_platform_data *pdata = client->dev.platform_data;
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 	struct max17048_chip *chip;
 	int ret = 0;
 	u8 values[4];
@@ -1207,15 +1207,15 @@ static int max17048_probe(struct i2c_client *client,
 	chip->voltage = 4350;
 	chip->capacity = 100;
 	chip->config = 0x971C;
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 	chip->starting_rcomp = pdata->starting_rcomp;
 	chip->temp_co_hot = pdata->temp_co_hot;
 	chip->temp_co_cold = pdata->temp_co_cold;
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 
-/* BEGIN: mansu.lee@lge.com 2012-01-16 Implement Quickstart for Accurency and Test Mode*/
+/*                                                                                     */
 	//chip->cal_data = pdata->soc_cal_data;
-/* END: mansu.lee@lge.com 2012-01-16 */
+/*                                   */
 
 	INIT_DELAYED_WORK_DEFERRABLE(&chip->work, max17048_work);
 #if 0 /* D1L does not use alert_work */
@@ -1234,14 +1234,14 @@ static int max17048_probe(struct i2c_client *client,
 	// RCOMP and Low Battery SOC setting
 	//max17048_write_reg(client, 0x0C, 0x47);
 
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt  [START] */
+/*                                                                           */
 	ret = max17048_set_operation();
 	if(!ret)
 	{
 		pr_err("%s: battery is not present : %d\n", __func__, ret);
 		return ret;
 	}
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt [END] */
+/*                                                                        */
 
 	if (need_to_quickstart == -1) {
 		max17048_quickstart(client);
@@ -1309,18 +1309,18 @@ static int max17048_resume(struct i2c_client *client)
 	int ret = 0;
 
 	printk("%s\n", __func__);
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt  [START] */
+/*                                                                           */
 	ret = max17048_set_operation();
 	if(!ret)
 	{
 		pr_err("%s: battery is not present or not valid battery : %d\n", __func__, ret);
 		return ret;
 	}
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt [END] */
+/*                                                                        */
 
 	schedule_delayed_work(&chip->work, HZ/2);
 	client->dev.power.power_state = PMSG_ON;
-	/* mansu.lee@lge.com 2011-12-28 refresh config reg values */
+	/*                                                        */
 	max17048_read_config(client);
 	max17048_clear_interrupt(client);
 	return 0;

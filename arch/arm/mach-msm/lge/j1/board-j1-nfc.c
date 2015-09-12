@@ -20,24 +20,24 @@
 #include "devices.h"
 //#include CONFIG_BOARD_HEADER_FILE
 
-/* ehee.lee@lge.com */
+/*                  */
 #include "board-j1.h"
 #include "board-8064.h"
-/* ehee.lee@lge.com */
+/*                  */
 
 #if defined(CONFIG_LGE_NFC)
 #include <linux/nfc/pn544_lge.h>
 
-/* ehee.lee@lge.com */
+/*                  */
 #define I2C_SURF 1
 #define I2C_FFA  (1 << 1)
 #define I2C_RUMI (1 << 2)
 #define I2C_SIM  (1 << 3)
 #define I2C_LIQUID (1 << 4)
-/* LGE_UPDATE_S. 02242012. jihyun.lee@lge.com
-   Add mach_mask for I2C */
+/*                                           
+                         */
 #define I2C_J1V (1 << 5)
-/* LGE_UPDATE_E */
+/*              */
 
 #define GPIO_VEN 55
 
@@ -49,7 +49,7 @@ struct i2c_registry {
 };
 
 typedef void (gpio_i2c_init_func_t)(int bus_num);
-/* ehee.lee@lge.com */
+/*                  */
 
 static struct pn544_i2c_platform_data pn544_i2c_platform_data[] = {
 	{

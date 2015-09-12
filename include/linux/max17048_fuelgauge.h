@@ -22,33 +22,33 @@ struct max17048g_platform_data {
 	unsigned int test_data;
 	unsigned int (*test_func)(void);
 };
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt  [START] */
+/*                                                                           */
 enum {
 	DISABLE_MAX17048_WORK,
 	ENABLE_MAX17048_WORK,
 };
-/* 20111222, hiro.kwon@lge.com, fuel gauge not working without batt [END] */
+/*                                                                        */
 
-/* BEGIN: mansu.lee@lge.com 2012-01-16 Implement Quickstart for Test Mode and SOC Accurency */
+/*                                                                                          */
 struct max17048_ocv_to_soc_data {
 	int voltage;
 	int soc;
 };
-/* END: mansu.lee@lge.com 2012-01-16 */
+/*                                   */
 
-/* BEGIN: hiro.kwon@lge.com 2011-12-22 RCOMP update when the temperature of the cell changes */
+/*                                                                                           */
 struct max17048_platform_data {
 	u8			starting_rcomp;
 	int			temp_co_hot;
 	int			temp_co_cold;
-	/* START: mansu.lee@lge.com 2011-01-16 Implement Quickstart for Test Mode and SOC Accurency */
+	/*                                                                                          */
 	struct max17048_ocv_to_soc_data		*soc_cal_data;
-	/* END: mansu.lee@lge.com 2011-01-16 */
+	/*                                   */
 };
 #ifdef CONFIG_BATTERY_MAX17048
 extern int __max17048_get_orig_capacity(void);
 #endif
-/* END: hiro.kwon@lge.com 2011-12-22 */
+/*                                   */
 extern int __max17048_get_capacity(void);
 extern int __max17048_get_voltage(void);
 extern int max17048_do_calibrate(void);

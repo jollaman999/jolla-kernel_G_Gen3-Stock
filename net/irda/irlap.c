@@ -949,11 +949,11 @@ void irlap_apply_default_connection_parameters(struct irlap_cb *self)
 	IRDA_ASSERT(self != NULL, return;);
 	IRDA_ASSERT(self->magic == LAP_MAGIC, return;);
 
-/* LGE_CHANGE
- * Refering to other phones,
- * we got to know that the default number of xbofs is 10, not 12.
- * <for IrDA authentication>
- * 2012-04-06, chaeuk.lee@lge.com
+/*           
+                            
+                                                                 
+                            
+                                 
  */
 #ifdef CONFIG_LGE_IRDA
 	/* xbofs : Default value in NDM */
@@ -963,7 +963,7 @@ void irlap_apply_default_connection_parameters(struct irlap_cb *self)
 	/* xbofs : Default value in NDM */
 	self->next_bofs   = 12;
 	self->bofs_count  = 12;
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 
 	/* NDM Speed is 9600 */
 	irlap_change_speed(self, 9600, TRUE);
@@ -997,11 +997,11 @@ void irlap_apply_default_connection_parameters(struct irlap_cb *self)
 	self->qos_rx.data_size.value = 64;
 	self->qos_tx.window_size.value = 1;
 	self->qos_rx.window_size.value = 1;
-/* LGE_CHANGE
- * Refering to other phones,
- * we got to know that the default number of xbofs is 10, not 12.
- * <for IrDA authentication>
- * 2012-04-06, chaeuk.lee@lge.com
+/*           
+                            
+                                                                 
+                            
+                                 
  */
 #ifdef CONFIG_LGE_IRDA
 	self->qos_tx.additional_bofs.value = 10;
@@ -1009,7 +1009,7 @@ void irlap_apply_default_connection_parameters(struct irlap_cb *self)
 #else
 	self->qos_tx.additional_bofs.value = 12;
 	self->qos_rx.additional_bofs.value = 12;
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 	self->qos_tx.link_disc_time.value = 0;
 	self->qos_rx.link_disc_time.value = 0;
 
@@ -1071,15 +1071,15 @@ void irlap_apply_connection_parameters(struct irlap_cb *self, int now)
 	 * Therefore, it must be lower or equal than our *OWN* max turn around.
 	 * Jean II */
 #ifdef CONFIG_LGE_IRDA
-	/* LGE_CHANGE
-	 * The default qos_tx.max_turn_time.value is 500ms	and self->poll_timeout is 50.
-	 * It is slow.
-	 * We just need over the 10ms(qos_tx.max_turn_time.value).
-	 * So, we set  self->poll_timeout to 3.
-	 * This is mean qos_tx.max_turn_time.value is around 30ms
-	 * Therefore, it is faster than old.
-	 * 2012-03-12, changyong.yi@lge.com
-	 */
+	/*           
+                                                                                 
+               
+                                                           
+                                        
+                                                          
+                                     
+                                    
+  */
 	self->poll_timeout = 3;
 #else
 	self->poll_timeout = self->qos_tx.max_turn_time.value * HZ / 1000;
@@ -1270,9 +1270,9 @@ const struct file_operations irlap_seq_fops = {
 	.release	= seq_release_private,
 };
 
-/* LGE_CHANGE
- * refer to irproc.c file
- * 2012-02-08, chaeuk.lee@lge.com
+/*           
+                         
+                                 
  */
 #ifdef CONFIG_LGE_IRDA
 static void *line_check_seq_start(struct seq_file *seq, loff_t *pos)
@@ -1339,5 +1339,5 @@ const struct file_operations line_check_seq_fops = {
 	.llseek         = seq_lseek,
 	.release	= seq_release_private,
 };
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 #endif /* CONFIG_PROC_FS */

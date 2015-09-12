@@ -11,14 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-/*=======================================================================================
+/*                                                                                       
 
-                   		 WARNING !!
+                                
 
- If you modify this file, it may give rise to serious Factory mass-production problem,
- Sure please contact us security team. [lg-security@lge.com]
+                                                                                      
+                                                            
 
-=======================================================================================*/
+                                                                                       */
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/device.h>
@@ -32,7 +32,7 @@
 #include <mach/board_lge.h>
 #include <mach/scm.h>
 
-#define LGE_QFPROM_INTERFACE_NAME "lge-apq8064-qfprom"
+#define LGE_QFPROM_INTERFACE_NAME "lge-qfprom"
 /* service ID inside tzbsp */
 #define QFPROM_SVC_ID           8
 #define TZBSP_SVC_OEM           254

@@ -260,8 +260,8 @@ static u8 t82_config_s[] = { MXT_SPT_NOISESUPEXTENSION_T82,
 
 #ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
 static u8 t93_config_s[] = { MXT_PROCI_TOUCH_SEQUENCE_LOGGER_T93,
-	0x01, 0x00, 0x00, 0xFF, 0x0F, 0x00, 0x00, 0xFF, 0x0F, 0xFE,
-	0x01, 0xA0, 0x16, 0x00, 0x3F, 0x00, 0x3F, 0x02
+	0x01, 0x00, 0x00, 0xFF, 0x0F, 0x00, 0x00, 0xFF, 0x0F, 0xFA,
+	0x00, 0xFF, 0x0F, 0x00, 0x14, 0x00, 0x32, 0x02
 };
 #endif
 static u8 end_config_s[] = { MXT_RESERVED_T255 };
@@ -480,20 +480,20 @@ static u8 t9_sus_config[] = { MXT_TOUCH_MULTI_T9,
 	11,  /* The number of register configuration */
 #endif
 	0, 129,
-	1, 7,
-	2, 11,
-	3, 13,
-	4, 22,
+	1, 2,
+	2, 2,
+	3, 23,
+	4, 40,
 	7, 60,
 #ifdef USE_FW_11AA
 	11, 150,	/* Movement hysteresis, initial */
 	12, 100,	/* Movement hysteresis, next */
 	14, 2,		/* Number of touch */
 #endif
-	18, 171,
-	19, 07,
+	18, 02,
+	19, 10,
 	20, 255,
-	21, 7,
+	21, 15,
 	30, 253,
 #ifdef USE_FW_11AA
 	35, 128, /* 0x80, CFG */

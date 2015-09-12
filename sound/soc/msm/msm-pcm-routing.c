@@ -1873,7 +1873,7 @@ static const struct snd_kcontrol_new tx_voice_stub_mixer_controls[] = {
 	SOC_SINGLE_EXT("AUX_PCM_UL_TX", MSM_BACKEND_DAI_AUXPCM_TX,
 	MSM_FRONTEND_DAI_VOICE_STUB, 1, 0, msm_routing_get_voice_stub_mixer,
 	msm_routing_put_voice_stub_mixer),
-#endif/*CONFIG_LGE_AUDIO*/
+#endif/*                */
 	SOC_SINGLE_EXT("SLIM_1_TX", MSM_BACKEND_DAI_SLIMBUS_1_TX,
 	MSM_FRONTEND_DAI_VOICE_STUB, 1, 0, msm_routing_get_voice_stub_mixer,
 	msm_routing_put_voice_stub_mixer),
@@ -1974,7 +1974,7 @@ static const struct snd_kcontrol_new auxpcm_rx_port_mixer_controls[] = {
 	SOC_SINGLE_EXT("SLIM_1_TX", MSM_BACKEND_DAI_AUXPCM_RX,
 	MSM_BACKEND_DAI_SLIMBUS_1_TX, 1, 0, msm_routing_get_port_mixer,
 	msm_routing_put_port_mixer),
-#endif/*CONFIG_LGE_AUDIO*/
+#endif/*                */
 };
 
 static const struct snd_kcontrol_new sbus_1_rx_port_mixer_controls[] = {
@@ -1985,7 +1985,7 @@ static const struct snd_kcontrol_new sbus_1_rx_port_mixer_controls[] = {
 	SOC_SINGLE_EXT("AUX_PCM_UL_TX", MSM_BACKEND_DAI_SLIMBUS_1_RX,
 	MSM_BACKEND_DAI_AUXPCM_TX, 1, 0, msm_routing_get_port_mixer,
 	msm_routing_put_port_mixer),
-#endif/*CONFIG_LGE_AUDIO */
+#endif/*                 */
 	SOC_SINGLE_EXT("AFE_PCM_TX", MSM_BACKEND_DAI_SLIMBUS_1_RX,
 	MSM_BACKEND_DAI_AFE_PCM_TX, 1, 0, msm_routing_get_port_mixer,
 	msm_routing_put_port_mixer),
@@ -1998,7 +1998,7 @@ static const struct snd_kcontrol_new sbus_3_rx_port_mixer_controls[] = {
 #ifdef CONFIG_LGE_AUDIO
 	SOC_SINGLE_EXT("AUX_PCM_DL_RX", MSM_BACKEND_DAI_SLIMBUS_3_RX,
 	MSM_BACKEND_DAI_AUXPCM_RX, 1, 0, msm_routing_get_port_mixer,
-#endif/*CONFIG_LGE_AUDIO */
+#endif/*                 */
 	msm_routing_put_port_mixer),
 	SOC_SINGLE_EXT("MI2S_TX", MSM_BACKEND_DAI_SLIMBUS_3_RX,
 	MSM_BACKEND_DAI_MI2S_TX, 1, 0, msm_routing_get_port_mixer,

@@ -49,7 +49,7 @@ static struct gpiomux_setting oneseg_int_pin = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 
 #ifdef CONFIG_SWITCH_MAX1462X
 static struct gpiomux_setting ear_key_int = {
@@ -378,7 +378,7 @@ struct msm_gpiomux_config vcap_configs[] = {
 	},
 };
 #endif
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 static struct gpiomux_setting gpio_i2c_config = {
 	.func = GPIOMUX_FUNC_1,
@@ -471,7 +471,7 @@ static struct gpiomux_setting gsbi3_felica_active = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif /* CONFIG_LGE_FELICA */
+#endif /*                   */
 
 #if defined(CONFIG_LGE_FELICA_NFC)
 static struct gpiomux_setting felica_pon_cfg = {
@@ -916,7 +916,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &gpio_spi_cs_config,
 		},
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 	{
 		.gpio	   = 51,		/* GSBI5 QUP 1SEG SPI_MOSI */
@@ -964,7 +964,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &oneseg_ctrl_pin,
 		},
 	},
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 #if !defined(CONFIG_LGE_IRRC)
 	{
 		.gpio      = 82,	/* GSBI7 UART2 TX */
@@ -1353,7 +1353,7 @@ static struct gpiomux_setting ap2mdm_wakeup = {
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
-// LGE_START // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334
+//                                                                        
 static struct msm_gpiomux_config mdm_configs_with_bcm4334[] __initdata = {
 	/* AP2MDM_STATUS */
 	{
@@ -1406,7 +1406,7 @@ static struct msm_gpiomux_config mdm_configs_with_bcm4334[] __initdata = {
 		}
 	},
 };
-// LGE_END // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334
+//                                                                      
 
 
 static struct msm_gpiomux_config mdm_configs[] __initdata = {
@@ -1696,7 +1696,7 @@ static struct msm_gpiomux_config apq8064_mxt_configs[] __initdata = {
 };
 #endif
 
-//[AUDIO_BSP]_START, 20121124, junday.lee@lge.com, for bt sco call
+//                                                                
 #if defined(CONFIG_LGE_BLUESLEEP)
 
 static struct gpiomux_setting bt_pcm = {
@@ -1741,7 +1741,7 @@ static struct msm_gpiomux_config bt_pcm_configs[] __initdata = {
 	}
 };
 #endif
-//[AUDIO_BSP]_END, 20121124, junday.lee@lge.com, for bt sco call
+//                                                              
 
 #ifndef CONFIG_MMC_MSM_SDC4_SUPPORT
 static struct msm_gpiomux_config wcnss_5wire_interface[] = {
@@ -1783,8 +1783,8 @@ static struct msm_gpiomux_config wcnss_5wire_interface[] = {
 };
 #endif
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct gpiomux_setting bt_host_wakeup_active_cfg = {
@@ -1832,9 +1832,9 @@ static struct msm_gpiomux_config msm8960_bt_wakeup_configs[] __initdata = {
 		},
 	},
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+#endif //                     
+//                                           
+//                                                                   
 
 
 #if !defined(CONFIG_MACH_LGE)
@@ -2263,12 +2263,12 @@ void __init apq8064_init_gpiomux(void)
 			msm_gpiomux_install(mdm_i2s_configs,
 					ARRAY_SIZE(mdm_i2s_configs));
 		else
-			// LGE_START // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334			
+			//                                                                           
 			if (lge_get_board_revno() >= HW_REV_C)
 				msm_gpiomux_install(mdm_configs_with_bcm4334,
 					ARRAY_SIZE(mdm_configs_with_bcm4334));
 			else
-			// LGE_END // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334	
+			//                                                                       
 			msm_gpiomux_install(mdm_configs,
 					ARRAY_SIZE(mdm_configs));
 	}
@@ -2283,12 +2283,12 @@ void __init apq8064_init_gpiomux(void)
 		}
 	}
 #else
-// LGE_START // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334			
+//                                                                           
 	if (lge_get_board_revno() >= HW_REV_C)
 		msm_gpiomux_install(mdm_configs_with_bcm4334,
 			ARRAY_SIZE(mdm_configs_with_bcm4334));
 	else
-// LGE_END // featuring GPIO(MDM2AP_HSIC_READY) confiuration for BCM4334	
+//                                                                       
 	msm_gpiomux_install(mdm_configs,
 			ARRAY_SIZE(mdm_configs));
 #endif
@@ -2333,10 +2333,10 @@ void __init apq8064_init_gpiomux(void)
 			ARRAY_SIZE(apq8064_sdc3_configs));
 
 #if defined(CONFIG_LGE_BLUESLEEP)
-//[AUDIO_BSP]_START, 20121124, junday.lee@lge.com, for bt sco call
+//                                                                
 	msm_gpiomux_install(bt_pcm_configs,
 		    ARRAY_SIZE(bt_pcm_configs));
-//[AUDIO_BSP]_END, 20121124, junday.lee@lge.com, for bt sco call
+//                                                              
     msm_gpiomux_install(mpq8064_uartdm_configs,
 	        ARRAY_SIZE(mpq8064_uartdm_configs));
 	msm_gpiomux_install(msm8960_bt_host_wakeup_configs,

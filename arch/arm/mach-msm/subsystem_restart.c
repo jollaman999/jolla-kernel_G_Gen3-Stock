@@ -567,12 +567,12 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		__subsystem_restart_dev(dev);
 		break;
 	case RESET_SOC:
-		// 2013.08.01 real-wifi@lge.com[wo0gi] QCT patch : SSR(SubSystem Reset 3) [START]
+		//                                                                               
 		if (strncmp(name, "wcnss", 5) == 0) {
 			__subsystem_restart_dev(dev);
 			break;
 		}
-		// 2013.08.01 real-wifi@lge.com[wo0gi] QCT patch : SSR(SubSystem Reset 3) [END]
+		//                                                                             
 #if defined(CONFIG_LGE_CRASH_HANDLER)
 		set_ssr_magic_number(name);
 		ssr_magic_number = get_ssr_magic_number();
@@ -613,7 +613,7 @@ found:
 }
 EXPORT_SYMBOL(subsystem_restart);
 
-/* [LGE_CHANGE_S] LGE_MODEM_RESET, 2014-02-10, donggee.im@lge.com */
+/*                                                                */
 int subsys_modem_restart(void)
 {
 	int ret;
@@ -627,7 +627,7 @@ int subsys_modem_restart(void)
 	return ret;
 }
 EXPORT_SYMBOL(subsys_modem_restart);
-/* [LGE_CHANGE_E] LGE_MODEM_RESET, 2014-02-10, donggee.im@lge.com */
+/*                                                                */
 
 struct subsys_device *subsys_register(struct subsys_desc *desc)
 {

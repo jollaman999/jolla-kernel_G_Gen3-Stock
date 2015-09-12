@@ -989,7 +989,7 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 				/* Add the current time stamp */
 				char tbuf[50], *tp;
 				unsigned tlen;
-				/* LGE_S jinyoun.park@lge.com 20111027 Change kernel timestamp resolution from cpu time to current clock */
+				/*                                                                                                       */
 #ifdef CONFIG_LGE_USE_CPU_CLOCK_TIMESTAMP
 				unsigned long long t;
 				unsigned long nanosec_rem;
@@ -1021,7 +1021,7 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 						tmresult.tm_sec,
 						(unsigned long) time.tv_nsec/1000000);
 #endif
-				/* LGE_E jinyoun.park@lge.com 20111027 Change kernel timestamp resolution from cpu time to current clock */
+				/*                                                                                                       */
 				for (tp = tbuf; tp < tbuf + tlen; tp++)
 					emit_log_char(*tp);
 				printed_len += tlen;

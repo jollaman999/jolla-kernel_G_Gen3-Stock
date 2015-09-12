@@ -50,14 +50,14 @@ void connect_bridge(int process_cable, int index)
 {
 	int err;
 
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 			if ((process_cable) && (driver->logging_mode == DM_DEV_MODE)) {
 				printk(KERN_DEBUG "diag: USB connected in DM_DEV_MODE\n");
 				diag_bridge[index].usb_connected = 1;
 			}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 
 #ifdef CONFIG_LGE_DM_APP
@@ -65,7 +65,7 @@ void connect_bridge(int process_cable, int index)
 		printk(KERN_DEBUG "diag: USB connected in DM_APP_MODE\n");
 		diag_bridge[index].usb_connected = 1;
 	}
-#endif /*CONFIG_LGE_DM_APP*/
+#endif /*                 */
 
 
 	mutex_lock(&diag_bridge[index].bridge_mutex);
@@ -137,7 +137,7 @@ int diagfwd_disconnect_bridge(int process_cable)
 {
 	int i;
 	pr_debug("diag: In %s, process_cable: %d\n", __func__, process_cable);
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 		if (driver->logging_mode == DM_DEV_MODE) {
 			for (i = 0; i < MAX_BRIDGES; i++) {
@@ -149,8 +149,8 @@ int diagfwd_disconnect_bridge(int process_cable)
 				}
 			return 0;
 		}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 
 #ifdef CONFIG_LGE_DM_APP
@@ -164,7 +164,7 @@ int diagfwd_disconnect_bridge(int process_cable)
 					}
 				return 0;
 			}
-#endif /*CONFIG_LGE_DM_APP*/
+#endif /*                 */
 
 
 	for (i = 0; i < MAX_BRIDGES; i++) {
@@ -318,15 +318,15 @@ void diagfwd_bridge_init(int index)
 		strlcpy(name, "hsic_2", sizeof(name));
 	} else if (index == SMUX) {
 		strlcpy(name, "smux", sizeof(name));
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #if defined(CONFIG_LGE_DM_DEV) || defined(CONFIG_LGE_DM_APP)
 
 	} else if (index == HSIC_3) {
 		strlcpy(name, "hsic_3", sizeof(name));
 	} else if (index == HSIC_4) {
 		strlcpy(name, "hsic_4", sizeof(name));
-#endif /* CONFIG_LGE_DM_DEV */
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                   */
+//                                                                           
 	} else {
 		pr_err("diag: incorrect bridge init, instance: %d\n", index);
 		return;

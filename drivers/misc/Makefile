@@ -65,6 +65,8 @@ obj-$(CONFIG_HAPTIC_ISA1200)		+= isa1200.o
 obj-$(CONFIG_PMIC8058_PWM) += pmic8058-pwm.o
 ifeq ($(CONFIG_MACH_APQ8064_AWIFI),y)
 obj-$(CONFIG_PMIC8XXX_VIBRATOR) += pm8xxx-vibrator_lge.o
+else ifeq ($(CONFIG_MACH_APQ8064_ALTEV),y)
+obj-$(CONFIG_PMIC8XXX_VIBRATOR) += pm8xxx-vibrator_lge.o
 else
 obj-$(CONFIG_PMIC8XXX_VIBRATOR) += pm8xxx-vibrator.o
 endif
@@ -78,6 +80,8 @@ obj-$(CONFIG_PMIC8058_XOADC) += pmic8058-xoadc.o
 obj-$(CONFIG_QSEECOM) += qseecom.o
 obj-$(CONFIG_QFP_FUSE) += qfp_fuse.o
 ifeq ($(CONFIG_MACH_APQ8064_AWIFI),y)
+obj-y += tspdrv_awifi/
+else ifeq ($(CONFIG_MACH_APQ8064_ALTEV),y)
 obj-y += tspdrv_awifi/
 else
 obj-y += tspdrv/

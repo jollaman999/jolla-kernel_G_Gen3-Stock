@@ -161,4 +161,4 @@ MODULE_DESCRIPTION("lgps3 rfkill");
 MODULE_AUTHOR("Nick Pelly <npelly@google.com>");
 MODULE_LICENSE("GPL");
 
-#endif // CONFIG_LGE_BLUESLEEP
+#endif //                     

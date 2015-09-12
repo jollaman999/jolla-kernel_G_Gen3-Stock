@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2012, LGE Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,7 +18,6 @@
 #include <mach/board.h>
 #include <mach/msm_bus_board.h>
 #include <mach/gpiomux.h>
-#include <mach/socinfo.h>
 #include <media/msm_camera.h>
 #include "devices.h"
 #include "board-gk.h"
@@ -103,8 +103,8 @@ static struct gpiomux_setting cam_settings[] = {
 };
 
 static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
-#if !defined(CONFIG_MACH_APQ8064_GKKT) && !defined(CONFIG_MACH_APQ8064_GKSK) && !defined(CONFIG_MACH_APQ8064_GKU) && !defined(CONFIG_MACH_APQ8064_GKATT) && !defined(CONFIG_MACH_APQ8064_GKGLOBAL) && !defined(CONFIG_MACH_APQ8064_GVKT)
+/*                                                                                                                      */
+#if !defined(CONFIG_MACH_APQ8064_GVKT)
 	{
 		.gpio = GPIO_CAM_FLASH_EN, /* 7 */
 		.settings = {
@@ -113,7 +113,7 @@ static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 		},
 	},
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 	{
 		.gpio = GPIO_CAM_MCLK0, /* 5 */
 		.settings = {
@@ -169,10 +169,10 @@ static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 		},
 	},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_gpiomux_config apq8064_cam_common_configs_revE[] = {
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
-#if !defined(CONFIG_MACH_APQ8064_GKKT) && !defined(CONFIG_MACH_APQ8064_GKSK) && !defined(CONFIG_MACH_APQ8064_GKU) && !defined(CONFIG_MACH_APQ8064_GKATT) && !defined(CONFIG_MACH_APQ8064_GKGLOBAL) && !defined(CONFIG_MACH_APQ8064_GVKT)
+/*                                                                                                                      */
+#if !defined(CONFIG_MACH_APQ8064_GVKT)
 	{
 		.gpio = GPIO_CAM_FLASH_EN, /* 7 */
 		.settings = {
@@ -181,7 +181,7 @@ static struct msm_gpiomux_config apq8064_cam_common_configs_revE[] = {
 		},
 	},
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 	{
 		.gpio = GPIO_CAM_MCLK0, /* 5 */
 		.settings = {
@@ -239,9 +239,9 @@ static struct msm_gpiomux_config apq8064_cam_common_configs_revE[] = {
 		},
 	},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
-/* LGE_CHANGE_S, For GV/GK 13M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                              */
 #if defined(CONFIG_CE1702)
 static struct msm_gpiomux_config apq8064_cam_2d_configs[] = {
 };
@@ -271,8 +271,8 @@ static struct msm_bus_vectors cam_preview_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 27648000,
-		.ib  = 2656000000UL,
+		.ab  = 194735543,//                                                                                                                                        
+		.ib  = 292103315,//                                                                                                                                        
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -292,8 +292,8 @@ static struct msm_bus_vectors cam_video_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 600000000,
-		.ib  = 2656000000UL,
+		.ab  = 274406400,//                                                                                                                                         
+		.ib  = 561807360,
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -313,8 +313,8 @@ static struct msm_bus_vectors cam_snapshot_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 600000000,
-		.ib  = 2656000000UL,
+		.ab  = 274423680,
+		.ib  = 1097694720,
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -334,8 +334,8 @@ static struct msm_bus_vectors cam_zsl_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 600000000,
-		.ib  = 2656000000UL,
+		.ab  = 302071680,
+		.ib  = 1812430080,
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -376,8 +376,8 @@ static struct msm_bus_vectors cam_dual_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 600000000,
-		.ib  = 2656000000UL,
+		.ab  = 348192000,
+		.ib  = 1208286720,
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -402,27 +402,6 @@ static struct msm_bus_vectors cam_dual_vectors[] = {
 		.dst = MSM_BUS_SLAVE_MM_IMEM,
 		.ab  = 43200000,
 		.ib  = 69120000,
-	},
-};
-
-static struct msm_bus_vectors cam_low_power_vectors[] = {
-	{
-		.src = MSM_BUS_MASTER_VFE,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 1451520,
-		.ib  = 3870720,
-	},
-	{
-		.src = MSM_BUS_MASTER_VPE,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 0,
-		.ib  = 0,
-	},
-	{
-		.src = MSM_BUS_MASTER_JPEG_ENC,
-		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 0,
-		.ib  = 0,
 	},
 };
 
@@ -454,10 +433,6 @@ static struct msm_bus_paths cam_bus_client_config[] = {
 	{
 		ARRAY_SIZE(cam_dual_vectors),
 		cam_dual_vectors,
-	},
-	{
-		ARRAY_SIZE(cam_low_power_vectors),
-		cam_low_power_vectors,
 	},
 };
 
@@ -501,11 +476,11 @@ static struct gpio apq8064_back_cam_gpio[] = {
 	{GPIO_CAM_MCLK0, GPIOF_DIR_IN, "CAMIF_MCLK"},
 	{GPIO_CAM1_RST_N, GPIOF_DIR_OUT, "CAM_RESET"},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct gpio apq8064_back_cam_gpio_revE[] = {
 	{GPIO_CAM_MCLK0, GPIOF_DIR_IN, "CAMIF_MCLK"},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 static struct msm_gpio_set_tbl apq8064_back_cam_gpio_set_tbl[] = {
 	{GPIO_CAM1_RST_N, GPIOF_OUT_INIT_LOW, 10000},
@@ -522,7 +497,7 @@ static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf = {
 	.cam_gpio_set_tbl = apq8064_back_cam_gpio_set_tbl,
 	.cam_gpio_set_tbl_size = ARRAY_SIZE(apq8064_back_cam_gpio_set_tbl),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf_revE = {
 	.cam_gpiomux_conf_tbl = apq8064_cam_2d_configs,
 	.cam_gpiomux_conf_tbl_size = ARRAY_SIZE(apq8064_cam_2d_configs),
@@ -531,7 +506,7 @@ static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf_revE = {
 	.cam_gpio_req_tbl = apq8064_back_cam_gpio_revE,
 	.cam_gpio_req_tbl_size = ARRAY_SIZE(apq8064_back_cam_gpio_revE),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 static struct msm_camera_i2c_conf apq8064_back_cam_i2c_conf = {
 	.use_i2c_mux = 1,
@@ -557,7 +532,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_ce1702 = {
 	.i2c_conf = &apq8064_back_cam_i2c_conf,
 	.csi_lane_params = &ce1702_csi_lane_params,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_sensor_platform_info sensor_board_info_ce1702_revE = {
 	.mount_angle	= 90,
 	.cam_vreg = apq_8064_back_cam_vreg,
@@ -566,7 +541,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_ce1702_revE = {
 	.i2c_conf = &apq8064_back_cam_i2c_conf,
 	.csi_lane_params = &ce1702_csi_lane_params,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 /*
 static struct i2c_board_info ce1702_eeprom_i2c_info = {
@@ -587,14 +562,14 @@ static struct msm_camera_sensor_info msm_camera_sensor_ce1702_data = {
 	.camera_type = BACK_CAMERA_2D,
 	.sensor_type = YUV_SENSOR,
 #ifdef CONFIG_CE1702_ACT
-	// [LGE_CHANGE_TEST_START] 20120503 jinsool.lee@lge.com
+	//                                                     
 	// .actuator_info = &ce1702_actuator_info,
 	.actuator_info = &msm_act_main_cam_0_info,
-	// [LGE_CHANGE_TEST_END] 20120503 jinsool.lee@lge.com
+	//                                                   
 #endif
 //	.eeprom_info = &ce1702_eeprom_info,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_sensor_info msm_camera_sensor_ce1702_data_revE = {
 	.sensor_name	= "ce1702",
 	.pdata	= &msm_camera_csi_device_data[0],
@@ -604,17 +579,17 @@ static struct msm_camera_sensor_info msm_camera_sensor_ce1702_data_revE = {
 	.camera_type = BACK_CAMERA_2D,
 	.sensor_type = YUV_SENSOR,
 #ifdef CONFIG_CE1702_ACT
-	// [LGE_CHANGE_TEST_START] 20120503 jinsool.lee@lge.com
+	//                                                     
 	// .actuator_info = &ce1702_actuator_info,
 	.actuator_info = &msm_act_main_cam_0_info,
-	// [LGE_CHANGE_TEST_END] 20120503 jinsool.lee@lge.com
+	//                                                   
 #endif
 //	.eeprom_info = &ce1702_eeprom_info,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M camera driver, 2012.08.15, youngil.yun@lge.com */
+/*                                                                            */
 
 #if defined(CONFIG_IMX111) || defined(CONFIG_IMX091)
 static struct msm_gpiomux_config apq8064_cam_2d_configs[] = {
@@ -785,7 +760,7 @@ static struct camera_vreg_t apq_8064_front_cam_vreg[] = {
 	{"cam2_vdig", REG_LDO, 1200000, 1200000, 105000, 0},
 };
 #endif
-/* LGE_CHANGE_S, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #if defined (CONFIG_IMX132)
 static struct camera_vreg_t apq_8064_front_cam_vreg[] = {
 	{"cam2_vio", REG_LDO, 1800000, 1800000, 85600, 0},
@@ -793,7 +768,7 @@ static struct camera_vreg_t apq_8064_front_cam_vreg[] = {
 //	{"cam2_vana", REG_LDO, 2800000, 2850000, 85600},
 };
 #endif
-/* LGE_CHANGE_E, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 
 #if defined(CONFIG_IMX111) || defined(CONFIG_IMX091)
 static struct gpio apq8064_common_cam_gpio[] = {
@@ -851,17 +826,17 @@ static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf = {
 };
 #endif
 
-/* LGE_CHANGE_S, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #if defined (CONFIG_IMX132)
 static struct gpio apq8064_front_cam_gpio[] = {
 	{GPIO_CAM_MCLK2, GPIOF_DIR_IN, "CAMIF_MCLK"},
 	{GPIO_CAM2_RST_N, GPIOF_DIR_OUT, "CAM_RESET"},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct gpio apq8064_front_cam_gpio_revE[] = {
 	{GPIO_CAM_MCLK2, GPIOF_DIR_IN, "CAMIF_MCLK"},
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 static struct msm_gpio_set_tbl apq8064_front_cam_gpio_set_tbl[] = {
 	{GPIO_CAM2_RST_N, GPIOF_OUT_INIT_LOW, 10000},
@@ -878,7 +853,7 @@ static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf = {
 	.cam_gpio_set_tbl = apq8064_front_cam_gpio_set_tbl,
 	.cam_gpio_set_tbl_size = ARRAY_SIZE(apq8064_front_cam_gpio_set_tbl),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf_revE = {
 	.cam_gpiomux_conf_tbl = apq8064_cam_2d_configs,
 	.cam_gpiomux_conf_tbl_size = ARRAY_SIZE(apq8064_cam_2d_configs),
@@ -887,10 +862,10 @@ static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf_revE = {
 	.cam_gpio_req_tbl = apq8064_front_cam_gpio_revE,
 	.cam_gpio_req_tbl_size = ARRAY_SIZE(apq8064_front_cam_gpio_revE),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 #endif
-/* LGE_CHANGE_E, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 
 #if defined (CONFIG_IMX091) || defined (CONFIG_IMX111)
 static struct msm_camera_i2c_conf apq8064_back_cam_i2c_conf = {
@@ -1011,7 +986,7 @@ static struct msm_camera_i2c_conf apq8064_front_cam_i2c_conf = {
 };
 #endif
 
-/* LGE_CHANGE_S, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #if defined (CONFIG_IMX132)
 static struct msm_camera_i2c_conf apq8064_front_cam_i2c_conf = {
 	.use_i2c_mux = 1,
@@ -1019,7 +994,7 @@ static struct msm_camera_i2c_conf apq8064_front_cam_i2c_conf = {
 	.i2c_mux_mode = MODE_L,
 };
 #endif
-/* LGE_CHANGE_E, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 
 #ifdef CONFIG_IMX119
 static struct msm_camera_sensor_flash_data flash_imx119 = {
@@ -1051,7 +1026,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_imx119_data = {
 };
 #endif
 
-/* LGE_CHANGE_S, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #if defined (CONFIG_IMX132)
 static struct msm_camera_sensor_flash_data flash_imx132 = {
 	.flash_type	= MSM_CAMERA_FLASH_NONE,
@@ -1070,7 +1045,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_imx132 = {
 	.i2c_conf = &apq8064_front_cam_i2c_conf,
 	.csi_lane_params = &imx132_csi_lane_params,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_sensor_platform_info sensor_board_info_imx132_revE = {
 	.mount_angle	= 270,
 	.cam_vreg = apq_8064_front_cam_vreg,
@@ -1079,7 +1054,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_imx132_revE = {
 	.i2c_conf = &apq8064_front_cam_i2c_conf,
 	.csi_lane_params = &imx132_csi_lane_params,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 static struct msm_camera_sensor_info msm_camera_sensor_imx132_data = {
 	.sensor_name	= "imx132",
@@ -1090,7 +1065,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_imx132_data = {
 	.camera_type = FRONT_CAMERA_2D,
 	.sensor_type = BAYER_SENSOR,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct msm_camera_sensor_info msm_camera_sensor_imx132_data_revE = {
 	.sensor_name	= "imx132",
 	.pdata	= &msm_camera_csi_device_data[1],
@@ -1100,10 +1075,10 @@ static struct msm_camera_sensor_info msm_camera_sensor_imx132_data_revE = {
 	.camera_type = FRONT_CAMERA_2D,
 	.sensor_type = BAYER_SENSOR,
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 #endif
-/* LGE_CHANGE_E, For GV/GK 2.4M front camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 
 /* Enabling flash LED for camera */
 struct led_flash_platform_data {
@@ -1112,8 +1087,8 @@ struct led_flash_platform_data {
 	unsigned sda_gpio;
 };
 
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
-#if !defined(CONFIG_MACH_APQ8064_GKKT) && !defined(CONFIG_MACH_APQ8064_GKSK) && !defined(CONFIG_MACH_APQ8064_GKU) && !defined(CONFIG_MACH_APQ8064_GKATT) && !defined(CONFIG_MACH_APQ8064_GKGLOBAL) && !defined(CONFIG_MACH_APQ8064_GVKT)
+/*                                                                                                                      */
+#if !defined(CONFIG_MACH_APQ8064_GVKT)
 static struct led_flash_platform_data lm3559_flash_pdata[] = {
 	{
 		.scl_gpio = GPIO_CAM_FLASH_I2C_SCL,
@@ -1122,7 +1097,7 @@ static struct led_flash_platform_data lm3559_flash_pdata[] = {
 	}
 };
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                                                      */
 
 static struct platform_device msm_camera_server = {
 	.name = "msm_cam_server",
@@ -1131,22 +1106,19 @@ static struct platform_device msm_camera_server = {
 
 void __init apq8064_init_cam(void)
 {
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 	if(lge_get_board_revno() >= HW_REV_C ||lge_get_board_revno() == HW_REV_1_0 ){
 		msm_gpiomux_install(apq8064_cam_common_configs_revE,
 				ARRAY_SIZE(apq8064_cam_common_configs_revE));
 	}else
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
-	/* for SGLTE2 platform, do not configure i2c/gpiomux gsbi4 is used for
-	 * some other purpose */
-	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2) {
+/*                                                                        */
+	{
 		msm_gpiomux_install(apq8064_cam_common_configs,
-			ARRAY_SIZE(apq8064_cam_common_configs));
+				ARRAY_SIZE(apq8064_cam_common_configs));
 	}
 
 	platform_device_register(&msm_camera_server);
-	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2)
-		platform_device_register(&msm8960_device_i2c_mux_gsbi4);
+	platform_device_register(&msm8960_device_i2c_mux_gsbi4);
 	platform_device_register(&msm8960_device_csiphy0);
 	platform_device_register(&msm8960_device_csiphy1);
 	platform_device_register(&msm8960_device_csid0);
@@ -1176,7 +1148,7 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 		.platform_data = &msm_camera_sensor_imx119_data,
 	},
 #endif
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_CE1702
 	{
 	I2C_BOARD_INFO("ce1702", I2C_SLAVE_ADDR_CE1702), /* 0x78 */
@@ -1189,10 +1161,10 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 	.platform_data = &msm_camera_sensor_imx132_data,
 	},
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                     */
 };
 
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 static struct i2c_board_info apq8064_camera_i2c_boardinfo_revE[] = {
 #ifdef CONFIG_CE1702
 	{
@@ -1207,11 +1179,11 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo_revE[] = {
 	},
 #endif
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 /* Enabling flash LED for camera */
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
-#if !defined(CONFIG_MACH_APQ8064_GKKT) && !defined(CONFIG_MACH_APQ8064_GKSK) && !defined(CONFIG_MACH_APQ8064_GKU) && !defined(CONFIG_MACH_APQ8064_GKATT) && !defined(CONFIG_MACH_APQ8064_GKGLOBAL) && !defined(CONFIG_MACH_APQ8064_GVKT)
+/*                                                                                                                      */
+#if !defined(CONFIG_MACH_APQ8064_GVKT)
 static struct i2c_board_info apq8064_lge_camera_i2c_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("lm3559", I2C_SLAVE_ADDR_FLASH),
@@ -1219,27 +1191,27 @@ static struct i2c_board_info apq8064_lge_camera_i2c_boardinfo[] = {
 	},
 };
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
+/*                                                                                                                      */
 
 struct msm_camera_board_info apq8064_camera_board_info = {
 	.board_info = apq8064_camera_i2c_boardinfo,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_camera_i2c_boardinfo),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 struct msm_camera_board_info apq8064_camera_board_info_revE = {
 	.board_info = apq8064_camera_i2c_boardinfo_revE,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_camera_i2c_boardinfo_revE),
 };
-/* LGE_CHANGE_E, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 
 /* Enabling flash LED for camera */
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.lee@lge.com */
-#if !defined(CONFIG_MACH_APQ8064_GKKT) && !defined(CONFIG_MACH_APQ8064_GKSK) && !defined(CONFIG_MACH_APQ8064_GKU) && !defined(CONFIG_MACH_APQ8064_GKATT) && !defined(CONFIG_MACH_APQ8064_GKGLOBAL) && !defined(CONFIG_MACH_APQ8064_GVKT)
+/*                                                                                                                      */
+#if !defined(CONFIG_MACH_APQ8064_GVKT)
 struct msm_camera_board_info apq8064_lge_camera_board_info = {
 	.board_info = apq8064_lge_camera_i2c_boardinfo,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_lge_camera_i2c_boardinfo),
 };
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver -> ISP controls the flash driver, 2012.08.15, gayoung85.leelge.com */
+/*                                                                                                                     */
 #endif
 #endif

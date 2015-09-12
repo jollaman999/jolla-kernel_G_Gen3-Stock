@@ -649,7 +649,7 @@ int mipi_lgit_lcd_on(struct platform_device *pdev)
 				  local_mfd1 = mfd;
 #endif
 
-//LGE_UPDATE_S hj.eum@lge.com : adding change mipi mode to write register setting of LCD IC
+//                                                                                         
 	MIPI_OUTP(MIPI_DSI_BASE + 0x38, 0x10000000);     //HS mode
 
 #if defined (CONFIG_MACH_APQ8064_GVDCM)
@@ -691,7 +691,7 @@ int mipi_lgit_lcd_on(struct platform_device *pdev)
        if (cnt < 0)
               return cnt;
 #endif
-//LGE_UPDATE_E hj.eum@lge.com : adding change mipi mode to write register setting of LCD IC
+//                                                                                         
 
 #ifdef LGD_PANEL_WORKAROUND
 

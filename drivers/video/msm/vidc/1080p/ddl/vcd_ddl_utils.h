@@ -34,12 +34,10 @@ do { \
 		printk(KERN_DEBUG x); \
 } while (0)
 
-#define DDL_MSG_LOG 1
-
 #ifdef DDL_MSG_LOG
-#define DDL_MSG_LOW(x...)//    printk(KERN_INFO x)
-#define DDL_MSG_MED(x...)//    printk(KERN_INFO x)
-#define DDL_MSG_HIGH(x...)//   printk(KERN_INFO x)
+#define DDL_MSG_LOW(x...)    printk(KERN_INFO x)
+#define DDL_MSG_MED(x...)    printk(KERN_INFO x)
+#define DDL_MSG_HIGH(x...)   printk(KERN_INFO x)
 #else
 #define DDL_MSG_LOW(x...)
 #define DDL_MSG_MED(x...)

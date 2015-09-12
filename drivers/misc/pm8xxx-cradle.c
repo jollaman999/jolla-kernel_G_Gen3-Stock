@@ -32,10 +32,17 @@
 #include <linux/delay.h>
 #include <linux/wakelock.h>
 
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+#define POUCH_DETECT_DELAY 100
+#endif
 static int pre_set_flag;
 struct pm8xxx_cradle {
 	struct switch_dev sdev;
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	struct delayed_work pouch_work;
+#else
 	struct work_struct work;
+#endif
 	struct device *dev;
 	struct wake_lock wake_lock;
 	const struct pm8xxx_cradle_platform_data *pdata;
@@ -78,6 +85,35 @@ static void boot_cradle_det_func(void)
 #endif
 }
 
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+static void pm8xxx_cradle_work_func(struct work_struct *work)
+{
+	int state=0;
+	unsigned long flags;
+spin_lock_irqsave(&cradle->lock, flags);
+	if (cradle->pdata->pouch_detect_pin)
+		cradle->pouch = !gpio_get_value_cansleep(cradle->pdata->pouch_detect_pin);
+
+	pr_info("%s : pouch === > %d \n", __func__ , cradle->pouch);
+
+	if (cradle->pouch == 1)
+		state = CRADLE_SMARTCOVER;
+	else
+		state = CRADLE_SMARTCOVER_NO_DEV;
+
+    if (cradle->state != state) {
+		cradle->state = state;
+		spin_unlock_irqrestore(&cradle->lock, flags);
+		wake_lock_timeout(&cradle->wake_lock, msecs_to_jiffies(3000));
+		switch_set_state(&cradle->sdev, cradle->state);
+		printk("%s : [Cradle] pouch value is %d\n", __func__ , state);
+	}
+	else {
+		spin_unlock_irqrestore(&cradle->lock, flags);
+		printk("%s : [Cradle] pouch value is %d (no change)\n", __func__ , state);
+	}
+}
+#else
 static void pm8xxx_cradle_work_func(struct work_struct *work)
 {
 	int state;
@@ -105,6 +141,7 @@ static void pm8xxx_cradle_work_func(struct work_struct *work)
 	is_smart_cover_closed = cradle->pouch; /* check status of smart cover to resize knock-on area */
 #endif
 }
+#endif
 
 void cradle_set_deskdock(int state)
 {
@@ -132,8 +169,12 @@ static irqreturn_t pm8xxx_pouch_irq_handler(int irq, void *handle)
 {
 	struct pm8xxx_cradle *cradle_handle = handle;
 	printk("pouch irq!!!!\n");
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	wake_lock_timeout(&cradle->wake_lock, msecs_to_jiffies(POUCH_DETECT_DELAY*5));
+	queue_delayed_work(cradle_wq, &cradle_handle->pouch_work, msecs_to_jiffies(POUCH_DETECT_DELAY));
+#else
 	queue_work(cradle_wq, &cradle_handle->work);
-
+#endif
 	return IRQ_HANDLED;
 }
 
@@ -211,8 +252,11 @@ static int __devinit pm8xxx_cradle_probe(struct platform_device *pdev)
 	}
 	wake_lock_init(&cradle->wake_lock, WAKE_LOCK_SUSPEND, "hall_ic_wakeups");
 
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	INIT_DELAYED_WORK(&cradle->pouch_work, pm8xxx_cradle_work_func);
+#else
 	INIT_WORK(&cradle->work, pm8xxx_cradle_work_func);
-
+#endif
 	printk("%s : init cradle\n", __func__);
 
 
@@ -273,8 +317,11 @@ err_switch_dev_register:
 static int __devexit pm8xxx_cradle_remove(struct platform_device *pdev)
 {
 	struct pm8xxx_cradle *cradle = platform_get_drvdata(pdev);
-
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	cancel_delayed_work_sync(&cradle->pouch_work);
+#else
 	cancel_work_sync(&cradle->work);
+#endif
 	switch_dev_unregister(&cradle->sdev);
 	platform_set_drvdata(pdev, NULL);
 	kfree(cradle);

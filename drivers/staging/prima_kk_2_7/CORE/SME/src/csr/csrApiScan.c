@@ -117,19 +117,19 @@ RSSI *cannot* be more than 0xFF or less than 0 for meaningful WLAN operation
 #define CSR_SCAN_IS_OVER_BSS_LIMIT(pMac)  \
    ( (pMac)->scan.nBssLimit <= (csrLLCount(&(pMac)->scan.scanResultList)) )
 
-/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [START] */
+/*                                                                                 */
 #ifdef CUSTOMER_LGE
 /* Maximum number of channels per country can be ignored */
 #define MAX_CHANNELS_IGNORE 20
 
 #define MAX_COUNTRY_IGNORE 14
-#else  //CUSTOMER_LGE
+#else  //            
 /* Maximum number of channels per country can be ignored */
 #define MAX_CHANNELS_IGNORE 10
 
 #define MAX_COUNTRY_IGNORE 5
-#endif //CUSTOMER_LGE
-/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [END] */
+#endif //            
+/*                                                                               */
 
 #define THIRTY_PERCENT(x)  (x*30/100);
 
@@ -143,7 +143,7 @@ typedef struct sCsrIgnoreChannels
     tANI_U16 channelCount;
 }tCsrIgnoreChannels;
 
-/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [START] */
+/*                                                                                 */
 #ifdef CUSTOMER_LGE
 static tCsrIgnoreChannels countryIgnoreList[MAX_COUNTRY_IGNORE] = {
     { {'U','A'}, { 136, 140}, 2},
@@ -167,7 +167,7 @@ static tCsrIgnoreChannels countryIgnoreList[MAX_COUNTRY_IGNORE] = {
     { {'J','O'}, { 52, 56, 60, 64, 100, 104, 108, 112, 116, 120,
                    124, 128, 132, 136, 140}, 15}
     };
-#else  //CUSTOMER_LGE
+#else  //            
 static tCsrIgnoreChannels countryIgnoreList[MAX_COUNTRY_IGNORE] = {
     { {'U','A'}, { 136, 140}, 2},
     { {'T','W'}, { 36, 40, 44, 48, 52}, 5},
@@ -175,8 +175,8 @@ static tCsrIgnoreChannels countryIgnoreList[MAX_COUNTRY_IGNORE] = {
     { {'A','U'}, { 120, 124, 128}, 3 },
     { {'A','R'}, { 120, 124, 128}, 3 }
     };
-#endif //CUSTOMER_LGE
-/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [END] */
+#endif //            
+/*                                                                               */
 
 //*** This is temporary work around. It need to call CCM api to get to CFG later
 /// Get string parameter value

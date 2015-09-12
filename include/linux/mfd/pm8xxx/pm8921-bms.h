@@ -89,6 +89,10 @@ struct pm8921_bms_platform_data {
 	int				high_ocv_correction_limit_uv;
 	int				low_ocv_correction_limit_uv;
 	int				hold_soc_est;
+#ifdef CONFIG_WIRELESS_CHARGER
+        int                             bms_support_wlc;
+        int                             (*wlc_is_plugged)(void);
+#endif
 #ifdef CONFIG_LGE_PM
 	/* MAKO patch */
 	int				eoc_check_soc;

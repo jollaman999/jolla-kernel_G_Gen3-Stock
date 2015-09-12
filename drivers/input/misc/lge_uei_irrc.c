@@ -28,9 +28,6 @@ static int uei_irrc_probe(struct platform_device *pdev)
 		return -EINVAL;
 
 	pr_info("%s\n", __FUNCTION__);
-#if defined(CONFIG_MACH_APQ8064_GVKT)
-    gpio_set_value_cansleep(VREG_3P0_IRDA_EN,1);
-#endif
 	gpio_set_value(pdata->en_gpio,1);
 
 	return 0;
@@ -50,35 +47,13 @@ static int uei_irrc_remove(struct platform_device *pdev)
 
 static int uei_irrc_suspend(struct platform_device *pdev, pm_message_t state)
 {
-#if defined(CONFIG_MACH_APQ8064_GVKT)
-		struct uei_irrc_pdata_type *pdata = pdev->dev.platform_data;
-		if(!pdata)
-			   return -EINVAL;
-#endif
-
 	pr_info("%s\n", __FUNCTION__);
-
-#if defined(CONFIG_MACH_APQ8064_GVKT)
-		gpio_set_value_cansleep(VREG_3P0_IRDA_EN,0);
-		gpio_set_value(pdata->en_gpio,0);
-#endif
 	return 0;
 }
 
 static int uei_irrc_resume(struct platform_device *pdev)
 {
-#if defined(CONFIG_MACH_APQ8064_GVKT)
-		struct uei_irrc_pdata_type *pdata = pdev->dev.platform_data;
-		if(!pdata)
-			   return -EINVAL;
-#endif
-
 	pr_info("%s\n", __FUNCTION__);
-
-#if defined(CONFIG_MACH_APQ8064_GVKT)
-		gpio_set_value_cansleep(VREG_3P0_IRDA_EN,1);
-		gpio_set_value(pdata->en_gpio,1);
-#endif
 	return 0;
 }
 

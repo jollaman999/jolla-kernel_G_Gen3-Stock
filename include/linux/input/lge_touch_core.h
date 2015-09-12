@@ -19,7 +19,7 @@
 #define LGE_TOUCH_CORE_H
 
 //#define MT_PROTOCOL_A
-//#define LGE_TOUCH_TIME_DEBUG
+//                            
 
 #define MAX_FINGER	10
 #define MAX_BUTTON	4
@@ -135,6 +135,9 @@ struct fw_upgrade_info
 {
 	char		fw_path[256];
 	u8			fw_force_upgrade;
+#ifdef CUST_G_TOUCH
+	u8			fw_force_rework;
+#endif
 	volatile u8	is_downloading;
 };
 
@@ -144,7 +147,6 @@ struct touch_fw_info
 	u8		ic_fw_identifier[31];	/* String */
 	u8		ic_fw_version[11];		/* String */
 #ifdef CUST_G_TOUCH
-	u8		fw_force_rework;
 	u8		syna_img_fw_version[5];
 	u8		syna_img_fw_product_id[11];
 #endif

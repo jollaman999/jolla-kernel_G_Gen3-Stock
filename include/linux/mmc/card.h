@@ -128,10 +128,10 @@ struct sd_switch_caps {
 	unsigned int		hs_max_dtr;
 	unsigned int		uhs_max_dtr;
 #define HIGH_SPEED_MAX_DTR	50000000
-#ifdef CONFIG_MACH_APQ8064_GV_KR
-#define UHS_SDR104_MAX_DTR	208000000
-#else
+#ifdef CONFIG_MACH_LGE
 #define UHS_SDR104_MAX_DTR	100000000
+#else
+#define UHS_SDR104_MAX_DTR	208000000
 #endif 
 #define UHS_SDR50_MAX_DTR	100000000
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)

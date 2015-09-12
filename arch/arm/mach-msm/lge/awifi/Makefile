@@ -1,4 +1,7 @@
-obj-$(CONFIG_MACH_APQ8064_AWIFI) += board-awifi.o \
+obj-$(CONFIG_MACH_APQ8064_AWIFI) += board-awifi.o
+obj-$(CONFIG_MACH_APQ8064_ALTEV) += board-altev.o
+
+obj-y += \
 	board-awifi-camera.o \
 	board-awifi-display.o \
 	board-awifi-gpiomux.o \

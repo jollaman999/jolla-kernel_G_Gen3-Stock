@@ -16,13 +16,13 @@
 #include "msm.h"
 #include "msm_ispif.h"
 #include "msm_camera_i2c_mux.h"
-//Start  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                           
 //#define REDUCE_SHUTTER_LAG_TIME
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
-//LGE_UPDATE_S hojin.ryu@lge.com 20121107 Added IEF On/Off Switch functions
+//                                                                         
+//                                                                         
 #ifdef CONFIG_MACH_LGE
-#ifdef CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT // this is for Project-G
-//#ifdef CONFIG_FB_MSM_MIPI_LGIT_VIDEO_HD_PT // this is for Project-L05E
+//#ifdef CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WXGA_PT // this is for Project-G
+#ifdef CONFIG_FB_MSM_MIPI_LGIT_VIDEO_HD_PT // this is for Project-L05E
 
 #define LGIT_IEF_SWITCH
 
@@ -32,18 +32,18 @@ extern int mipi_lgit_lcd_ief_on(void);
 #endif
 #endif
 #endif
-//LGE_UPDATE_E hojin.ryu@lge.com 20121107
+//                                       
 
-/*LGE_UPDATE_S Color Engine Switch for camera, 2012.11.19, elin.lee@lge.com*/
+/*                                                                         */
 #if defined (CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_INVERSE_PT) || defined (CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_INVERSE_PT_PANEL)
 #define LGIT_COLOR_ENGINE_SWITCH
 #ifdef LGIT_COLOR_ENGINE_SWITCH
 extern int mipi_lgit_lcd_color_engine_off(void);
 #endif
 #endif
-/*LGE_UPDATE_E Color Engine Switch for camera, 2012.11.19, elin.lee@lge.com*/
+/*                                                                         */
 
-/*LGE_CHANGE_START, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                    */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 #include <linux/mfd/pm8xxx/pm8921.h>
 #include "../../../../../arch/arm/mach-msm/lge/L05E/board-L05E.h"
@@ -68,13 +68,15 @@ static struct pm_gpio gpio23_param = {
 };
 #endif
 
-/*LGE_CHANGE_END, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                  */
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /* LGE_CHANGE_E, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                      */
+#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /*                                                                                     */
 #include <linux/mfd/pm8xxx/pm8921.h>
 #include "../../../../../arch/arm/mach-msm/lge/awifi/board-awifi.h"
 #include <mach/board_lge.h>
+#include <linux/platform_device.h>
+
 #define MSM_MAINCAM_RST_EN PM8921_GPIO_PM_TO_SYS(27)	//REAR_CAM_RST_N
 #define CAMERA_DEBUG 1
 #define LDBGE(fmt,args...) printk(KERN_EMERG "[CAM/E][ERR] "fmt,##args)
@@ -94,8 +96,21 @@ static struct pm_gpio gpio27_param = {
 		.function       = PM_GPIO_FUNC_NORMAL,
 };
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+/*                                                                                       */
+static int show_cam_sensor(struct device *dev, struct device_attribute *attr, char *buf)
+{
+	struct i2c_client *client;
+	client = to_i2c_client(dev);
+
+	return sprintf(buf, "%s\n", client->name );
+}
+
+static DEVICE_ATTR(sensor, S_IRUGO, show_cam_sensor, NULL);
+/*                                                                                       */
+#endif
 /*=============================================================*/
 void msm_sensor_adjust_frame_lines1(struct msm_sensor_ctrl_t *s_ctrl)
 {
@@ -155,7 +170,7 @@ void msm_sensor_adjust_frame_lines2(struct msm_sensor_ctrl_t *s_ctrl)
 	}
 	return;
 }
-//Start LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                          
 #ifndef REDUCE_SHUTTER_LAG_TIME
 #if 0
 static void msm_sensor_delay_frames(struct msm_sensor_ctrl_t *s_ctrl)
@@ -184,7 +199,7 @@ static void msm_sensor_delay_frames(struct msm_sensor_ctrl_t *s_ctrl)
 }
 #endif
 #endif
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                         
 int32_t msm_sensor_write_init_settings(struct msm_sensor_ctrl_t *s_ctrl)
 {
 	int32_t rc = 0;
@@ -238,9 +253,9 @@ int32_t msm_sensor_write_output_settings(struct msm_sensor_ctrl_t *s_ctrl,
 		ARRAY_SIZE(dim_settings), MSM_CAMERA_I2C_WORD_DATA);
 	return rc;
 }
-    /* LGE_CHANGE_S, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
+    /*                                                                                             */
 extern int sub_cam_id_for_keep_screen_on;
-    /* LGE_CHANGE_E, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
+    /*                                                                                             */
 
 void msm_sensor_start_stream(struct msm_sensor_ctrl_t *s_ctrl)
 {
@@ -256,50 +271,46 @@ void msm_sensor_start_stream(struct msm_sensor_ctrl_t *s_ctrl)
 		s_ctrl->msm_sensor_reg->start_stream_conf,
 		s_ctrl->msm_sensor_reg->start_stream_conf_size,
 		s_ctrl->msm_sensor_reg->default_data_type);
-    /* LGE_CHANGE_S, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
+    /*                                                                                             */
 if(sub_cam_id_for_keep_screen_on != -2733){
-    /* LGE_CHANGE_E, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
-	//LGE_UPDATE_S hojin.ryu@lge.com 20121107	Turn IEF off when camera sensor starts
+    /*                                                                                             */
+	//                                                                              
 #ifdef LGIT_IEF_SWITCH
 	if(system_state != SYSTEM_BOOTING) {
 		mipi_lgit_lcd_ief_off();
 	}
 #endif
-//LGE_UPDATE_E hojin.ryu@lge.com 20121107
+//                                       
 
-/*LGE_UPDATE_S Color Engine Switch for camera, 2012.11.19, elin.lee@lge.com*/
+/*                                                                         */
 #ifdef LGIT_COLOR_ENGINE_SWITCH
     if(system_state != SYSTEM_BOOTING) {
       mipi_lgit_lcd_color_engine_off();
     }
 #endif
-/*LGE_UPDATE_S Color Engine Switch for camera, 2012.11.19, elin.lee@lge.com*/
-    /* LGE_CHANGE_S, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
+/*                                                                         */
+    /*                                                                                             */
 }
-    /* LGE_CHANGE_E, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
-//Start LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+    /*                                                                                             */
+//                                                                          
 #ifndef REDUCE_SHUTTER_LAG_TIME //Test1: Changed from def to ndef
     pr_err(" %s : remove delay for shutter lag time \n", __func__ );
-/* LGE_CHANGE_S, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_OV5693
     if(!strcmp(s_ctrl->sensordata->sensor_name, "ov5693"))
         msleep(100); // OV5693 need to skip 3 or more frames for changing sensor mode. (eg. nonZSL capturing)
     else
-        msleep(10);
+        msleep(50);
 #else
         msleep(10);
 #endif
-/* LGE_CHANGE_E, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
-
-    //LGE_CAMERA_IQ, Optimus G KK upgrade 20140325, chaehee.lim@lge.com 
-    if(!strcmp(s_ctrl->sensordata->sensor_name, "imx119"))
-	msleep(10); 
+/*                                                                                     */
 #else
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                         
 	msleep(20);
-//Start LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                          
 #endif
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                         
 }
 
 void msm_sensor_stop_stream(struct msm_sensor_ctrl_t *s_ctrl)
@@ -309,16 +320,16 @@ void msm_sensor_stop_stream(struct msm_sensor_ctrl_t *s_ctrl)
 		s_ctrl->msm_sensor_reg->stop_stream_conf,
 		s_ctrl->msm_sensor_reg->stop_stream_conf_size,
 		s_ctrl->msm_sensor_reg->default_data_type);
-//Start LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                          
 #ifdef REDUCE_SHUTTER_LAG_TIME
 	pr_err(" %s : remove delay for shutter lag time \n", __func__ );
 #else
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                         
     msleep(30);
 //	msm_sensor_delay_frames(s_ctrl);
-//Start LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                          
 #endif	
-//End  LGE_BSP_CAMERA : dont use for shutter lag time - jonghwan.ko@lge.com
+//                                                                         
 }
 
 void msm_sensor_group_hold_on(struct msm_sensor_ctrl_t *s_ctrl)
@@ -749,7 +760,7 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			break;
 
 		case CFG_GET_CAM_OPEN_MODE:
-			//Get Current Previewing Mode by jungki.kim@lge.com
+			//                                                 
 			if (s_ctrl->func_tbl->sensor_get_cam_open_mode == NULL) {
 				rc = -EFAULT;
 				break;
@@ -758,7 +769,7 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			break;
 
 		case CFG_SET_EXIF_ROTATION:
-			//Insert Rotation Information In EXIF by jungki.kim@lge.com
+			//                                                         
 			if (s_ctrl->func_tbl->sensor_set_exif_rotation == NULL) {
 				rc = -EFAULT;
 				break;
@@ -767,7 +778,7 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			break;
 
 		case CFG_SET_EXIF_GPS:
-			//Set GPS Exif Tags For GK/GV by jungki.kim@lge.com
+			//                                                 
 			if (s_ctrl->func_tbl->sensor_set_exif_gps == NULL) {
 				rc = -EFAULT;
 				break;
@@ -896,7 +907,7 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			else
 				rc = -EFAULT;
 			break;
-/* LGE_CHANGE_S, add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com */
+/*                                                                                             */
 		case CFG_SET_OBJECT_TRACKING:
 			if (s_ctrl->func_tbl->sensor_object_tracking== NULL) {
 				rc = -EFAULT;
@@ -904,9 +915,9 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			}
 			s_ctrl->func_tbl->sensor_object_tracking(s_ctrl,&cdata.cfg.rect_info);
 			break;
-/* LGE_CHANGE_E, add the object tracking method for GK project, 2012.10.19 youngil.yun@lge.com */
+/*                                                                                             */
 
-/* LGE_CHANGE_S, add the changing image size for GK project, 2012.10.19 youngil.yun@lge.com */
+/*                                                                                          */
 		case CFG_SET_DIM_INFO:
 			if (s_ctrl->func_tbl->sensor_dim_info== NULL) {
 				rc = -EFAULT;
@@ -914,9 +925,9 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			}
 			s_ctrl->func_tbl->sensor_dim_info(s_ctrl,&cdata.cfg.dimension);
 			break;
-/* LGE_CHANGE_E, add the changing image size for GK project, 2012.10.19 youngil.yun@lge.com */
+/*                                                                                          */
 
-/* LGE_CHANGE_S, Add ISO setting for GK/GV, 2012.10.28, gayoung85.lee[Start] */
+/*                                                                           */
 		case CFG_SET_ISO:
 			if(s_ctrl->func_tbl->sensor_set_iso == NULL){
 				rc = -EFAULT;
@@ -924,9 +935,9 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 				}
 			rc = s_ctrl->func_tbl->sensor_set_iso(s_ctrl, cdata.cfg.iso_type);
 				break;
-/* LGE_CHANGE_E, Add ISO setting for GK/GV, 2012.10.28, gayoung85.lee[End] */
+/*                                                                         */
 
-/* LGE_CHANGE_S, Add ManualSceneMode for GK/GV, 2012.10.28, gayoung85.lee[Start] */
+/*                                                                               */
 		case CFG_SET_MANUAL_SCENE_MODE:
 			if(s_ctrl->func_tbl->sensor_set_manual_scene_mode== NULL){
 				rc = -EFAULT;
@@ -934,18 +945,18 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 				}
 			rc = s_ctrl->func_tbl->sensor_set_manual_scene_mode(s_ctrl, cdata.cfg.scene_mode);
 			break;
-/* LGE_CHANGE_E, Add ManualSceneMode for GK/GV, 2012.10.28, gayoung85.lee[End] */
+/*                                                                             */
 
-/* LGE_CHANGE_S, Set Gyro Data For GK/GV, 2012.10.30, jungki.kim[Start] */
+/*                                                                      */
 		case CFG_SET_GYRO_DATA:
 			if (s_ctrl->func_tbl->sensor_set_gyro_data) 
 				rc = s_ctrl->func_tbl->sensor_set_gyro_data(s_ctrl,(uint8_t *)cdata.cfg.setting);
 			else
 				rc = -EFAULT;
 			break;
-/* LGE_CHANGE_E, Set Gyro Data For GK/GV, 2012.10.30, jungki.kim[End] */
+/*                                                                    */
 
-/* LGE_CHANGE_S, Add the WDR for GK project, 2012.10.30, gayoung85.lee[Start] */
+/*                                                                            */
 		case CFG_SET_WDR:
 			if(s_ctrl->func_tbl->sensor_set_wdr == NULL){
 				rc = -EFAULT;
@@ -953,8 +964,8 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 				}
 			rc = s_ctrl->func_tbl->sensor_set_wdr(s_ctrl, cdata.cfg.wdr_mode);
 			break;		
-/* LGE_CHANGE_E, Add the WDR for GK project, 2012.10.30, gayoung85.lee[End] */
-/* LGE_CHANGE_S, Add the Auto Scene Detection for GK porject, 2012.11.6, gayoung85.lee[Start] */
+/*                                                                          */
+/*                                                                                            */
 		case CFG_SET_ASD:
 			if(s_ctrl->func_tbl->sensor_set_asd_enable== NULL){
 				rc = -EFAULT;
@@ -962,8 +973,8 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 				}
 			rc = s_ctrl->func_tbl->sensor_set_asd_enable(s_ctrl, cdata.cfg.asd_onoff);
 			break;	
-/* LGE_CHANGE_E, Add the Auto Scene Detection for GK porject, 2012.11.6, gayoung85.lee[End] */
-/* LGE_CHANGE_S, fixed cts failure!, 2013.01.07 junghee.eim@lge.com */
+/*                                                                                          */
+/*                                                                  */
 		case CFG_SET_EXIF_THUMBNAIL_SIZE:
 			if (s_ctrl->func_tbl->sensor_set_exif_thumbnail_size == NULL) {
 				rc = -EFAULT;
@@ -971,7 +982,7 @@ int32_t msm_sensor_config(struct msm_sensor_ctrl_t *s_ctrl, void __user *argp)
 			}
 			s_ctrl->func_tbl->sensor_set_exif_thumbnail_size(s_ctrl, &cdata.cfg.dimension);
 			break;
-/* LGE_CHANGE_E, fixed cts failure!, 2013.01.07 junghee.eim@lge.com */
+/*                                                                  */
 
 		default:
 			rc = -EFAULT;
@@ -1874,12 +1885,12 @@ int32_t msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 	}
 
 	pr_err( " %s : E sensor name is %s \n",__func__, s_ctrl->sensordata->sensor_name);
-	pr_err( " %s : lgcam_commit on 121230 \n",__func__); /* LGE_CHANGE, check merged date , 2012.12.30, jungryoul.choi@lge.com */
-	pr_err( " %s : lgcam_commit increase JPEG_ENC] on 130113 [ \n",__func__); /* LGE_CHANGE, check merged date , 2013.01.13, seongjo.kim@lge.com */
-	pr_err( " %s : lgcam_commit fix AF kernel crash on 130121 [ \n",__func__); /* LGE_CHANGE, check merged date , 2013.01.21, jungryoul.choi@lge.com */
+	pr_err( " %s : lgcam_commit on 121230 \n",__func__); /*                                                                    */
+	pr_err( " %s : lgcam_commit increase JPEG_ENC] on 130113 [ \n",__func__); /*                                                                 */
+	pr_err( " %s : lgcam_commit fix AF kernel crash on 130121 [ \n",__func__); /*                                                                    */
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	rc = gpio_request(MSM_MAINCAM_RST_EN, "MAIN_CAM_RST_EN");
 	if (rc) {
 		LDBGE("%s: PM request gpio failed\n", __func__);
@@ -1891,7 +1902,7 @@ int32_t msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 	msleep(1);
 	rc = gpio_direction_output(MSM_MAINCAM_RST_EN, 0);
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 	rc = msm_camera_request_gpio_table(data, 1);
 	if (rc < 0) {
@@ -1920,7 +1931,7 @@ int32_t msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 		pr_err("%s: enable regulator failed\n", __func__);
 		goto enable_vreg_failed;
 	}
-/*LGE_CHANGE_START, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                    */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 if(lge_get_board_revno() >= HW_REV_C){
 	rc = gpio_request(MSM_CAM0_RST_EN, "VTCAM_RST_EN");
@@ -1937,7 +1948,7 @@ if(lge_get_board_revno() >= HW_REV_C){
 	rc = gpio_direction_output(MSM_CAM0_RST_EN, 1);
 }
 #endif
-/*LGE_CHANGE_END, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                  */
 
 	rc = msm_camera_config_gpio_table(data, 1);
 	if (rc < 0) {
@@ -1945,13 +1956,13 @@ if(lge_get_board_revno() >= HW_REV_C){
 		goto config_gpio_failed;
 	}
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	msleep(1);
 	rc = gpio_direction_output(MSM_MAINCAM_RST_EN, 1);
 	msleep(1);
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 	if (s_ctrl->sensor_device_type == MSM_SENSOR_I2C_DEVICE) {
 		if (s_ctrl->clk_rate != 0)
@@ -1972,12 +1983,12 @@ if(lge_get_board_revno() >= HW_REV_C){
 		}
 	}
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
-	pr_err("%s : mclk: %ldHz\n", __func__, s_ctrl->clk_rate);	/* LGE_CHANGE, For debugging, 2012-09-18, kwangsik83.kim@lge.com */
-	usleep_range(1000, 3000);  //usleep_range(1000, 2000);    /* LGE_CHANGE, For stable preview, 2012-09-18, kwangsik83.kim@lge.com */
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	pr_err("%s : mclk: %ldHz\n", __func__, s_ctrl->clk_rate);	/*                                                               */
+	usleep_range(1000, 3000);  //                                                                                                     
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 	if (!s_ctrl->power_seq_delay)
 		usleep_range(1000, 2000);
@@ -2012,19 +2023,19 @@ cci_init_failed:
 		msm_sensor_disable_i2c_mux(
 			data->sensor_platform_info->i2c_conf);
 enable_clk_failed:
-/*LGE_CHANGE_START, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                    */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 if(lge_get_board_revno() >= HW_REV_C){
 	rc = gpio_direction_output(MSM_CAM0_RST_EN, 0);
 }
 #endif
-/*LGE_CHANGE_END, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                  */
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	rc = gpio_direction_output(MSM_MAINCAM_RST_EN, 0);
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 		msm_camera_config_gpio_table(data, 0);
 config_gpio_failed:
@@ -2055,16 +2066,16 @@ int32_t msm_sensor_power_down(struct msm_sensor_ctrl_t *s_ctrl)
 	struct device *dev = NULL;
 
 	pr_err( " %s : E sensor name is %s \n",__func__, s_ctrl->sensordata->sensor_name);
-    /* LGE_CHANGE_S, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
+    /*                                                                                             */
 	sub_cam_id_for_keep_screen_on = -1;
-    /* LGE_CHANGE_E, soojung.lim@lge.com, 2012-10-31, Wise screen / Because of the display engine  */
-	//LGE_UPDATE_S hojin.ryu@lge.com 20121107	Turn IEF on when getting out from camera
+    /*                                                                                             */
+	//                                                                                
 #ifdef LGIT_IEF_SWITCH
 	if(system_state != SYSTEM_BOOTING){	
 		mipi_lgit_lcd_ief_on();
 	}
 #endif
-	//LGE_UPDATE_E hojin.ryu@lge.com 20121107
+	//                                       
 
 	if (s_ctrl->sensor_device_type == MSM_SENSOR_PLATFORM_DEVICE)
 		dev = &s_ctrl->pdev->dev;
@@ -2088,7 +2099,7 @@ int32_t msm_sensor_power_down(struct msm_sensor_ctrl_t *s_ctrl)
 	else
 		msm_cam_clk_enable(dev, cam_8974_clk_info, s_ctrl->cam_clk,
 			ARRAY_SIZE(cam_8974_clk_info), 0);
-/*LGE_CHANGE_START, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                    */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 if(lge_get_board_revno() >= HW_REV_C){
 
@@ -2098,15 +2109,15 @@ if(lge_get_board_revno() >= HW_REV_C){
 	gpio_direction_output(MSM_CAM0_RST_EN, 0 );
 }
 #endif
-/*LGE_CHANGE_END, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                  */
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	usleep(5);
 	LDBGI("%s: Revision [%d] MSM_MAINCAM_RST_EN GPIO No.%d\n",__func__, lge_get_board_revno(), MSM_MAINCAM_RST_EN);
 	gpio_direction_output(MSM_MAINCAM_RST_EN, 0 );
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 	msm_camera_config_gpio_table(data, 0);
 	msm_camera_enable_vreg(dev,
@@ -2125,19 +2136,19 @@ if(lge_get_board_revno() >= HW_REV_C){
 	kfree(s_ctrl->reg_ptr);
 	s_ctrl->curr_res = MSM_SENSOR_INVALID_RES;
 	pr_err( " %s : X sensor name is %s \n",__func__, s_ctrl->sensordata->sensor_name);
-/*LGE_CHANGE_START, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                    */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 if(lge_get_board_revno() >= HW_REV_C){
 	gpio_free(MSM_CAM0_RST_EN);
 }
 #endif
-/*LGE_CHANGE_END, youngwook.song@lge.com Reconfig GPIO Setting for Rev.C and afterwards. 2013-03-05 */
+/*                                                                                                  */
 
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	gpio_free(MSM_MAINCAM_RST_EN);
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 
 	return 0;
 }
@@ -2170,6 +2181,9 @@ int32_t msm_sensor_i2c_probe(struct i2c_client *client,
 	const struct i2c_device_id *id)
 {
 	int rc = 0;
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	int ret= 0;
+#endif
 	struct msm_sensor_ctrl_t *s_ctrl;
 	CDBG("%s %s_i2c_probe called\n", __func__, client->name);
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
@@ -2219,6 +2233,17 @@ int32_t msm_sensor_i2c_probe(struct i2c_client *client,
 	pr_err("%s %s probe succeeded\n", __func__, client->name);
 	snprintf(s_ctrl->sensor_v4l2_subdev.name,
 		sizeof(s_ctrl->sensor_v4l2_subdev.name), "%s", id->name);
+
+/*                                                                                       */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+	ret = device_create_file(&client->dev, &dev_attr_sensor);
+	pr_err("__GY__%s : %s device file create suceeded\n", __func__, client->name) ;
+	if(ret < 0){
+		pr_err("cam sensor sysfs is not created\n");
+		device_remove_file(&client->dev, &dev_attr_sensor);
+		}
+#endif
+	/*                                                                                       */
 	v4l2_i2c_subdev_init(&s_ctrl->sensor_v4l2_subdev, client,
 		s_ctrl->sensor_v4l2_subdev_ops);
 	s_ctrl->sensor_v4l2_subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;

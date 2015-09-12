@@ -77,9 +77,9 @@ static struct gpiomux_setting gpio_epm_spi_cs_config = {
 	.pull = GPIOMUX_PULL_UP,
 };
 #endif
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
-// LGE_BROADCAST_ONESEG {
+//                       
 #if defined(CONFIG_LGE_BROADCAST_TDMB) || defined(CONFIG_LGE_BROADCAST_ONESEG)
 static struct gpiomux_setting gsbi5_spi_config= {
 	.func = GPIOMUX_FUNC_2,
@@ -98,8 +98,8 @@ static struct gpiomux_setting dmb_int_pin = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif /* CONFIG_LGE_BROADCAST */
-// LGE_BROADCAST_ONESEG }
+#endif /*                      */
+//                       
 
 
 #ifdef CONFIG_MSM_VCAP
@@ -441,7 +441,7 @@ static struct gpiomux_setting gsbi7_func2_cfg = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 #if defined(CONFIG_LGE_IRRC)
 static struct gpiomux_setting gsbi7_irrc_TXD = {
@@ -506,7 +506,7 @@ static struct gpiomux_setting gsbi7_func2_cfg = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif //#if defined(CONFIG_MACH_LGE)
+#endif //                            
 
 static struct gpiomux_setting gsbi3_suspended_cfg = {
 	.func = GPIOMUX_FUNC_1,
@@ -797,7 +797,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_ACTIVE] = &gsbi4_uart_active
 		},
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 
 #if !defined(CONFIG_MACH_LGE)
@@ -833,9 +833,9 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 		},
 	},
 #endif
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
-// LGE_BROADCAST_ONESEG {
+//                       
 #if defined(CONFIG_LGE_BROADCAST_TDMB) || defined(CONFIG_LGE_BROADCAST_ONESEG)
 	{
 		.gpio	   = 51,		/* GSBI5 QUP DMB SPI_MOSI */
@@ -879,8 +879,8 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &dmb_ctrl_pin,
 		},
 	},	
-#endif /* CONFIG_LGE_BROADCAST */
-// LGE_BROADCAST_ONESEG }
+#endif /*                      */
+//                       
 
 #if !defined(CONFIG_MACH_LGE)
 	{
@@ -927,7 +927,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_ACTIVE] = &gpio_i2c_config,
 		},
 	},
-#endif /* LGE Not Used */
+#endif /*              */
 };
 
 static struct msm_gpiomux_config apq8064_slimbus_config[] __initdata = {
@@ -1403,7 +1403,7 @@ static struct msm_gpiomux_config mpq8064_gsbi5_i2c_configs[] __initdata = {
 		},
 	},
 };
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 static struct gpiomux_setting ir_suspended_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,

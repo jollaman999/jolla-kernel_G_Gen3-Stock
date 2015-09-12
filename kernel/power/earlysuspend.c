@@ -133,9 +133,9 @@ static void early_suspend(struct work_struct *work)
 	start_monitor_blocking(early_suspend_monitor_id,
 		jiffies + usecs_to_jiffies(5000000));
 #endif
-	save_earlysuspend_step(EARLYSUSPEND_START);  // LGE_UPDATE
+	save_earlysuspend_step(EARLYSUSPEND_START);  //           
 	mutex_lock(&early_suspend_lock);
-	save_earlysuspend_step(EARLYSUSPEND_MUTEXLOCK);  // LGE_UPDATE
+	save_earlysuspend_step(EARLYSUSPEND_MUTEXLOCK);  //           
 	spin_lock_irqsave(&state_lock, irqflags);
 	if (state == SUSPEND_REQUESTED)
 		state |= SUSPENDED;
@@ -152,7 +152,7 @@ static void early_suspend(struct work_struct *work)
 
 	if (debug_mask & DEBUG_SUSPEND)
 		pr_info("early_suspend: call handlers\n");
-	save_earlysuspend_step(EARLYSUSPEND_CHAINSTART);  // LGE_UPDATE
+	save_earlysuspend_step(EARLYSUSPEND_CHAINSTART);  //           
 #ifdef CONFIG_MACH_LGE
 	es_watchdog_timer.expires = jiffies + WATCHDOG_EXPIRES_TIME;
 	add_timer(&es_watchdog_timer);
@@ -179,11 +179,11 @@ static void early_suspend(struct work_struct *work)
 #ifdef CONFIG_MACH_LGE
 	del_timer(&es_watchdog_timer);
 #endif
-	save_earlysuspend_call(NULL);  // LGE_UPDATE
+	save_earlysuspend_call(NULL);  //           
 
-	save_earlysuspend_step(EARLYSUSPEND_CHAINDONE);  // LGE_UPDATE
+	save_earlysuspend_step(EARLYSUSPEND_CHAINDONE);  //           
 	mutex_unlock(&early_suspend_lock);
-	save_earlysuspend_step(EARLYSUSPEND_MUTEXUNLOCK);  // LGE_UPDATE
+	save_earlysuspend_step(EARLYSUSPEND_MUTEXUNLOCK);  //           
 
 	suspend_sys_sync_queue();
 	save_earlysuspend_step(EARLYSUSPEND_SYNCDONE);
@@ -215,7 +215,7 @@ static void late_resume(struct work_struct *work)
 #endif
 	save_lateresume_step(LATERESUME_START);
 	mutex_lock(&early_suspend_lock);
-	save_lateresume_step(LATERESUME_MUTEXLOCK);  // LGE_UPDATE
+	save_lateresume_step(LATERESUME_MUTEXLOCK);  //           
 	spin_lock_irqsave(&state_lock, irqflags);
 	if (state == SUSPENDED)
 		state &= ~SUSPENDED;
@@ -230,7 +230,7 @@ static void late_resume(struct work_struct *work)
 	}
 	if (debug_mask & DEBUG_SUSPEND)
 		pr_info("late_resume: call handlers\n");
-	save_lateresume_step(LATERESUME_CHAINSTART);  // LGE_UPDATE
+	save_lateresume_step(LATERESUME_CHAINSTART);  //           
 #ifdef CONFIG_MACH_LGE
 	es_watchdog_timer.expires = jiffies + WATCHDOG_EXPIRES_TIME;
 	add_timer(&es_watchdog_timer);
@@ -264,10 +264,10 @@ static void late_resume(struct work_struct *work)
 
 	if (debug_mask & DEBUG_SUSPEND)
 		pr_info("late_resume: done\n");
-	save_lateresume_step(LATERESUME_CHAINDONE);  // LGE_UPDATE
+	save_lateresume_step(LATERESUME_CHAINDONE);  //           
 abort:
 	mutex_unlock(&early_suspend_lock);
-	save_lateresume_step(LATERESUME_END);  // LGE_UPDATE
+	save_lateresume_step(LATERESUME_END);  //           
 
 #ifdef CONFIG_MACH_LGE
 	end_monitor_blocking(late_resume_monitor_id);

@@ -79,7 +79,6 @@ extern struct regulator_init_data msm8064_saw_regulator_pdata_8821_s1;
 struct mmc_platform_data;
 int __init apq8064_add_sdcc(unsigned int controller,
 		struct mmc_platform_data *plat);
-int __init apq8064_add_uio(void);
 
 #if defined(CONFIG_MACH_LGE)
 extern void __init register_i2c_backlight_devices(void);
@@ -146,7 +145,7 @@ void __init configure_apq8064_pm8917_power_grid(void);
 #define I2C_SLAVE_ADDR_IMX091_ACT   (0x18)
 #define I2C_SLAVE_ADDR_IMX119       (0x6E)
 #define I2C_SLAVE_ADDR_FLASH        (0xA6 >> 1)
-#endif //#if defined(CONFIG_MACH_LGE)
+#endif //                            
 
 void apq8064_init_fb(void);
 void apq8064_allocate_fb_region(void);

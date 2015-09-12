@@ -394,12 +394,12 @@ static int hw_device_reset(struct ci13xxx *udc)
 	}
 
 #ifdef CONFIG_USB_G_LGE_ANDROID_PFSC
-    /* USB FS only used in 130K
-     *
-     * LGE_BOOT_MODE_FACTORY: 130K + QEM
-     * LGE_BOOT_MODE_PIFBOOT: 130K
-     * LGE_BOOT_MODE_FACTORY2: 56K + QEM
-     * LGE_BOOT_MODE_PIFBOOT2: 56K
+    /*                         
+      
+                                        
+                                  
+                                        
+                                  
      */
     boot_mode = lge_get_boot_mode();
     if ((boot_mode == LGE_BOOT_MODE_FACTORY)  ||

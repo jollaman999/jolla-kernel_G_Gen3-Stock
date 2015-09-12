@@ -1393,7 +1393,7 @@ static struct clk_freq_tbl clk_tbl_gsbi_qup[] = {
 	F_GSBI_QUP(27000000, pxo,  1, 0,  0),
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 	F_GSBI_QUP(32000000, pll8, 4, 1,  3),
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 	F_GSBI_QUP(48000000, pll8, 4, 1,  2),
 	F_GSBI_QUP(51200000, pll8, 1, 2, 15),
 	F_END
@@ -5374,7 +5374,7 @@ static struct clk_lookup msm_clocks_8064[] = {
 	CLK_LOOKUP("core_clk",		gsbi5_qup_clk.c,	"spi_qsd.0"),
 #else
 	CLK_LOOKUP("core_clk",      gsbi5_qup_clk.c,    "qup_i2c.5"),
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 	CLK_LOOKUP("core_clk",		gsbi6_qup_clk.c,	""),
 #if defined(CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER) || (defined(CONFIG_MACH_LGE)&& defined (CONFIG_TOUCHSCREEN_S340010_SYNAPTICS_TK))
@@ -5458,7 +5458,7 @@ static struct clk_lookup msm_clocks_8064[] = {
 	CLK_LOOKUP("iface_clk",		gsbi5_p_clk.c,		"spi_qsd.0"),
 #else
 	CLK_LOOKUP("iface_clk",     gsbi5_p_clk.c,      "qup_i2c.5"),
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 
 #if !defined(CONFIG_MACH_APQ8064_GVDCM) && !defined(CONFIG_MACH_APQ8064_L05E)
@@ -5512,31 +5512,31 @@ static struct clk_lookup msm_clocks_8064[] = {
 	CLK_LOOKUP("core_clk",		pmic_ssbi2_clk.c,	""),
 	CLK_LOOKUP("mem_clk",		rpm_msg_ram_p_clk.c,	""),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #if defined(CONFIG_MACH_APQ8064_GKKT) ||defined(CONFIG_MACH_APQ8064_GKSK) ||defined(CONFIG_MACH_APQ8064_GKU) ||defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GVKT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR) || defined(CONFIG_MACH_APQ8064_OMEGA)
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,		"4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
 	CLK_LOOKUP("cam_clk",		cam2_clk.c, 		"4-006c"), /* GSBI4, Slave Addr: 0x6e, imx132 */
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 
 //#ifdef CONFIG_MACH_APQ8064_J1VD
 #if defined(CONFIG_MACH_APQ8064_J1V) || defined(CONFIG_MACH_APQ8064_J1U) || defined(CONFIG_MACH_APQ8064_J1A) || defined(CONFIG_MACH_APQ8064_J1SP) || defined(CONFIG_MACH_APQ8064_J1D) || defined(CONFIG_MACH_APQ8064_J1SK) || defined(CONFIG_MACH_APQ8064_J1KT) || defined(CONFIG_MACH_APQ8064_J1KD) || defined(CONFIG_MACH_APQ8064_J1R) || defined(CONFIG_MACH_APQ8064_J1B)|| defined(CONFIG_MACH_APQ8064_J1VD)|| defined(CONFIG_MACH_APQ8064_J1X)|| defined(CONFIG_MACH_APQ8064_J1TL) || defined(CONFIG_MACH_APQ8064_J1TM)
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,		"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
-/* LGE_CHANGE_S, for old HW (LGU Rev.A,B VZW Rev.A,B ATT Rev.A), 2012.04.27, jungryoul.choi@lge.com */
+/*                                                                                                  */
 #if 1
-	CLK_LOOKUP("cam_clk",		cam2_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//* LGE_CHANGE_S, Using MCLK2, soojung.lim@lge.com */
+	CLK_LOOKUP("cam_clk",		cam2_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//*                                                */
 #else
-	CLK_LOOKUP("cam_clk",		cam1_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//* LGE_CHANGE_S, Using MCLK2, soojung.lim@lge.com */
+	CLK_LOOKUP("cam_clk",		cam1_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//*                                                */
 #endif
-/* LGE_CHANGE_S, for old HW (LGU Rev.A,B VZW Rev.A,B ATT Rev.A), 2012.04.27, jungryoul.choi@lge.com */
+/*                                                                                                  */
 #endif
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
-#if defined CONFIG_MACH_APQ8064_AWIFI
+/*                                                      */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0020"), /* GSBI4, Slave Addr: 0x20, s5k4e5ya */
-	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5663 *//* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
-	CLK_LOOKUP("cam_clk",		cam2_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//* LGE_CHANGE_S, Using MCLK2, soojung.lim@lge.com */
+	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5663 *//*                                                                                   */
+	CLK_LOOKUP("cam_clk",		cam2_clk.c,		"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 *//*                                                */
 #endif
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 #else /* QCT Original */
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-001a"),
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0034"),
@@ -5901,22 +5901,22 @@ static struct clk_lookup msm_clocks_8960_common[] __initdata = {
 	CLK_LOOKUP("core_clk",		pmic_ssbi2_clk.c,	""),
 	CLK_LOOKUP("mem_clk",		rpm_msg_ram_p_clk.c,	""),
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
-#if defined(CONFIG_MACH_APQ8064_GKKT) ||defined(CONFIG_MACH_APQ8064_GKSK) ||defined(CONFIG_MACH_APQ8064_GKU) ||defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVKT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR) || defined(CONFIG_MACH_APQ8064_OMEGA)
+/*                                                                                     */
+#if defined(CONFIG_MACH_APQ8064_GKKT) ||defined(CONFIG_MACH_APQ8064_GKSK) ||defined(CONFIG_MACH_APQ8064_GKU) ||defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GVKT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL)
 	CLK_LOOKUP("cam_clk",		cam0_clk.c, "4-0078"), /* GSBI4, Slave Addr: 0x78, ce1702 */
 	CLK_LOOKUP("cam_clk",		cam1_clk.c, "4-006c"), /* GSBI4, Slave Addr: 0x6c, imx132 */
 #endif
-/* LGE_CHANGE_E, For GV/GK 13M & 2.4M camera driver, 2012.07.20, gayoung85.lee@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_MACH_APQ8064_J1VD
 	CLK_LOOKUP("cam_clk",		cam0_clk.c, "4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
 	CLK_LOOKUP("cam_clk",		cam1_clk.c, "4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
 #endif
-#if defined CONFIG_MACH_APQ8064_AWIFI
-/* LGE_CHANGE_S, for A-PJT, 2013.5.7, jungki.kim[Start] */
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
+/*                                                      */
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0020"), /* GSBI4, Slave Addr: 0x20, s5k4e5ya */
-	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-0040"), /* GSBI4, Slave Addr: 0x20 << 1, ov5693 *//*                                                                                   */
 	CLK_LOOKUP("cam_clk",		cam1_clk.c, 	"4-006e"), /* GSBI4, Slave Addr: 0x6e, imx119 */
-/* LGE_CHANGE_E, for A-PJT, 2013.5.7, jungki.kim[End] */
+/*                                                    */
 #endif
 #else /* QCT Original */
 	CLK_LOOKUP("cam_clk",		cam0_clk.c,	"4-001a"),

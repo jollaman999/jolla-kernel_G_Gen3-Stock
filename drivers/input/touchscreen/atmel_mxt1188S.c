@@ -224,7 +224,7 @@ u8 latest_firmware[] = {
 #ifndef CONFIG_TOUCHSCREEN_LGE_LPWG
 	#include "mXT1188SC09_v1.1.AA_extid_29_.h"
 #else
-	#include "mXT1188SC09_extid_29_V1.1.FD_.h"
+	#include "MXT1188SC09_v2.0.AA_BL_v1_.h"
 #endif
 #else //USE_FW_11AA
 	#include "mXT1188S__APP_V2-0-AB_extid_29_.h"
@@ -237,20 +237,24 @@ u8 latest_firmware[] = {
 #define jitter_sub(x, y)	(x > y ? x - y : y - x)
 #define get_interval(a,b) a>=b ? a-b : 1000000+a-b
 
-// LGE_CHANGE_S [naomi.kim@lge.com] 13.06.17, set data format
+//                                                           
 #define TOUCHEVENTFILTER	1
-// LGE_CHANGE_E [naomi.kim@lge.com] 13.06.17, set data format
+//                                                           
 #endif
 
 static bool must_calibration;
 static bool is_probing;
 
+extern bool atmel_touch_i2c_suspended;
+
+static bool mxt_regulator_on = false;
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 /* Early-suspend level */
-#define MXT_SUSPEND_LEVEL 1
+#define MXT_SUSPEND_LEVEL 50
 
-//static void mxt_early_suspend(struct early_suspend *h);
-//static void mxt_late_resume(struct early_suspend *h);
+static void mxt_early_suspend(struct early_suspend *h);
+static void mxt_late_resume(struct early_suspend *h);
 #endif
 
 struct mxt_info {
@@ -278,11 +282,11 @@ struct t_data {
 	u16	x_position;
 	u16	y_position;
 	u8	touch_major;
-	// LGE_CHANGE_S [naomi.kim@lge.com] 13.06.17, set data format
+	//                                                           
 	#if TOUCHEVENTFILTER
 	u8	touch_minor;
 	#endif //TOUCHEVENTFILTER
-	// LGE_CHANGE_E [naomi.kim@lge.com] 13.06.17, set data format
+	//                                                           
 	u8	pressure;
 	u8	orientation;
 	int tool;
@@ -463,6 +467,10 @@ struct mxt_data {
 	/* Indicates whether device is in suspend */
 	bool suspended;
 
+	bool suspended_2nd;
+
+	//struct wake_lock mxt_wake_lock;
+
 #ifdef CUST_A_TOUCH
 	struct accuracy_filter_info	accuracy_filter;
 	struct touch_data ts_data;
@@ -485,6 +493,9 @@ struct mxt_data {
 	u8 lpwg_mode;
 	u8 mxt_multi_tap_enable;
 	u8 g_tap_cnt;
+
+	bool wrong_lpwg_code;
+	u8 wrong_lpwg_count;
 
 	struct hrtimer multi_tap_timer;
 	struct work_struct	multi_tap_work;
@@ -618,16 +629,16 @@ static bool touch_irq_wake = 0;
 static int touch_enable_irq_wake(unsigned int irq){
 	int ret = 0;
 	if(!touch_irq_wake){
-		touch_irq_wake = 1;
 		ret= enable_irq_wake(irq);
+		touch_irq_wake = 1;
 	}
 	return ret;
 }
 static int touch_disable_irq_wake(unsigned int irq){
 	int ret = 0;
 	if(touch_irq_wake){
-		touch_irq_wake = 0;
 		ret = disable_irq_wake(irq);
+		touch_irq_wake = 0;
 	}
 	return ret;
 }
@@ -635,14 +646,14 @@ static int touch_disable_irq_wake(unsigned int irq){
 static bool touch_enable = 1;
 static void touch_enable_irq(unsigned int irq){
 	if(!touch_enable){
-		touch_enable = 1;
 		enable_irq(irq);
+		touch_enable = 1;
 	}
 }
 static void touch_disable_irq(unsigned int irq){
 	if(touch_enable){
-		touch_enable = 0;
 		disable_irq(irq);
+		touch_enable = 0;
 	}
 }
 
@@ -943,6 +954,8 @@ static int __mxt_read_reg(struct i2c_client *client,
 	u8 buf[2];
 	int i=0;
 
+	if(!mxt_regulator_on) dev_err(&client->dev, "%s: mxt_regulator_not READY\n", __func__);
+
 	buf[0] = reg & 0xff;
 	buf[1] = (reg >> 8) & 0xff;
 
@@ -980,6 +993,8 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
 	buf = kmalloc(count, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
+
+	if(!mxt_regulator_on) dev_err(&client->dev, "%s: mxt_regulator_not READY2\n", __func__);
 
 	buf[0] = reg & 0xff;
 	buf[1] = (reg >> 8) & 0xff;
@@ -2085,9 +2100,14 @@ static int mxt_proc_t37_message(struct mxt_data *data, u8 *msg_buf)
 	int cnt = 0;
 	int tap_num = 0;
 	int msg_size = 0;
-	int x = 0;
-	int y = 0;
+	int xp = 0;
+	int yp = 0;
+	int xr = 0;
+	int yr = 0;
 	int ret = 0;
+
+	data->wrong_lpwg_code = false;
+	data->wrong_lpwg_count = 0;
 
 	#if 0
 		dev_info(&data->client->dev,"t37: %d, %d, %d, %d, %d, %d, %d, %d, %d\n",
@@ -2144,26 +2164,35 @@ retry:
 		goto error;
 
 	ret = __mxt_read_reg(data->client, object->start_address + 3, msg_size, buf);
+#if 0
 	for (i = 0; i < msg_size ; i++) {
 		dev_err(&data->client->dev,"	T37[%02d] : %d \n", i+3, buf[i]);
 	}
-
+#endif
 	if (ret != 0)
 		goto error;
 
 	for (i = 0; i < tap_num ; i++) {
 		cnt = i * MAX_T37_MSG_SIZE;
-		x = (buf[cnt + 1] << 8) | buf[cnt];
-		y = (buf[cnt + 3] << 8) | buf[cnt + 2];
-		g_tci_press[i].x = x;
-		g_tci_press[i].y = y;
-		dev_err(&data->client->dev,"%d tap press   x: %5u, y: %5u (%d)\n", i, x, y, cnt);
+		xp = (buf[cnt + 1] << 8) | buf[cnt];
+		yp = (buf[cnt + 3] << 8) | buf[cnt + 2];
+		g_tci_press[i].x = xp * 100000 / 2562 * 1200 / 100000;;
+		g_tci_press[i].y = yp * 100000 / 4095 * 1920 / 100000;;
+//		dev_err(&data->client->dev,"%d tap press   x: %5u, y: %5u (%d)\n", i, xp, yp, cnt);
 
-		x = (buf[cnt + 5] << 8) | buf[cnt + 4];
-		y = (buf[cnt + 7] << 8) | buf[cnt + 6];
-		g_tci_report[i].x = x;
-		g_tci_report[i].y = y;
-		dev_err(&data->client->dev,"%d tap release x: %5u, y: %5u (%d)\n", i, x, y, cnt);
+		xr = (buf[cnt + 5] << 8) | buf[cnt + 4];
+		yr = (buf[cnt + 7] << 8) | buf[cnt + 6];
+		g_tci_report[i].x = xr * 100000 / 2562 * 1200 / 100000;;
+		g_tci_report[i].y = yr * 100000 / 4095 * 1920 / 100000;;
+//		dev_err(&data->client->dev,"%d tap release x: %5u, y: %5u (%d)\n", i, xr, yr, cnt);
+
+		if ( xr > 2350 || xr < 250 || yr < 250 || yr > 3850 ) {
+			data->wrong_lpwg_count++;
+			if(data->wrong_lpwg_count == tap_num) {
+				dev_err(&data->client->dev,"Woops-sliping in boundary area!!!\n");
+				data->wrong_lpwg_code = true;
+			}
+		}
 	}
 
 	if (buf)
@@ -2193,6 +2222,12 @@ static void mxt_proc_t93_messages(struct mxt_data *data, u8 *message)
 	if ( msg && 0x01){
 		mxt_t6_command(data, MXT_COMMAND_DIAGNOSTIC, UDF_MESSAGE_COMMAND, false);
 		mxt_proc_t37_message(data, message);
+		if (data->wrong_lpwg_code) {
+			data->wrong_lpwg_code = false;
+			memset(g_tci_press, 0, sizeof(g_tci_press));
+			memset(g_tci_report, 0, sizeof(g_tci_report));
+			return;
+		}
 		wake_lock_timeout(&touch_wake_lock, msecs_to_jiffies(3000));
 #ifdef KHG // Call udf wakeup configuration( mxt1188S_udf_act_config ).
 //		mxt_active_mode_start(data);
@@ -2791,7 +2826,7 @@ static int mxt_read_and_process_messages(struct mxt_data *data, u8 count)
 	return num_valid;
 }
 
-// LGE_CHANGE_S [naomi.kim@lge.com] 13.06.18, make width minor data
+//                                                                 
 #if TOUCHEVENTFILTER
 int set_minor_data(struct mxt_data *data, int area, u8 vector)
 {
@@ -2854,7 +2889,7 @@ int set_minor_data(struct mxt_data *data, int area, u8 vector)
 	return minor;
 }
 #endif	//TOUCHEVENTFILTER
-// LGE_CHANGE_E [naomi.kim@lge.com] 13.06.18, make width minor data
+//                                                                 
 
 
 static bool tracking_card_coordinate(struct mxt_data *data) {
@@ -3020,8 +3055,8 @@ static char* get_tool_type(struct mxt_data *data, struct t_data touch_data) {
 static int mxt_soft_reset(struct mxt_data *data);
 #endif
 
-static void mxt_regulator_enable(struct mxt_data *data);
-static void mxt_regulator_disable(struct mxt_data *data);
+static void mxt_regulator_enable(struct mxt_data *data, bool enable);
+//static void mxt_regulator_disable(struct mxt_data *data);
 
 static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 {
@@ -3035,9 +3070,19 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 	int report_num = 0;
 	int pen_count = 0;
 	char *tool_type;
-	int i;
+	int i = 0;
 //	bool long_pressed = false;
 #endif
+
+	if (data->suspended_2nd) {
+		do {
+			if (atmel_touch_i2c_suspended) {
+				msleep(10);
+			} else {
+				break;
+			}
+		} while(++i <100);
+	}
 
 	/* Read T44 and T5 together */
 	ret = __mxt_read_reg(data->client, data->T44_address,
@@ -3046,9 +3091,9 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 		dev_err(dev, "Failed to read T44 and T5 (%d)\n", ret);
 		/* RESET IC FOR INTERRUPT */
 		dev_err(dev, "Touch IC Interrupt level is Low, HW RESET\n");
-		mxt_regulator_disable(data);
+		mxt_regulator_enable(data,0);
 		msleep(300);
-		mxt_regulator_enable(data);
+		mxt_regulator_enable(data,1);
 
 		return IRQ_NONE;
 	}
@@ -3200,7 +3245,7 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR,
 					data->ts_data.curr_data[i].touch_major);
 
-			// LGE_CHANGE_S [naomi.kim@lge.com] 13.06.18, report width minor data
+			//                                                                   
 #ifdef USE_FW_11AA//0//TOUCHEVENTFILTER
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MINOR,
 					data->ts_data.curr_data[i].touch_minor);
@@ -3214,9 +3259,9 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 			input_report_abs(data->input_dev, ABS_MT_WIDTH_MINOR,
 					data->ts_data.curr_data[i].touch_minor);
 #endif	//TOUCHEVENTFILTER
-			// LGE_CHANGE_E [naomi.kim@lge.com] 13.06.18, report width minor data
+			//                                                                   
 
-			// LGE_CHANGE_S [naomi.kim@lge.com] 13.06.18, add more debugging data
+			//                                                                   
 			#if TOUCHEVENTFILTER
 			dev_dbg(dev,
 				"report_data[%d] : x: %d y: %d, z: %d, M: %d, m: %d, orient: %d)\n",
@@ -3238,7 +3283,7 @@ static irqreturn_t mxt_process_messages_t44(struct mxt_data *data)
 					data->ts_data.curr_data[i].orientation
 			);
 			#endif	//TOUCHEVENTFILTER
-			// LGE_CHANGE_E [naomi.kim@lge.com] 13.06.18, add more debugging data
+			//                                                                   
 		}
 #if DEBUG_ABS
 		if (data->ts_data.curr_data[i].status == FINGER_PRESSED) {
@@ -3552,7 +3597,7 @@ recheck:
 	}
 }
 
-#if 0// def CONFIG_TOUCHSCREEN_LGE_LPWG
+#if 0//                                
 static int mxt_init_t93_tab_count(struct mxt_data *data)
 {
 	struct mxt_object *object = NULL;
@@ -3924,8 +3969,11 @@ static int mxt_check_retrigen(struct mxt_data *data)
 	return 0;
 }
 
-static void mxt_regulator_enable(struct mxt_data *data)
+static void mxt_regulator_enable(struct mxt_data *data, bool enable)
 {
+if(enable)
+{
+	dev_info(&data->client->dev,"[OHJ]%s 1\n", __func__);
 	gpio_set_value(data->pdata->gpio_reset, 0);
 
 	regulator_enable(data->reg_vio);
@@ -3934,15 +3982,24 @@ static void mxt_regulator_enable(struct mxt_data *data)
 
 	gpio_set_value(data->pdata->gpio_reset, 1);
 	msleep(MXT_POWERON_DELAY); /* Minimum 65ms, recommend 100ms from ATMEL */
+	mxt_regulator_on=1;
 }
-
-static void mxt_regulator_disable(struct mxt_data *data)
+else
 {
+	mxt_regulator_on=0;
+	dev_info(&data->client->dev,"[OHJ]%s 0\n", __func__);
 	regulator_disable(data->reg_vdd);
 	regulator_disable(data->reg_vio);
 	gpio_set_value(data->pdata->gpio_reset, 0);
 }
+}
 
+#if 0
+static void mxt_regulator_disable(struct mxt_data *data)
+{
+
+}
+#endif
 static void mxt_probe_regulators(struct mxt_data *data)
 {
 	struct device *dev = &data->client->dev;
@@ -3982,7 +4039,8 @@ static void mxt_probe_regulators(struct mxt_data *data)
 	}
 
 	data->use_regulator = true;
-	mxt_regulator_enable(data);
+	mxt_regulator_enable(data,1);
+
 	dev_dbg(dev, "Initialised regulators\n");
 	return;
 
@@ -4418,7 +4476,7 @@ static int mxt_load_fw(struct device *dev, bool from_header)
 
 	if (data->suspended) {
 		if (data->use_regulator)
-			mxt_regulator_enable(data);
+			mxt_regulator_enable(data,1);
 
 		touch_enable_irq(data->irq);
 		data->suspended = false;
@@ -4632,7 +4690,7 @@ static ssize_t mxt_update_cfg_store(struct mxt_data *data,
 
 	if (data->suspended) {
 		if (data->use_regulator)
-			mxt_regulator_enable(data);
+			mxt_regulator_enable(data,1);
 		else
 			mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
 
@@ -4988,7 +5046,7 @@ static void lpwg_early_suspend(struct mxt_data *data)
 {
 	dev_info(&data->client->dev,"%s Start\n", __func__);
 
-	mxt_reset_slots(data);
+//	mxt_reset_slots(data);
 
 	switch (data->lpwg_mode) {
 		case LPWG_DOUBLE_TAP:
@@ -5210,9 +5268,12 @@ static ssize_t mxt_smart_cover_store(struct mxt_data *data,
 	const char *buf, size_t count)
 {
 	int i;
+//	struct input_dev *input_dev = data->input_dev;
 
 	if (sscanf(buf, "%d", &i) == 1 && i < 2) {
+//		mutex_lock(&input_dev->mutex);
 		data->smart_cover_enable = (i == 1);
+//		mutex_unlock(&input_dev->mutex);
 
 		dev_info(&data->client->dev, "%s\n", i ? "smart cover enabled" : "smart cover disabled");
 		return count;
@@ -5220,6 +5281,7 @@ static ssize_t mxt_smart_cover_store(struct mxt_data *data,
 		dev_info(&data->client->dev, "smart_cover_enable write error\n");
 		return -EINVAL;
 	}
+
 }
 
 static ssize_t mxt_show_self_test(struct mxt_data *data, char *buf)
@@ -5266,7 +5328,18 @@ static ssize_t mxt_chargerlogo_state_store(struct mxt_data *data,
 	}
 }
 
-static LGE_TOUCH_ATTR(fw_ver, S_IRUGO, mxt_fw_version_show, NULL);
+static ssize_t show_pen_support(struct mxt_data *data, char *buf)
+{
+	int ret = 0;
+	int pen_support = 1;   /* 1: Support , 0: Not support */
+
+	ret = sprintf(buf, "%d\n", pen_support);
+
+	return ret;
+}
+
+
+static LGE_TOUCH_ATTR(testmode_ver, S_IRUGO, mxt_fw_version_show, NULL);
 static LGE_TOUCH_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
 static LGE_TOUCH_ATTR(object, S_IRUGO, mxt_object_show, NULL);
 static LGE_TOUCH_ATTR(update_fw, S_IWUSR, NULL, mxt_update_fw_store);
@@ -5285,9 +5358,11 @@ static LGE_TOUCH_ATTR(lpwg_notify, S_IRUGO | S_IWUSR, NULL, store_lpwg_notify);
 #else
 static LGE_TOUCH_ATTR(touch_gesture,S_IRUGO | S_IWUSR, NULL, mxt_knock_on_store);
 #endif
+static LGE_TOUCH_ATTR(pen_support, S_IRUGO | S_IWUSR, show_pen_support, NULL);
+
 
 static struct attribute *mxt_attrs[] = {
-	&lge_touch_attr_fw_ver.attr,
+	&lge_touch_attr_testmode_ver.attr,
 	&lge_touch_attr_hw_version.attr,
 	&lge_touch_attr_object.attr,
 	&lge_touch_attr_update_fw.attr,
@@ -5305,6 +5380,7 @@ static struct attribute *mxt_attrs[] = {
 #else
 	&lge_touch_attr_touch_gesture.attr,
 #endif
+	&lge_touch_attr_pen_support.attr,
 	NULL
 };
 
@@ -5379,6 +5455,7 @@ static void mxt_start(struct mxt_data *data)
 {
 	struct mxt_object *object = NULL;
 
+
 	if(data->chargerlogo) {
 		return;
 	}
@@ -5389,10 +5466,15 @@ static void mxt_start(struct mxt_data *data)
 
 	dev_info(&data->client->dev, "%s\n", __func__);
 
+	if (!mxt_regulator_on)
+	{
+		mxt_regulator_enable(data,1);
+	}
+
 #ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
-	if (data->lpwg_mode && suspended_due_to_smart_cover == false) {
+	if (data->lpwg_mode) {
 #else
-	if (data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
+	if (data->mxt_knock_on_enable) {
 #endif
 		touch_disable_irq(data->irq);
 		mutex_lock(&i2c_suspend_lock);
@@ -5407,7 +5489,7 @@ static void mxt_start(struct mxt_data *data)
 #endif
 		mutex_unlock(&i2c_suspend_lock);
 	} else if (data->use_regulator) {
-		mxt_regulator_enable(data);
+//		mxt_regulator_enable(data);
 		object = mxt_get_object(data, MXT_SPT_CTESCANCONFIG_T77);
 		if (object) {
 			mxt_write_reg(data->client, object->start_address, 8);
@@ -5435,6 +5517,7 @@ static void mxt_start(struct mxt_data *data)
 
 	data->enable_reporting = true;
 	data->suspended = false;
+	data->suspended_2nd = false;
 	touch_enable_irq(data->irq);
 
 	if (data->autocal_step == 0) {
@@ -5494,9 +5577,10 @@ static void mxt_stop(struct mxt_data *data)
 			mxt_t61_timer_set(data, 2, MXT_T61_TIMER_CMD_STOP);
 		if (data->antitouch_timer3_started)
 			mxt_t61_timer_set(data, 3, MXT_T61_TIMER_CMD_STOP);
-	} else if (data->use_regulator)
-		mxt_regulator_disable(data);
-	else
+	} else if (data->use_regulator) {
+	//	mxt_regulator_enable(data,0);
+//		Do nothing....
+	} else
 		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
 
 	mxt_reset_slots(data);
@@ -5523,12 +5607,20 @@ static void mxt_stop(struct mxt_data *data)
 #endif
 		touch_enable_irq(data->irq);
 	}
+	//mdelay(10);
 }
 
 static int mxt_input_open(struct input_dev *dev)
 {
 	struct mxt_data *data = input_get_drvdata(dev);
 	dev_info(&data->client->dev, "%s\n", __func__);
+
+	mxt_regulator_enable(data,0);
+	msleep(100);
+	mxt_regulator_enable(data,1);
+
+	data->suspended = true;
+
 	mxt_start(data);
 
 	return 0;
@@ -5537,7 +5629,6 @@ static int mxt_input_open(struct input_dev *dev)
 static void mxt_input_close(struct input_dev *dev)
 {
 	struct mxt_data *data = input_get_drvdata(dev);
-
 	mxt_stop(data);
 }
 
@@ -5587,7 +5678,7 @@ static int mxt_initialize_t9_input_device(struct mxt_data *data)
 		return -ENOMEM;
 	}
 
-	input_dev->name = MXT_DEVICE_NAME;
+	input_dev->name = "touch_atmel";
 //	input_dev->phys = data->phys;
 //	input_dev->id.bustype = BUS_I2C;
 //	input_dev->dev.parent = dev;
@@ -5695,7 +5786,6 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	wake_lock_init(&touch_wake_lock, WAKE_LOCK_SUSPEND, "touch_wakelock");
 	mutex_init(&i2c_suspend_lock);
 
-
 	data = kzalloc(sizeof(struct mxt_data), GFP_KERNEL);
 	if (!data) {
 		dev_err(&client->dev, "Failed to allocate memory\n");
@@ -5708,6 +5798,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	data->client = client;
 	data->irq = client->irq;
 	i2c_set_clientdata(client, data);
+//	data->suspended = true;
 
 	error = mxt_handle_pdata(data);
 	if (error)
@@ -5721,6 +5812,8 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	init_completion(&data->t25_completion);
 
 	test_data = data;
+
+	//wake_lock_init(&data->mxt_wake_lock, WAKE_LOCK_SUSPEND, "mxt_wake_lock");
 
 	error = gpio_request(data->pdata->gpio_reset, "touch_reset");
 	if (error < 0) {
@@ -5788,25 +5881,24 @@ static int __devinit mxt_probe(struct i2c_client *client,
 		data->accuracy_filter.touch_max_count = one_sec / 2;
 	}
 #endif
-#if 0//def CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	data->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + MXT_SUSPEND_LEVEL;
 	data->early_suspend.suspend = mxt_early_suspend;
 	data->early_suspend.resume = mxt_late_resume;
 	register_early_suspend(&data->early_suspend);
 #endif
 
-	data->fb_notif.notifier_call = fb_notifier_callback;
-
-	error = fb_register_client(&data->fb_notif);
-	if (error)
-		dev_err(&client->dev, "Unable to register fb_notifier: %d\n", error);
+//	data->fb_notif.notifier_call = fb_notifier_callback;
+//	error = fb_register_client(&data->fb_notif);
+//	if (error)
+//		dev_err(&client->dev, "Unable to register fb_notifier: %d\n", error);
 
 	data->chargerlogo = false;
 
 	/* disabled report touch event to prevent unnecessary event.
 	* it will be enabled in open function
 	*/
-	mxt_stop(data);
+//	mxt_stop(data);
 
 	/* Register sysfs for making fixed communication path to framework layer */
 	error = sysdev_class_register(&lge_touch_sys_class);
@@ -5822,8 +5914,7 @@ static int __devinit mxt_probe(struct i2c_client *client,
 	}
 
 	error = kobject_init_and_add(&data->lge_touch_kobj, &lge_touch_kobj_type,
-			data->input_dev->dev.kobj.parent,
-			"%s", LGE_TOUCH_NAME);
+			data->input_dev->dev.kobj.parent, "%s", LGE_TOUCH_NAME);
 	if (error < 0) {
 		dev_err(&client->dev, "kobject_init_and_add is failed\n");
 		goto err_lge_touch_sysfs_init_and_add;
@@ -5831,15 +5922,13 @@ static int __devinit mxt_probe(struct i2c_client *client,
 
 	sysfs_bin_attr_init(&data->mem_access_attr);
 	data->mem_access_attr.attr.name = "mem_access";
-	data->mem_access_attr.attr.mode = S_IRUGO | S_IWUSR;//S_IRWXUGO;
+	data->mem_access_attr.attr.mode = S_IWUSR | S_IRUSR;
 	data->mem_access_attr.read = mxt_mem_access_read;
 	data->mem_access_attr.write = mxt_mem_access_write;
 	data->mem_access_attr.size = data->mem_size;
 
-	if (sysfs_create_bin_file(&client->dev.kobj,
-				  &data->mem_access_attr) < 0) {
-		dev_err(&client->dev, "Failed to create %s\n",
-			data->mem_access_attr.attr.name);
+	if (sysfs_create_bin_file(&client->dev.kobj, &data->mem_access_attr) < 0) {
+		dev_err(&client->dev, "Failed to create %s\n", data->mem_access_attr.attr.name);
 		goto err_lge_touch_sysfs_init_and_add;
 	}
 
@@ -5901,9 +5990,9 @@ static int __devexit mxt_remove(struct i2c_client *client)
 	return 0;
 }
 
-#ifdef CONFIG_PM_SLEEP
+#if 0//def CONFIG_PM_SLEEP
 //static int mxt_suspend(struct device *dev)
-static int mxt_suspend(struct mxt_data *data)
+static int mxt_fb_suspend(struct mxt_data *data)
 {
 //	struct i2c_client *client = to_i2c_client(dev);
 //	struct mxt_data *data = i2c_get_clientdata(client);
@@ -5912,16 +6001,13 @@ static int mxt_suspend(struct mxt_data *data)
 	if(data->chargerlogo)
 		return 0;
 
+	mutex_lock(&input_dev->mutex);
+
 	if (data->smart_cover_enable) {
 		if (gpio_get_value(HALL_IC_GPIO) == 0)
 			suspended_due_to_smart_cover = true;
 	}
-
-	mutex_lock(&input_dev->mutex);
-
-	if (input_dev->users)
-		mxt_stop(data);
-
+	if (input_dev->users)	mxt_stop(data);
 	mutex_unlock(&input_dev->mutex);
 
 #ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
@@ -5932,17 +6018,18 @@ static int mxt_suspend(struct mxt_data *data)
 	if (data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
 #endif
 		touch_enable_irq_wake(data->irq);
+		wake_lock_timeout(&data->mxt_wake_lock, msecs_to_jiffies(1000));
 		dev_info(&data->client->dev, "enable irq wake");
 	}
+
+	//data->suspended_2nd = true;
 
 	return 0;
 }
 
 //static int mxt_resume(struct device *dev)
-static int mxt_resume(struct mxt_data *data)
+static int mxt_fb_resume(struct mxt_data *data)
 {
-//	struct i2c_client *client = to_i2c_client(dev);
-//	struct mxt_data *data = i2c_get_clientdata(client);
 	struct input_dev *input_dev = data->input_dev;
 
 #ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
@@ -5961,30 +6048,88 @@ static int mxt_resume(struct mxt_data *data)
 	if (input_dev->users)
 		mxt_start(data);
 
-	mutex_unlock(&input_dev->mutex);
-
 	suspended_due_to_smart_cover = false;
-
+	data->suspended_2nd = false;
+	mutex_unlock(&input_dev->mutex);
 	return 0;
 }
 #endif
 
-#if 0//def CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static void mxt_early_suspend(struct early_suspend *h)
 {
 	struct mxt_data *data = container_of(h, struct mxt_data, early_suspend);
+	struct input_dev *input_dev = data->input_dev;
 
-	mxt_suspend(&data->client->dev);
+	dev_info(&data->client->dev, "%s\n", __func__);
+
+	if(data->chargerlogo)
+		return ;
+
+	mutex_lock(&input_dev->mutex);
+
+	if (data->smart_cover_enable) {
+		if (gpio_get_value(HALL_IC_GPIO) == 0)
+			suspended_due_to_smart_cover = true;
+	}
+	if (input_dev->users)	mxt_stop(data);
+	msleep(50);
+	mutex_unlock(&input_dev->mutex);
+
+#ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
+//	if (device_may_wakeup(dev) && data->lpwg_mode && suspended_due_to_smart_cover == false) {
+	if (data->lpwg_mode && suspended_due_to_smart_cover == false) {
+#else
+//	if (device_may_wakeup(dev) && data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
+	if (data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
+#endif
+		touch_enable_irq_wake(data->irq);
+
+		wake_lock_timeout(&touch_wake_lock, msecs_to_jiffies(3000));
+		dev_info(&data->client->dev, "enable irq wake");
+	}
+
+	//data->suspended_2nd = true;
+
+	return;
+
 }
 
 static void mxt_late_resume(struct early_suspend *h)
 {
-	struct mxt_data *data = container_of(h, struct mxt_data, early_suspend);
 
-	mxt_resume(&data->client->dev);
+	struct mxt_data *data = container_of(h, struct mxt_data, early_suspend);
+	struct input_dev *input_dev = data->input_dev;
+
+	dev_info(&data->client->dev, "%s\n", __func__);
+
+#ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
+//	if (device_may_wakeup(dev) && data->lpwg_mode && suspended_due_to_smart_cover == false) {
+	if (data->lpwg_mode && suspended_due_to_smart_cover == false) {
+#else
+//	if (device_may_wakeup(dev) && data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
+	if (data->mxt_knock_on_enable && suspended_due_to_smart_cover == false) {
+#endif
+		touch_disable_irq_wake(data->irq);
+		dev_info(&data->client->dev, "disable irq wake");
+	}
+
+	mutex_lock(&input_dev->mutex);
+
+	if (input_dev->users)
+		mxt_start(data);
+
+	suspended_due_to_smart_cover = false;
+	data->suspended_2nd = false;
+	mutex_unlock(&input_dev->mutex);
+	return ;
+
+
 }
 #endif
 
+
+#if 0
 int fb_notifier_callback(struct notifier_block *self, unsigned long event, void *data)
 {
        struct fb_event *evdata = data;
@@ -5994,18 +6139,60 @@ int fb_notifier_callback(struct notifier_block *self, unsigned long event, void 
        if (evdata && evdata->data && event == FB_EVENT_BLANK && ts && ts->client) {
 			blank = evdata->data;
 			if (*blank == FB_BLANK_UNBLANK)
-				mxt_resume(ts);
+				mxt_fb_resume(ts);
 			else if (*blank == FB_BLANK_POWERDOWN)
-				mxt_suspend(ts);
+				mxt_fb_suspend(ts);
        }
        return 0;
 }
+#endif
+
+static int mxt_suspend(struct device *dev) {
+
+	struct i2c_client *client = to_i2c_client(dev);
+	struct mxt_data *data = i2c_get_clientdata(client);
+
+	dev_info(dev, "%s %d  %d  %d\n", __func__,data->suspended_2nd,data->lpwg_mode,mxt_regulator_on);
+
+	if(data->suspended_2nd) return 0;
+
+#ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
+	if (!data->lpwg_mode && mxt_regulator_on) {
+#else
+	if (!data->mxt_knock_on_enable && mxt_regulator_on) {
+#endif
+		touch_disable_irq_wake(data->irq);
+		touch_disable_irq(data->irq);
+		mxt_regulator_enable(data,0);
+	}
+
+	data->suspended_2nd = true;
+	return 0;
+}
+
+static int mxt_resume(struct device *dev) {
+#if 0
+	struct i2c_client *client = to_i2c_client(dev);
+	struct mxt_data *data = i2c_get_clientdata(client);
+
+	dev_info(dev, "%s\n", __func__);
+#ifdef CONFIG_TOUCHSCREEN_LGE_LPWG
+	if (!data->lpwg_mode) {
+#else
+	if (!data->mxt_knock_on_enable) {
+#endif
+		mxt_regulator_enable(data,1);
+	}
+#endif
+	dev_info(dev, "%s\n", __func__);
+	return 0;
+}
 
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#if 1//def CONFIG_HAS_EARLYSUSPEND
 static const struct dev_pm_ops mxt_pm_ops = {
-	.suspend	= NULL,
-	.resume		= NULL,
+	.suspend	= mxt_suspend,
+	.resume		= mxt_resume,
 };
 #else
 static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
@@ -6019,10 +6206,6 @@ static void mxt_shutdown(struct i2c_client *client)
 }
 
 static const struct i2c_device_id mxt_id[] = {
-	{ "qt602240_ts", 0 },
-	{ "atmel_mxt_ts", 0 },
-	{ "atmel_mxt_tp", 0 },
-	{ "mXT224", 0 },
 	{ MXT_DEVICE_NAME, 0},
 	{ }
 };
@@ -6030,7 +6213,7 @@ MODULE_DEVICE_TABLE(i2c, mxt_id);
 
 static struct i2c_driver mxt_driver = {
 	.driver = {
-		.name	= MXT_DEVICE_NAME,
+		.name	= "touch_atmel",
 		.owner	= THIS_MODULE,
 		.pm	= &mxt_pm_ops,
 	},
@@ -6040,8 +6223,18 @@ static struct i2c_driver mxt_driver = {
 	.id_table	= mxt_id,
 };
 
+
+#ifdef CONFIG_LGE_PM_CHARGING_CHARGERLOGO
+extern int lge_boot_mode_for_touch;
+#endif
+
 static int __init mxt_init(void)
 {
+#ifdef CONFIG_LGE_PM_CHARGING_CHARGERLOGO
+	if (lge_boot_mode_for_touch == 2) { // Chargerlogo mode
+		return -EMLINK;
+	}
+#endif
 
 #if defined(CONFIG_TOUCHSCREEN_LGE_LPWG)
 	touch_multi_tap_wq = create_singlethread_workqueue("touch_multi_tap_wq");
@@ -6055,6 +6248,12 @@ static int __init mxt_init(void)
 
 static void __exit mxt_exit(void)
 {
+#ifdef CONFIG_LGE_PM_CHARGING_CHARGERLOGO
+	if (lge_boot_mode_for_touch == 2) { // Chargerlogo mode
+		return;
+	}
+#endif
+
 	i2c_del_driver(&mxt_driver);
 
 #if defined(CONFIG_TOUCHSCREEN_LGE_LPWG)

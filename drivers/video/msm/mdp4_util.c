@@ -445,6 +445,9 @@ void mdp4_hw_init(void)
 
 	/* max read pending cmd config */
 	outpdw(MDP_BASE + 0x004c, 0x02222);	/* 3 pending requests */
+   outpdw(MDP_BASE + 0x0400, 0x7FF);
+   outpdw(MDP_BASE + 0x0404, 0x30044);
+
 
 #ifndef CONFIG_FB_MSM_OVERLAY
 	/* both REFRESH_MODE and DIRECT_OUT are ignored at BLT mode */
@@ -529,7 +532,7 @@ irqreturn_t mdp4_isr(int irq, void *ptr)
 	outpdw(MDP_INTR_CLEAR, isr);
 
 	if (isr & INTR_PRIMARY_INTF_UDERRUN) {
-		pr_warn("%s: UNDERRUN -- primary\n", __func__);
+		pr_debug("%s: UNDERRUN -- primary\n", __func__);
 		mdp4_stat.intr_underrun_p++;
 		/* When underun occurs mdp clear the histogram registers
 		that are set before in hw_init so restore them back so
@@ -543,7 +546,7 @@ irqreturn_t mdp4_isr(int irq, void *ptr)
 	}
 
 	if (isr & INTR_EXTERNAL_INTF_UDERRUN) {
-		pr_warn("%s: UNDERRUN -- external\n", __func__);
+		pr_debug("%s: UNDERRUN -- external\n", __func__);
 		mdp4_stat.intr_underrun_e++;
 	}
 
@@ -659,7 +662,10 @@ irqreturn_t mdp4_isr(int irq, void *ptr)
 #ifdef CONFIG_LGE_FPS_CONTROL
 			if (mdp4_stat.enable_skip_vsync) {
 				mdp4_stat.bucket += mdp4_stat.weight;
-				if (mdp4_stat.skip_value<=mdp4_stat.bucket) {
+				if (mdp4_stat.skip_first == false) {
+					mdp4_stat.skip_first = true;
+					mdp4_primary_vsync_dsi_video();
+				} else if (mdp4_stat.skip_value <= mdp4_stat.bucket) {
 					mdp4_primary_vsync_dsi_video();
 					mdp4_stat.bucket -= mdp4_stat.skip_value;
 				} else {
@@ -1433,18 +1439,6 @@ struct mdp_csc_cfg dmb_csc_convert = {
 	{ 0x0, 0x0, 0x0, },
 	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
 	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
-#elif defined(CONFIG_MACH_APQ8064_GVKT)
-	/*dmb YUV2RGB*/
-	0,
-	{
-		0x0230, 0x0000, 0x0331, //280
-		0x0238, 0xff37, 0xfe60, //284
-		0x0276, 0x0409, 0x0000, //315
-	},
-	{ 0xfff0, 0xff80, 0xff80, },
-	{ 0x0, 0x0, 0x0, },
-	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
-	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
 #else
 	/*YUV2RGB*/
 	0,
@@ -1459,7 +1453,7 @@ struct mdp_csc_cfg dmb_csc_convert = {
 	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
 #endif
 };
-#endif /* LGE_BROADCAST_TDMB */
+#endif /*                    */
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 struct mdp_csc_cfg dmb_csc_convert = {
        /*YUV2RGB*/
@@ -1474,7 +1468,7 @@ struct mdp_csc_cfg dmb_csc_convert = {
 	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
 	{ 0x0, 0xff, 0x0, 0xff, 0x0, 0xff, },
 };
-#endif /* LGE_BROADCAST_ONESEG */
+#endif /*                      */
 void mdp4_vg_csc_restore(void)
 {
         int i;

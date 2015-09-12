@@ -47,11 +47,6 @@ static void wunlock_w(struct work_struct *w)
     wake_unlock(&_udc_ctxt.wlock);
 }
 #endif
-void usb_bus_active_unlock(void)
-{
-    wake_unlock(&_udc_ctxt.wlock);
-}
-EXPORT_SYMBOL(usb_bus_active_unlock);
 
 static irqreturn_t msm_udc_irq(int irq, void *data)
 {
@@ -266,10 +261,16 @@ int ci13xxx_msm_remove(struct platform_device *pdev)
 	return 0;
 }
 
+void ci13xxx_msm_shutdown(struct platform_device *pdev)
+{
+	ci13xxx_pullup(&_udc->gadget, 0);
+}
+
 static struct platform_driver ci13xxx_msm_driver = {
 	.probe = ci13xxx_msm_probe,
 	.driver = { .name = "msm_hsusb", },
 	.remove = ci13xxx_msm_remove,
+	.shutdown = ci13xxx_msm_shutdown,
 };
 MODULE_ALIAS("platform:msm_hsusb");
 

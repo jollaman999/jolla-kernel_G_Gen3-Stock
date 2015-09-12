@@ -34,12 +34,12 @@
 #if defined (CONFIG_SND_SOC_TPA2028D) || defined (CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER)
 #include <sound/tpa2028d.h>
 #endif
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Check external EC reference from codec
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 #include <sound/es325-export.h>
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 /* 8064 machine driver */
 #define PM8921_GPIO_BASE		NR_GPIO_IRQS
 #define PM8921_GPIO_PM_TO_SYS(pm_gpio)  (pm_gpio - 1 + PM8921_GPIO_BASE)
@@ -62,7 +62,7 @@ static const struct soc_enum msm_btsco_enum[] = {
 		SOC_ENUM_SINGLE_EXT(2, btsco_rate_text),
 };
 
-#endif/* CONFIG_LGE_AUDIO*/
+#endif/*                 */
 
 #define SAMPLE_RATE_8KHZ 8000
 #define SAMPLE_RATE_16KHZ 16000
@@ -129,12 +129,12 @@ static int msm_slim_3_rx_ch = 1;
 
 static int msm_slim_1_rate = SAMPLE_RATE_8KHZ;
 static int msm_btsco_ch = 1;
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 static int msm_slimbus_es325_sample_rate = 48000;
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 static int msm_slim_1_rx_ch = 1;
 static int msm_slim_1_tx_ch = 1;
 
@@ -602,7 +602,7 @@ static const struct snd_soc_dapm_widget apq8064_dapm_widgets[] = {
 	SND_SOC_DAPM_MIC("Handset Mic", NULL),
 	SND_SOC_DAPM_MIC("Handset SubMic", NULL),
 #endif
-#endif/*CONFIG_LGE_AUDIO */
+#endif/*                 */
 
 	/*********** Digital Mics ***************/
 	SND_SOC_DAPM_MIC("Digital Mic1", NULL),
@@ -668,7 +668,7 @@ static const struct snd_soc_dapm_route apq8064_common_audio_map[] = {
 	{"AMIC4", NULL, "MIC BIAS1 Internal2"},
 	{"MIC BIAS1 Internal2", NULL, "ANCLeft Headset Mic"},
 #endif
-#endif/*CONFIG_LGE_AUDIO*/
+#endif/*                */
 };
 
 static const struct snd_soc_dapm_route apq8064_mtp_audio_map[] = {
@@ -799,7 +799,7 @@ static const struct soc_enum msm_enum[] = {
 	SOC_ENUM_SINGLE_EXT(2, hdmi_rate),
 };
 
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 static const char *slimbus_sample_rate_text[] = {"8000", "16000", "48000"};
@@ -807,7 +807,7 @@ static const struct soc_enum msm_slimbus_es325_sample_rate_enum[] = {
 		SOC_ENUM_SINGLE_EXT(3, slimbus_sample_rate_text),
 };
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 static const char * const slim1_rate_text[] = {"8000", "16000", "48000"};
 static const struct soc_enum msm_slim_1_rate_enum[] = {
 	SOC_ENUM_SINGLE_EXT(3, slim1_rate_text),
@@ -925,7 +925,7 @@ static int msm_slim_1_rate_put(struct snd_kcontrol *kcontrol,
 		 msm_slim_1_rate);
 	return 0;
 }
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 static int msm_slimbus_es325_sample_rate_get(struct snd_kcontrol *kcontrol,
@@ -957,7 +957,7 @@ static int msm_slimbus_es325_sample_rate_put(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 
 static int msm_incall_rec_mode_get(struct snd_kcontrol *kcontrol,
 					struct snd_ctl_elem_value *ucontrol)
@@ -1038,7 +1038,7 @@ static int msm_btsco_rate_put(struct snd_kcontrol *kcontrol,
 					msm_btsco_rate);
 	return 0;
 }
-#endif/*CONFIG_LGE_AUDIO */
+#endif/*                 */
 
 static const struct snd_kcontrol_new tabla_msm_controls[] = {
 	SOC_ENUM_EXT("Speaker Function", msm_enum[0], msm_get_spk,
@@ -1055,13 +1055,13 @@ static const struct snd_kcontrol_new tabla_msm_controls[] = {
 			msm_incall_rec_mode_get, msm_incall_rec_mode_put),
 	SOC_ENUM_EXT("SLIM_3_RX Channels", msm_enum[1],
 		msm_slim_3_rx_ch_get, msm_slim_3_rx_ch_put),
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 	SOC_ENUM_EXT("SLIMBus SampleRate", msm_slimbus_es325_sample_rate_enum[0],
 		msm_slimbus_es325_sample_rate_get, msm_slimbus_es325_sample_rate_put),
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 	SOC_ENUM_EXT("HDMI_RX Channels", msm_enum[3],
 		msm_hdmi_rx_ch_get, msm_hdmi_rx_ch_put),
 	SOC_ENUM_EXT("HDMI RX Rate", msm_enum[4],
@@ -1071,7 +1071,7 @@ static const struct snd_kcontrol_new tabla_msm_controls[] = {
 //BT_SCO_WB
 	SOC_ENUM_EXT("Internal BTSCO SampleRate", msm_btsco_enum[0],
 		msm_btsco_rate_get, msm_btsco_rate_put),
-#endif/*CONFIG_LGE_AUDIO*/
+#endif/*                */
 };
 
 static void *def_tabla_mbhc_cal(void)
@@ -1161,12 +1161,12 @@ static int msm_hw_params(struct snd_pcm_substream *substream,
 	unsigned int rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
 	unsigned int rx_ch_cnt = 0, tx_ch_cnt = 0;
 	unsigned int num_tx_ch = 0;
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Check external EC reference from codec
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 	int es325_tx1_enabled = es325_get_tx1_enabled();
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 
 
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
@@ -1195,7 +1195,7 @@ static int msm_hw_params(struct snd_pcm_substream *substream,
 		}
 	} else {
 
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 		if (codec_dai->id  == 2 || codec_dai->id == 12)
 			num_tx_ch =  msm_slim_0_tx_ch;
@@ -1219,7 +1219,7 @@ static int msm_hw_params(struct snd_pcm_substream *substream,
 			num_tx_ch =  msm_slim_0_rx_ch;
 		}
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 
 		pr_debug("%s: %s_tx_dai_id_%d_ch=%d\n", __func__,
 			codec_dai->name, codec_dai->id, num_tx_ch);
@@ -1583,13 +1583,13 @@ static int msm_slim_0_rx_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 
 	pr_debug("%s()\n", __func__);
 	rate->min = rate->max = 48000;
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 	pr_debug("%s() sample rate(%d)\n", __func__, msm_slimbus_es325_sample_rate);
 	rate->min = rate->max = msm_slimbus_es325_sample_rate;//48000;
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 	channels->min = channels->max = msm_slim_0_rx_ch;
 
 	return 0;
@@ -1606,13 +1606,13 @@ static int msm_slim_0_tx_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 
 	pr_debug("%s()\n", __func__);
 	rate->min = rate->max = 48000;
-// [[CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 // Changed SLIMBus Sample Rate 48KHz to 8KHz via eS325, Power consumption
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 	pr_debug("%s() sample rate(%d)\n", __func__, msm_slimbus_es325_sample_rate);
 	rate->min = rate->max = msm_slimbus_es325_sample_rate;//48000;
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]CONFIG_LGE_AUDIO,  Audience eS325 ALSA SoC Audio driver
+//                                                          
 	channels->min = channels->max = msm_slim_0_tx_ch;
 
 	return 0;
@@ -1786,7 +1786,7 @@ static int msm_auxpcm_be_params_fixup(struct snd_soc_pcm_runtime *rtd,
 #else//QCT_Original
 	/* PCM only supports mono output with 8khz sample rate */
 	rate->min = rate->max = 8000;
-#endif/*CONFIG_LGE_AUDIO */
+#endif/*                 */
 
 	channels->min = channels->max = 1;
 

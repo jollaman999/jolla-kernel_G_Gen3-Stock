@@ -964,8 +964,8 @@ static int msm_open(struct file *f)
 			goto msm_cam_server_get_mctl_failed;
 		}
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		pmctl->client = msm_camera_v4l2_get_ion_client(pcam);
 		if(pmctl->client != NULL)
 			ion_client_created = 1;
@@ -976,7 +976,7 @@ static int msm_open(struct file *f)
 		}
 		ion_client_created = 1;		
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 #endif
 
 		/* Should be set to sensor ops if any but right now its OK!! */
@@ -991,30 +991,30 @@ static int msm_open(struct file *f)
 		rc = pmctl->mctl_open(pmctl, MSM_APPS_ID_V4L2);
 		if (rc < 0) {
 			pr_err("%s: HW open failed rc = 0x%x\n",  __func__, rc);
-			rc = -EIO;  /* LGE_CHANGE, To block kernel crash, 2013-08-22, gayoung85.lee@lge.com */
+			rc = -EIO;  /*                                                                      */
 			goto mctl_open_failed;
 		}
 		pmctl->pcam_ptr = pcam;
     
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 #if defined(CONFIG_LGE_GK_CAMERA)
 #else
 		msm_setup_v4l2_event_queue(&pcam_inst->eventHandle,
 			pcam->pvdev);
 #endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 		mutex_init(&pcam->event_lock);
 		msm_queue_init(&pcam->eventData_q, "eventData");
 	}
   
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */     
+/*                                                                                   */     
 #if defined(CONFIG_LGE_GK_CAMERA)
    if (pcam_inst->my_index == 0) {
        msm_setup_v4l2_event_queue(&pcam_inst->eventHandle,
        pcam->pvdev);
     }
 #endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 
 	pcam_inst->vbqueue_initialized = 0;
 	pcam_inst->sequence = 0;
@@ -1049,8 +1049,8 @@ msm_send_open_server_failed:
 mctl_open_failed:
 	if (pcam->use_count == 1) {
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		if(ion_client_created == 1)
 			msm_camera_v4l2_put_ion_client(pcam);
 #else
@@ -1059,7 +1059,7 @@ mctl_open_failed:
 			kref_put(&pmctl->refcount, msm_release_ion_client);
 		}
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 #endif
 		if (msm_server_end_session(pcam) < 0)
 			pr_err("%s: msm_server_end_session failed\n",
@@ -1174,11 +1174,11 @@ static int msm_close(struct file *f)
 	pmctl = msm_cam_server_get_mctl(pcam->mctl_handle);
 	if (!pmctl) {
 		pr_err("%s NULL mctl pointer\n", __func__);
-/* LGE_CHANGE_S, camera recovery patch, 2013.2.1, jungki.kim[Start] */
+/*                                                                  */
 #if !defined(CONFIG_LGE_GK_CAMERA)
 		return -EINVAL;
 #endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.2.1, jungki.kim[End] */
+/*                                                                */
 	}
 
 	mutex_lock(&pcam->vid_lock);
@@ -1187,39 +1187,39 @@ static int msm_close(struct file *f)
 	if (pcam_inst->streamon) {
 		/*something went wrong since instance
 		is closing without streamoff*/
-//LGE_UPDATE_S 0828 add messages to debug timeout error yt.jeon@lge.com
+//                                                                     
 		printk("%s OO pcam_inst->streamon \n",__func__);
-//LGE_UPDATE_E 0828 add messages to debug timeout error yt.jeon@lge.com
-		// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+//                                                                     
+		//                                                                                          
+/*                                                                                   */    
 #if defined(CONFIG_LGE_GK_CAMERA)
 #else
-//Start LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
+//                                                                                
 		//msm_cam_stop_hardware(pcam);
 			if(pmctl->mctl_release)
 				pmctl->mctl_release(pmctl);
 			pmctl->mctl_release = NULL;
-//End  LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
+//                                                                               
 #endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
-		// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-08-10 handle server daemon crash elegantly
-//LGE_UPDATE_S 0828 add messages to debug timeout error yt.jeon@lge.com
+/*                                                                                   */    
+		//                                                                                        
+//                                                                     
 	}
 	else
 	{
 		printk("%s XX pcam_inst->streamon \n",__func__);
-//LGE_UPDATE_E 0828 add messages to debug timeout error yt.jeon@lge.com
+//                                                                     
 	}
 
 	pcam_inst->streamon = 0;
 	pcam_inst->avtimerOn = 0;
 	pcam->use_count--;
 	pcam->dev_inst_map[pcam_inst->image_mode] = NULL;
-/* LGE_CHANGE_S, ion leakage patch, 2013.1.23, jungki.kim[Start] */
+/*                                                               */
 #if defined(CONFIG_LGE_GK_CAMERA)
 	pcam_inst->is_closing = 1;
 #endif
-/* LGE_CHANGE_E, ion leakage patch, 2013.1.23, jungki.kim[End] */
+/*                                                             */
 	if (pcam_inst->vbqueue_initialized)
 		vb2_queue_release(&pcam_inst->vid_bufq);
 	D("%s Closing down instance %p ", __func__, pcam_inst);
@@ -1230,12 +1230,12 @@ static int msm_close(struct file *f)
 		mutex_lock(&pcam->event_lock);
 		msm_drain_eventq(&pcam->eventData_q);
 		mutex_unlock(&pcam->event_lock);
-/* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 #if defined(CONFIG_LGE_GK_CAMERA)
 #else
 		mutex_destroy(&pcam->event_lock);
 #endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 		msm_destroy_v4l2_event_queue(&pcam_inst->eventHandle);
 	}
 
@@ -1248,13 +1248,13 @@ static int msm_close(struct file *f)
 	f->private_data = NULL;
 
 	if (pcam->use_count == 0) {
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 		msm_camera_v4l2_put_ion_client(pcam);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 
 		if (msm_server_get_usecount() > 0) {
 			rc = msm_send_close_server(pcam);
@@ -1262,34 +1262,34 @@ static int msm_close(struct file *f)
 				pr_err("msm_send_close_server failed %d\n", rc);
 		}
 
-/* LGE_CHANGE_S, camera recovery patch, 2013.2.1, jungki.kim[Start] */
+/*                                                                  */
 #if defined(CONFIG_LGE_GK_CAMERA)
 		if (pmctl != NULL && pmctl->mctl_release)
 #else
 		if (pmctl->mctl_release)
 #endif
-/* LGE_CHANGE_E, camera recovery patch, 2013.2.1, jungki.kim[End] */
+/*                                                                */
 			pmctl->mctl_release(pmctl);
-//Start LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
+//                                                                                
 #if !defined(CONFIG_LGE_GK_CAMERA)
 		pmctl->mctl_release = NULL;
 #endif
-//End  LGE_BSP_CAMERA : mediaserver recovery patch from QCT - jonghwan.ko@lge.com
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if !defined(CONFIG_LGE_GK_CAMERA) && !defined(CONFIG_MACH_APQ8064_AWIFI)
+//                                                                               
+/*                                                                  */
+#if !defined(CONFIG_LGE_GK_CAMERA) && !defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 		kref_put(&pmctl->refcount, msm_release_ion_client);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 		rc = msm_server_end_session(pcam);
 		if (rc < 0)
 			pr_err("msm_server_end_session fails %d\n", rc);
- /* LGE_CHANGE_S, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+ /*                                                                                   */    
 #if defined(CONFIG_LGE_GK_CAMERA)
           mutex_destroy(&pcam->event_lock);
 #endif
-/* LGE_CHANGE_E, To block kernel crash on GK/GV camera, 2012.12.16, elin.lee@lge.com */    
+/*                                                                                   */    
 	}
 	mutex_unlock(&pcam->vid_lock);
 	return rc;
@@ -1353,26 +1353,26 @@ long msm_v4l2_evt_notify(struct msm_cam_media_controller *mctl,
 	}
 	ktime_get_ts(&v4l2_ev.timestamp);
 	if (evt_payload.payload_length > 0 && evt_payload.payload != NULL) {
-//Start LGE_BSP_CAMERA : Dont use G model - jonghwan.ko@lge.com
+//                                                             
 		pr_err(" %s : payload_length %d \n",__func__,evt_payload.payload_length);
-//End  LGE_BSP_CAMERA : Dont use G model - jonghwan.ko@lge.com
+//                                                            
 		mutex_lock(&pcam->event_lock);
 		event_qcmd = kzalloc(sizeof(struct msm_queue_cmd), GFP_KERNEL);
 		if (!event_qcmd) {
 			pr_err("%s Insufficient event_qcmd memory. return", __func__);
 			rc = -ENOMEM;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto event_qcmd_alloc_fail;
 		}
 		payload = kzalloc(evt_payload.payload_length, GFP_KERNEL);
 		if (!payload) {
 			pr_err("%s Insufficient payload memory. return", __func__);
 			rc = -ENOMEM;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto payload_alloc_fail;
 		}
 		if (copy_from_user(payload,
@@ -1380,9 +1380,9 @@ long msm_v4l2_evt_notify(struct msm_cam_media_controller *mctl,
 				evt_payload.payload_length)) {
 			ERR_COPY_FROM_USER();
 			rc = -EFAULT;
-//Start LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                              
 			mutex_unlock(&pcam->event_lock);
-//End  LGE_BSP_CAMERA : sync mutex_unlock - jonghwan.ko@lge.com
+//                                                             
 			goto copy_from_user_failed;
 		}
 		event_qcmd->command = payload;
@@ -1575,8 +1575,8 @@ probe_fail:
 	return NULL;
 }
 
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
 void msm_camera_v4l2_release_ion_client(struct kref *ref)
 {
@@ -1641,7 +1641,7 @@ int msm_camera_v4l2_put_ion_client(struct msm_cam_v4l2_device *pcam)
 }
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 
 /* register a msm sensor into the msm device, which will probe the
  * sensor HW. if the HW exist then create a video device (/dev/videoX/)
@@ -1728,13 +1728,13 @@ int msm_sensor_register(struct v4l2_subdev *sensor_sd)
 	}
 
 	pcam->vnode_id = vnode_count++;
-/* LGE_CHANGE_S, Patch for ION free, 2013.1.8, gayoung85.lee[Start] */
-#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI)
+/*                                                                  */
+#if defined(CONFIG_LGE_GK_CAMERA) ||defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
     spin_lock_init(&pcam->ion_lock);
 #endif
 #endif
-/* LGE_CHANGE_E, Patch for ION free, 2013.1.8, gayoung85.lee[End] */
+/*                                                                */
 	return rc;
 
 failure:

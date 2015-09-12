@@ -174,9 +174,6 @@ struct synaptics_rmi4_data {
 	const struct synaptics_rmi4_platform_data *board;
 	struct mutex		fn_list_mutex;
 	struct mutex		rmi4_page_mutex;
-#if defined(CONFIG_RMI4_I2C) && defined(CONFIG_HAS_EARLYSUSPEND)
-	struct early_suspend early_suspend;
-#endif
 	int			current_page;
 	unsigned int		number_of_interrupt_register;
 	unsigned short		fn01_ctrl_base_addr;

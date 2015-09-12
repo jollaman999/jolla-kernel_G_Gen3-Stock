@@ -113,7 +113,7 @@ module_param_named(debug_mask, synaptics_rmi4_i2c_debug_mask, int,
 #define MELT_CONTROL_REG_MELT			0x01
 #define MELT_CONTROL_REG_NUKE_MELT		0x80
 
-#if 1// def CONFIG_LGE_J1_TOUCHSCREEN 
+#if 1//                               
 #define DS4_FW_CONFIG_ID_REG			0x58		/* FW Customer Defined Config ID, 4bytes */
 #endif
 
@@ -160,7 +160,7 @@ extern unsigned char get_fw_image_rev(void);
 
 static struct workqueue_struct *synaptics_wq;
 
-#if 1//def CONFIG_LGE_J1_TOUCHSCREEN
+#if 1//                             
 int my_atoi(const char *name)
 {
 	int val = 0;
@@ -1046,7 +1046,7 @@ static void synaptics_ts_work_func(struct work_struct *work)
 				 *	only send a released key event if the button was previously pressed.
 				 */
 				for(b_counter = 0; b_counter < ts->pdata->num_of_button; b_counter++) {
-#if 1// def CONFIG_LGE_J1_TOUCHSCREEN
+#if 1//                              
 					 if ((
 								 (ts->button_data_type == 4 && (((ts_reg_ctrl.button_data_reg >> b_counter) & 0x1) == 1)) 	 /* press interrupt */
 								 ||(ts->button_data_type == 8 && 
@@ -1210,7 +1210,7 @@ exit_work:
 			if (ret < 0)
 				SYNAPTICS_ERR_MSG("Product ID read fail\n");
 
-#if 1// def CONFIG_LGE_J1_TOUCHSCREEN
+#if 1//                              
 			ret = synaptics_ts_read(ts->client, DS4_FW_CONFIG_ID_REG, 4, &ts->fw_config_id[0]);
 			if (ret < 0)
 				SYNAPTICS_ERR_MSG("FW config id read fail\n");

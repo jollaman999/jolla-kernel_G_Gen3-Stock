@@ -1,4 +1,5 @@
-/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2012, LGE Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -48,17 +49,6 @@ static struct gpiomux_setting gpio_spi_cs2_config = {
 	.pull = GPIOMUX_PULL_NONE,
 };
 
-
-struct msm_gpiomux_config apq8064_ethernet_configs[] = {
-	{
-		.gpio = 43,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &gpio_eth_config,
-			[GPIOMUX_ACTIVE] = &gpio_eth_config,
-		}
-	},
-};
-#endif
 /* Chip selects for SPI clients */
 static struct gpiomux_setting gpio_spi_cs_config = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -73,7 +63,17 @@ static struct gpiomux_setting gpio_epm_spi_cs_config = {
 	.pull = GPIOMUX_PULL_UP,
 };
 
-#endif /* CONFIG_MACH_LGE */
+struct msm_gpiomux_config apq8064_ethernet_configs[] = {
+	{
+		.gpio = 43,
+		.settings = {
+			[GPIOMUX_SUSPENDED] = &gpio_eth_config,
+			[GPIOMUX_ACTIVE] = &gpio_eth_config,
+		}
+	},
+};
+#endif
+#endif /*                 */
 
 #if CONFIG_SWITCH_MAX1462X
 static struct gpiomux_setting ear_key_int = {
@@ -92,9 +92,9 @@ struct msm_gpiomux_config apq8064_earjack_configs[] = {
 	},
 };
 #endif
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+//                                                                   
 #ifdef CONFIG_LGE_BLUESLEEP
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 /*static struct gpiomux_setting gsbi6 = {
 	.func = GPIOMUX_FUNC_2,
@@ -144,9 +144,9 @@ static struct gpiomux_setting bt_wakeup_suspend_cfg = {
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = /*GPIOMUX_PULL_UP,*/ GPIOMUX_PULL_NONE,
 };
-#endif /* CONFIG_LGE_BLUESLEEP */
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+#endif /*                      */
+//                                           
+//                                                                   
 
 #if defined(CONFIG_LGE_BROADCAST_TDMB) 
 static struct gpiomux_setting gsbi5_spi_config= {
@@ -172,7 +172,7 @@ static struct gpiomux_setting dmb_int_pin = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 
 #ifdef CONFIG_MSM_VCAP
@@ -440,6 +440,13 @@ static struct gpiomux_setting gpio_i2c_config = {
 	.pull = GPIOMUX_PULL_NONE,
 };
 
+static struct gpiomux_setting gpio_i2c_2ma_config = {
+	.func = GPIOMUX_FUNC_1,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_NONE,
+};
+
+
 static struct gpiomux_setting gpio_i2c_config_sus = {
 	.func = GPIOMUX_FUNC_1,
 	.drv = GPIOMUX_DRV_2MA,
@@ -497,7 +504,7 @@ static struct gpiomux_setting gsbi7_func2_cfg = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 #if defined(CONFIG_LGE_IRRC)
 static struct gpiomux_setting gsbi7_irrc_TXD = {
@@ -525,7 +532,7 @@ static struct gpiomux_setting gsbi3_active_cfg = {
 	.pull = GPIOMUX_PULL_NONE,
 };
 
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [START]
+//                                                                          
 #if defined (CONFIG_SLIMPORT_ANX7808)
 static struct gpiomux_setting slimport_suspend_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -534,7 +541,7 @@ static struct gpiomux_setting slimport_suspend_cfg = {
 	.dir = GPIOMUX_IN,
 };
 #endif
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [END]
+//                                                                        
 
 static struct gpiomux_setting hdmi_suspend_1_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -559,6 +566,22 @@ static struct gpiomux_setting hdmi_active_2_cfg = {
 	.drv = GPIOMUX_DRV_16MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
+
+#if !defined (CONFIG_MACH_LGE)
+static struct gpiomux_setting hdmi_active_3_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_UP,
+	.dir = GPIOMUX_IN,
+};
+
+static struct gpiomux_setting hdmi_active_4_cfg = {
+	.func = GPIOMUX_FUNC_GPIO,
+	.drv = GPIOMUX_DRV_2MA,
+	.pull = GPIOMUX_PULL_UP,
+	.dir = GPIOMUX_OUT_HIGH,
+};
+#endif
 
 static struct gpiomux_setting gsbi5_suspended_cfg = {
 	.func = GPIOMUX_FUNC_2,
@@ -766,8 +789,8 @@ static struct msm_gpiomux_config apq8064_hdmi_configs[] __initdata = {
 	},
 };
 
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [START]
-//2012-11-22 soodong.kim@lge.com : HW revision check [START]
+//                                                                          
+//                                                          
 #if defined (CONFIG_SLIMPORT_ANX7808)
 static struct msm_gpiomux_config apq8064_slimport_configs1[] __initdata = {
 	{
@@ -787,9 +810,27 @@ static struct msm_gpiomux_config apq8064_slimport_configs2[] __initdata = {
 };
 
 #endif
-//2012-11-22 soodong.kim@lge.com : HW revision check [END]
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [END]
+//                                                        
+//                                                                        
 
+#if !defined (CONFIG_MACH_LGE)
+static struct msm_gpiomux_config apq8064_mhl_configs[] __initdata = {
+	{
+		.gpio = 30,
+		.settings = {
+		[GPIOMUX_ACTIVE]    = &hdmi_active_3_cfg,
+		[GPIOMUX_SUSPENDED] = &hdmi_suspend_1_cfg,
+		},
+	},
+	{
+		.gpio = 35,
+		.settings = {
+		[GPIOMUX_ACTIVE]    = &hdmi_active_4_cfg,
+		[GPIOMUX_SUSPENDED] = &hdmi_suspend_1_cfg,
+		},
+	},
+};
+#endif
 
 static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 	{
@@ -835,7 +876,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_ACTIVE] = &gsbi4_uart_active
 		},
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	
 #if defined(CONFIG_LGE_BROADCAST_TDMB) 
 	{
@@ -884,7 +925,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_SUSPENDED] = &dmb_ctrl_pin,
 		},
 	},	
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 	
 #if !defined(CONFIG_MACH_LGE)
 #if defined(CONFIG_KS8851) || defined(CONFIG_KS8851_MODULE)
@@ -944,6 +985,37 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 		},
 	},
 #endif
+};
+
+#if !defined(CONFIG_MACH_LGE)
+static struct msm_gpiomux_config apq8064_non_mi2s_gsbi_configs[] __initdata = {
+	{
+		.gpio      = 32,		/* EPM CS */
+		.settings = {
+			[GPIOMUX_SUSPENDED] = &gpio_epm_spi_cs_config,
+		},
+	},
+};
+#endif /*                 */
+
+static struct msm_gpiomux_config apq8064_gsbi1_i2c_2ma_configs[] __initdata = {
+	{
+		.gpio      = 21,		/* GSBI1 QUP I2C_CLK */
+		.settings = {
+			[GPIOMUX_SUSPENDED] = &gpio_i2c_config_sus,
+			[GPIOMUX_ACTIVE] = &gpio_i2c_2ma_config,
+		},
+	},
+	{
+		.gpio      = 20,		/* GSBI1 QUP I2C_DATA */
+		.settings = {
+			[GPIOMUX_SUSPENDED] = &gpio_i2c_config_sus,
+			[GPIOMUX_ACTIVE] = &gpio_i2c_2ma_config,
+		},
+	},
+};
+
+static struct msm_gpiomux_config apq8064_gsbi1_i2c_8ma_configs[] __initdata = {
         {
                 .gpio      = 21,                /* GSBI1 QUP I2C_CLK */
                 .settings = {
@@ -994,7 +1066,7 @@ static struct msm_gpiomux_config apq8064_irrc_configs[] __initdata = {
 };
 #endif
 
-static struct gpiomux_setting spkr_i2c = {
+static struct gpiomux_setting spkr_i2s = {
 	.func = GPIOMUX_FUNC_1,
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_KEEPER,
@@ -1004,25 +1076,25 @@ static struct msm_gpiomux_config mpq8064_spkr_i2s_config[] __initdata = {
 	{
 		.gpio   = 47,           /* spkr i2c sck */
 		.settings = {
-			[GPIOMUX_SUSPENDED] = &spkr_i2c,
+			[GPIOMUX_SUSPENDED] = &spkr_i2s,
 		},
 	},
 	{
 		.gpio   = 48,           /* spkr_i2s_ws */
 		.settings = {
-			[GPIOMUX_SUSPENDED] = &spkr_i2c,
+			[GPIOMUX_SUSPENDED] = &spkr_i2s,
 		},
 	},
 	{
 		.gpio   = 49,           /* spkr_i2s_dout */
 		.settings = {
-			[GPIOMUX_SUSPENDED] = &spkr_i2c,
+			[GPIOMUX_SUSPENDED] = &spkr_i2s,
 		},
 	},
 	{
 		.gpio   = 50,           /* spkr_i2s_mclk */
 		.settings = {
-			[GPIOMUX_SUSPENDED] = &spkr_i2c,
+			[GPIOMUX_SUSPENDED] = &spkr_i2s,
 		},
 	},
 };
@@ -1045,42 +1117,42 @@ static struct msm_gpiomux_config apq8064_audio_codec_configs[] __initdata = {
 
 static struct gpiomux_setting ap2mdm_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_4MA,
+	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
 static struct gpiomux_setting mdm2ap_status_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
+	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
 static struct gpiomux_setting mdm2ap_errfatal_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
+	.drv = GPIOMUX_DRV_16MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
 static struct gpiomux_setting mdm2ap_pblrdy = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
+	.drv = GPIOMUX_DRV_16MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
 
 static struct gpiomux_setting ap2mdm_soft_reset_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_4MA,
+	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
 static struct gpiomux_setting ap2mdm_wakeup = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_4MA,
+	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_DOWN,
 };
 
-// LGE_START // featuring GPIO(MDM2AP_HSIC_READY) configuration for BCM4334
+//                                                                         
 static struct msm_gpiomux_config mdm_configs_bcm[] __initdata = {
 	/* AP2MDM_STATUS */
 	{
@@ -1133,7 +1205,7 @@ static struct msm_gpiomux_config mdm_configs_bcm[] __initdata = {
 		}
 	},
 };
-// LGE_END // featuring GPIO(MDM2AP_HSIC_READY) configuration for BCM4334
+//                                                                       
 
 
 static struct msm_gpiomux_config mdm_configs[] __initdata = {
@@ -1185,105 +1257,6 @@ static struct msm_gpiomux_config mdm_configs[] __initdata = {
 		.gpio = 46,
 		.settings = {
 			[GPIOMUX_SUSPENDED] = &mdm2ap_pblrdy,
-		}
-	},
-};
-
-static struct msm_gpiomux_config amdm_configs[] __initdata = {
-	/* AP2MDM_STATUS */
-	{
-		.gpio = 48,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_cfg,
-		}
-	},
-	/* MDM2AP_STATUS */
-	{
-		.gpio = 49,
-		.settings = {
-            [GPIOMUX_ACTIVE] = &mdm2ap_status_cfg,
-			[GPIOMUX_SUSPENDED] = &mdm2ap_status_cfg,
-		}
-	},
-	/* MDM2AP_ERRFATAL */
-	{
-		.gpio = 19,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &mdm2ap_errfatal_cfg,
-		}
-	},
-	/* AP2MDM_ERRFATAL */
-	{
-		.gpio = 18,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_cfg,
-		}
-	},
-	/* AP2MDM_SOFT_RESET, aka AP2MDM_PON_RESET_N */
-	{
-		.gpio = 27,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_soft_reset_cfg,
-		}
-	},
-	/* AP2MDM_WAKEUP */
-	{
-		.gpio = 35,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_wakeup,
-		}
-	},
-	/* MDM2AP_PBL_READY*/
-	{
-		.gpio = 31,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &mdm2ap_pblrdy,
-		}
-	},
-};
-
-static struct msm_gpiomux_config bmdm_configs[] __initdata = {
-	/* AP2MDM_STATUS */
-	{
-		.gpio = 56,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_cfg,
-		}
-	},
-	/* MDM2AP_STATUS */
-	{
-		.gpio = 32,
-		.settings = {
-			[GPIOMUX_ACTIVE] = &mdm2ap_status_cfg,
-			[GPIOMUX_SUSPENDED] = &mdm2ap_status_cfg,
-		}
-	},
-	/* MDM2AP_ERRFATAL */
-	{
-		.gpio = 81,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &mdm2ap_errfatal_cfg,
-		}
-	},
-	/* AP2MDM_ERRFATAL */
-	{
-		.gpio = 18,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_cfg,
-		}
-	},
-	/* AP2MDM_SOFT_RESET, aka AP2MDM_PON_RESET_N */
-	{
-		.gpio = 3,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_soft_reset_cfg,
-		}
-	},
-	/* AP2MDM_WAKEUP */
-	{
-		.gpio = 29,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &ap2mdm_wakeup,
 		}
 	},
 };
@@ -1340,13 +1313,19 @@ static struct msm_gpiomux_config mdm_i2s_configs[] __initdata = {
 	},
 };
 
-static struct gpiomux_setting mi2s_act_cfg = {
+static struct gpiomux_setting i2s_act_cfg = {
 	.func = GPIOMUX_FUNC_1,
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
 
-static struct gpiomux_setting mi2s_sus_cfg = {
+static struct gpiomux_setting i2s_act_func_2_cfg = {
+	.func = GPIOMUX_FUNC_2,
+	.drv = GPIOMUX_DRV_8MA,
+	.pull = GPIOMUX_PULL_NONE,
+};
+
+static struct gpiomux_setting i2s_sus_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = GPIOMUX_PULL_DOWN,
@@ -1356,58 +1335,97 @@ static struct msm_gpiomux_config mpq8064_mi2s_configs[] __initdata = {
 	{
 		.gpio	= 27,		/* mi2s ws */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 	{
 		.gpio	= 28,		/* mi2s sclk */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 	{
 		.gpio	= 29,		/* mi2s dout3 */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 	{
 		.gpio	= 30,		/* mi2s dout2 */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 
 	{
 		.gpio	= 31,		/* mi2s dout1 */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 	{
 		.gpio	= 32,		/* mi2s dout0 */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 
 	{
 		.gpio	= 33,		/* mi2s mclk */
 		.settings = {
-			[GPIOMUX_ACTIVE]    = &mi2s_act_cfg,
-			[GPIOMUX_SUSPENDED] = &mi2s_sus_cfg,
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
 		},
 	},
 };
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+static struct msm_gpiomux_config apq8064_mi2s_configs[] __initdata = {
+	{
+		.gpio	= 27,		/* mi2s ws */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 28,		/* mi2s sclk */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 29,		/* mi2s dout3 - TX*/
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 32,		/* mi2s dout0 - RX */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+
+	{
+		.gpio	= 33,		/* mi2s mclk */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+};
+
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 #if 0
@@ -1474,9 +1492,59 @@ static struct msm_gpiomux_config bt_pcm_configs[] __initdata = {
 	}
 };
 
-//END: 0019632 chanha.park@lge.com 2012-05-31
-#endif /* CONFIG_LGE_BLUESLEEP */
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+//                                           
+#endif /*                      */
+//                                                                   
+
+static struct msm_gpiomux_config apq8064_mic_i2s_configs[] __initdata = {
+	{
+		.gpio	= 35,		/* mic i2s sclk */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 36,		/* mic i2s ws */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 37,		/* mic i2s din0 */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+};
+
+
+static struct msm_gpiomux_config apq8064_spkr_i2s_configs[] __initdata = {
+	{
+		.gpio	= 40,		/* spkr i2s sclk */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_func_2_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 41,		/* spkr i2s dout */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_func_2_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+	{
+		.gpio	= 42,		/* spkr i2s ws */
+		.settings = {
+			[GPIOMUX_ACTIVE]    = &i2s_act_cfg,
+			[GPIOMUX_SUSPENDED] = &i2s_sus_cfg,
+		},
+	},
+};
+
 
 static struct msm_gpiomux_config apq8064_mxt_configs[] __initdata = {
 	{	/* TS INTERRUPT */
@@ -1535,8 +1603,8 @@ static struct msm_gpiomux_config wcnss_5wire_interface[] = {
 };
 #endif
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct msm_gpiomux_config msm8960_bt_host_wakeup_configs[] __initdata = {
@@ -1558,9 +1626,9 @@ static struct msm_gpiomux_config msm8960_bt_wakeup_configs[] __initdata = {
 		},
 	},
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+#endif //                     
+//                                           
+//                                                                   
 
 static struct msm_gpiomux_config mpq8064_gsbi5_i2c_configs[] __initdata = {
 	{
@@ -1705,7 +1773,7 @@ static struct msm_gpiomux_config apq8064_sdc2_not_configs[] __initdata = {
 	},
 };
 
-// 20121106 changduk.ryu@lge.com [START] remove GPIO 62 pin configuration NFC VEN used the pin in rev E
+//                                                                                                     
 static struct msm_gpiomux_config apq8064_sdc2_not_configs_rev_e[] __initdata = {
 	{
 		.gpio      = 59,
@@ -1736,7 +1804,7 @@ static struct msm_gpiomux_config apq8064_sdc2_not_configs_rev_e[] __initdata = {
 		},
 	},	
 };
-// 20121106 changduk.ryu@lge.com [END]  remove GPIO 62 pin configuration NFC VEN used the pin in rev E
+//                                                                                                    
 
 
 #endif
@@ -1829,22 +1897,13 @@ static struct msm_gpiomux_config apq8064_sdc3_configs[] __initdata = {
 		},
 	},
 };
-//20120112 jungyub.jee@lge.com SD detect change
-#if defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL)
-
-static struct gpiomux_setting apq8064_sdc3_card_det_cfg_chg = {
-	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
-	.pull = GPIOMUX_PULL_UP,
-};
-
-#else
+//                                             
 static struct gpiomux_setting apq8064_sdc3_card_det_cfg_chg = {
 	.func = GPIOMUX_FUNC_GPIO,
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif
+
 static struct msm_gpiomux_config apq8064_sdc3_configs_chg[] __initdata = {
 	{
 		.gpio      = 26,
@@ -1854,7 +1913,8 @@ static struct msm_gpiomux_config apq8064_sdc3_configs_chg[] __initdata = {
 		},
 	},
 };
-//20120112 jungyub.jee@lge.com SD detect change
+//                                             
+
 
 #ifdef CONFIG_LGE_WIRELESS_CHARGER
 static struct gpiomux_setting wc_track_cfg = {
@@ -1873,35 +1933,6 @@ static struct msm_gpiomux_config gpio_wc_track_configs[] = {
 	},
 };
 #endif
-
-static struct msm_gpiomux_config sglte2_qsc_configs[] __initdata = {
-	/* MDM2AP_STATUS */
-	{
-		.gpio = 51,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &mdm2ap_status_cfg,
-		}
-	},
-	/* MDM2AP_ERRFATAL */
-	{
-		.gpio = 52,
-		.settings = {
-			[GPIOMUX_SUSPENDED] = &mdm2ap_errfatal_cfg,
-		}
-	},
-};
-
-static struct gpiomux_setting gsbi4_uartdm_active = {
-	.func = GPIOMUX_FUNC_1,
-	.drv = GPIOMUX_DRV_8MA,
-	.pull = GPIOMUX_PULL_NONE,
-};
-
-static struct gpiomux_setting gsbi4_uartdm_suspended = {
-	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
-	.pull = GPIOMUX_PULL_DOWN,
-};
 
 /* GK Broadcom BCM4334 */
 #if defined(CONFIG_LGE_BLUESLEEP)
@@ -1949,38 +1980,7 @@ static struct msm_gpiomux_config mpq8064_uartdm_configs[] __initdata = {
 };
 #endif
 
-static struct msm_gpiomux_config apq8064_uartdm_gsbi4_configs[] __initdata = {
-	{
-		.gpio      = 11,        /* GSBI4 UARTDM RX */
-		.settings = {
-			[GPIOMUX_ACTIVE] = &gsbi4_uartdm_active,
-			[GPIOMUX_SUSPENDED] = &gsbi4_uartdm_suspended,
-		},
-	},
-	{
-		.gpio      = 10,       /* GSBI4 UARTDM TX */
-		.settings = {
-			[GPIOMUX_ACTIVE] = &gsbi4_uartdm_active,
-			[GPIOMUX_SUSPENDED] = &gsbi4_uartdm_suspended,
-		},
-	},
-	{
-		.gpio      = 13,        /* GSBI4 UARTDM RFR */
-		.settings = {
-			[GPIOMUX_ACTIVE] = &gsbi4_uartdm_active,
-			[GPIOMUX_SUSPENDED] = &gsbi4_uartdm_suspended,
-		},
-	},
-	{
-		.gpio      = 12,        /* GSBI4 UARTDM CTS */
-		.settings = {
-			[GPIOMUX_ACTIVE] = &gsbi4_uartdm_active,
-			[GPIOMUX_SUSPENDED] = &gsbi4_uartdm_suspended,
-		},
-	},
-};
-
-/* ehee.lee@lge.com [START] for NFC */
+/*                                  */
 #if defined(CONFIG_LGE_NFC)
 static struct gpiomux_setting nfc_pn544_ven_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -2003,12 +2003,12 @@ static struct gpiomux_setting nfc_pn544_firm_cfg = {
 	.dir = GPIOMUX_OUT_LOW,
 };
 #endif
-/* ehee.lee@lge.com [END] for NFC */ 
+/*                                */ 
 
 
 
-/* ehee.lee@lge.com [START] for NFC */
-/* #ifndef CONFIG_LGE_FELICA_KDDI */
+/*                                  */
+/*                                */
 #if !defined(CONFIG_LGE_FELICA_KDDI) && !defined(CONFIG_LGE_FELICA_DCM)
 #if defined(CONFIG_LGE_NFC)
 static struct msm_gpiomux_config apq8064_nfc_configs[] __initdata = {
@@ -2053,8 +2053,8 @@ static struct msm_gpiomux_config apq8064_nfc_configs_rev_e[] __initdata = {
 	},
 };
 #endif
-#endif//endif of CONFIG_LGE_FELICA_KDDI, CONFIG_LGE_FELICA_DCM
-/* ehee.lee@lge.com [END] for NFC */ 
+#endif//                                                      
+/*                                */ 
 
 #ifdef CONFIG_BATTERY_MAX17043
 static struct gpiomux_setting fuelgauge_max17048_cfg= {
@@ -2079,7 +2079,7 @@ void __init apq8064_init_gpiomux(void)
 {
 	int rc;
 	int platform_version = socinfo_get_platform_version();
-	hw_rev_type lge_bd_rev = HW_REV_EVB1;//20120112 jungyub.jee@lge.com SD detect change
+	hw_rev_type lge_bd_rev = HW_REV_EVB1;//                                             
 
 	rc = msm_gpiomux_init(NR_GPIO_IRQS);
 	if (rc) {
@@ -2112,10 +2112,30 @@ void __init apq8064_init_gpiomux(void)
 
 		msm_gpiomux_install(apq8064_gsbi_configs,
 				ARRAY_SIZE(apq8064_gsbi_configs));
-	}
 
-	msm_gpiomux_install(apq8064_slimbus_config,
-			ARRAY_SIZE(apq8064_slimbus_config));
+#if !defined(CONFIG_MACH_LGE)
+		if (!(machine_is_apq8064_mtp() &&
+		(SOCINFO_VERSION_MINOR(platform_version) == 1)))
+			msm_gpiomux_install(apq8064_non_mi2s_gsbi_configs,
+				ARRAY_SIZE(apq8064_non_mi2s_gsbi_configs));
+#endif
+	}
+	if (machine_is_apq8064_mtp() &&
+	(SOCINFO_VERSION_MINOR(platform_version) == 1)) {
+			msm_gpiomux_install(apq8064_mic_i2s_configs,
+				ARRAY_SIZE(apq8064_mic_i2s_configs));
+			msm_gpiomux_install(apq8064_spkr_i2s_configs,
+				ARRAY_SIZE(apq8064_spkr_i2s_configs));
+			msm_gpiomux_install(apq8064_mi2s_configs,
+				ARRAY_SIZE(apq8064_mi2s_configs));
+			msm_gpiomux_install(apq8064_gsbi1_i2c_2ma_configs,
+				ARRAY_SIZE(apq8064_gsbi1_i2c_2ma_configs));
+	} else {
+		msm_gpiomux_install(apq8064_slimbus_config,
+				ARRAY_SIZE(apq8064_slimbus_config));
+		msm_gpiomux_install(apq8064_gsbi1_i2c_8ma_configs,
+				ARRAY_SIZE(apq8064_gsbi1_i2c_8ma_configs));
+	}
 
 #ifdef CONFIG_LGE_IRRC
        msm_gpiomux_install(apq8064_irrc_configs,
@@ -2143,25 +2163,11 @@ void __init apq8064_init_gpiomux(void)
 
 
 	if (machine_is_apq8064_mtp()) {
-		if (socinfo_get_platform_subtype() == PLATFORM_SUBTYPE_DSDA2) {
-			msm_gpiomux_install(amdm_configs,
-					ARRAY_SIZE(amdm_configs));
-			msm_gpiomux_install(bmdm_configs,
-				ARRAY_SIZE(bmdm_configs));
-		} else if (socinfo_get_platform_subtype() ==
-					PLATFORM_SUBTYPE_SGLTE2) {
-			msm_gpiomux_install(mdm_configs,
-					ARRAY_SIZE(mdm_configs));
-			msm_gpiomux_install(sglte2_qsc_configs,
-					ARRAY_SIZE(sglte2_qsc_configs));
-
-			/* GSBI4 UART GPIOs for Primary IPC */
-			msm_gpiomux_install(apq8064_uartdm_gsbi4_configs,
-				ARRAY_SIZE(apq8064_uartdm_gsbi4_configs));
-		} else if (SOCINFO_VERSION_MINOR(platform_version) == 1) {
+		if (SOCINFO_VERSION_MINOR(platform_version) == 1)
 			msm_gpiomux_install(mdm_i2s_configs,
 					ARRAY_SIZE(mdm_i2s_configs));
-		} else {
+		//                                                                         
+		else{
 			lge_bd_rev = lge_get_board_revno();
 			if ((lge_bd_rev >= HW_REV_C) && (lge_bd_rev != HW_REV_F))
 			msm_gpiomux_install(mdm_configs_bcm,
@@ -2170,7 +2176,7 @@ void __init apq8064_init_gpiomux(void)
 			msm_gpiomux_install(mdm_configs,
 					ARRAY_SIZE(mdm_configs));
 			}
-		// LGE_END // featuring GPIO(MDM2AP_HSIC_READY) configuration for BCM4334
+		//                                                                       
 	}
 
 
@@ -2189,7 +2195,7 @@ void __init apq8064_init_gpiomux(void)
 		msm_gpiomux_install(apq8064_hsic_configs,
 				ARRAY_SIZE(apq8064_hsic_configs));
 #endif
-/* ehee.lee@lge.com [START] for NFC */
+/*                                  */
 #if defined(CONFIG_LGE_NFC)
 	lge_bd_rev = lge_get_board_revno();
 	if ((int)lge_bd_rev == HW_REV_E || (int)lge_bd_rev == HW_REV_C|| (int)lge_bd_rev == HW_REV_D||(int)lge_bd_rev == HW_REV_1_0)
@@ -2203,10 +2209,10 @@ void __init apq8064_init_gpiomux(void)
 		ARRAY_SIZE(apq8064_nfc_configs));
 	}
 #endif
-/* ehee.lee@lge.com [END] for NFC */ 
+/*                                */ 
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 	msm_gpiomux_install(bt_pcm_configs,
@@ -2222,16 +2228,16 @@ void __init apq8064_init_gpiomux(void)
 	msm_gpiomux_install(msm8960_bt_wakeup_configs,
 			ARRAY_SIZE(msm8960_bt_wakeup_configs));
 #endif
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+//                                           
+//                                                                   
 	if (machine_is_apq8064_cdp() || machine_is_apq8064_liquid())
 		msm_gpiomux_install(apq8064_mxt_configs,
 			ARRAY_SIZE(apq8064_mxt_configs));
 
 	msm_gpiomux_install(apq8064_hdmi_configs,
 			ARRAY_SIZE(apq8064_hdmi_configs));
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [START]
-//2012-11-22 soodong.kim@lge.com : HW revision check [START]
+//                                                                          
+//                                                          
 #if defined (CONFIG_SLIMPORT_ANX7808)
     if( ( lge_get_board_revno() == HW_REV_F ||
           lge_get_board_revno() == HW_REV_B ||
@@ -2244,9 +2250,14 @@ void __init apq8064_init_gpiomux(void)
     }
     pr_err("[Slimport] revision = %d gpiomux install complete!\n", lge_get_board_revno());
 #endif
-//2012-11-22 soodong.kim@lge.com : HW revision check [END]
-//2012-10-30 soodong.kim@lge.com : set GPIO initial value to PULL_UP [END]
+//                                                        
+//                                                                        
 
+#if !defined (CONFIG_MACH_LGE)
+	if (apq8064_mhl_display_enabled())
+		msm_gpiomux_install(apq8064_mhl_configs,
+				ARRAY_SIZE(apq8064_mhl_configs));
+#endif
 
 	 if (machine_is_mpq8064_cdp())
 		msm_gpiomux_install(mpq8064_ir_configs,
@@ -2257,7 +2268,7 @@ void __init apq8064_init_gpiomux(void)
 			     ARRAY_SIZE(apq8064_sdc2_configs));
 #else
 
-//20121106 changduk.ryu@lge.com [Start] Rev E Setting
+//                                                   
 	lge_bd_rev = lge_get_board_revno();
 	if ((int)lge_bd_rev == HW_REV_E)
 		msm_gpiomux_install(apq8064_sdc2_not_configs_rev_e,
@@ -2265,14 +2276,14 @@ void __init apq8064_init_gpiomux(void)
 	else
 		msm_gpiomux_install(apq8064_sdc2_not_configs,
 				     ARRAY_SIZE(apq8064_sdc2_not_configs));
-//20121106 changduk.ryu@lge.com [End] Rev E Setting
+//                                                 
 #endif
 
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 	 msm_gpiomux_install(apq8064_sdc4_configs,
 			     ARRAY_SIZE(apq8064_sdc4_configs));
 #endif
-//20120112 jungyub.jee@lge.com SD detect change
+//                                             
 	lge_bd_rev = lge_get_board_revno();
 
 	 if (lge_bd_rev == HW_REV_F) 
@@ -2300,6 +2311,6 @@ void __init apq8064_init_gpiomux(void)
 				ARRAY_SIZE(apq8064_fuel_gauge_configs));
 #endif
 
-//20120112 jungyub.jee@lge.com SD detect change
+//                                             
 
 }

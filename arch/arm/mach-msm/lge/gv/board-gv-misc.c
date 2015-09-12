@@ -450,10 +450,10 @@ static struct mhl_platform_data sii8334_mhl_pdata = {
 #define I2C_RUMI (1 << 2)
 #define I2C_SIM  (1 << 3)
 #define I2C_LIQUID (1 << 4)
-/* LGE_UPDATE_S. 02242012. jihyun.lee@lge.com
-   Add mach_mask for I2C */
+/*                                           
+                         */
 #define I2C_GV (1 << 5)
-/* LGE_UPDATE_E */
+/*              */
 
 #define MHL_I2C_DEVICE_TYPE "SiI-833x"
 
@@ -627,7 +627,7 @@ static struct platform_device cradle_device = {
 
 void __init apq8064_init_misc(void)
 {
-//LGE_CHANGE_S,  vreg_l9 is used only for sensor
+//                                              
 #if !defined(CONFIG_MACH_LGE)
 	int rc = 0;
     static struct regulator *vreg_l9 = NULL;
@@ -646,7 +646,7 @@ void __init apq8064_init_misc(void)
 	rc = regulator_set_voltage(vreg_l9, 3000000, 3000000);
 	rc = regulator_enable(vreg_l9);
 #endif
-	//LGE_CHANGE_E 
+	//             
 
 #if defined(CONFIG_ANDROID_VIBRATOR)
 	vibrator_gpio_init();

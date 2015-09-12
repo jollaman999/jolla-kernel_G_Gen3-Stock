@@ -341,9 +341,9 @@ DEFINE_SIMPLE_ATTRIBUTE(mmc_dbg_card_status_fops, mmc_dbg_card_status_get,
 		NULL, "%08llx\n");
 
 #ifdef CONFIG_MACH_LGE
-/* LGE_CHANGE
-* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-* 2012-10-30, J1-FS@lge.com
+/*           
+                                                                     
+                           
 */
 static int mmc_ext_csd_read(struct seq_file *s, void *data)
 #else
@@ -353,10 +353,10 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
 #endif
 {
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	struct mmc_card *card = s->private;
 #else
 	struct mmc_card *card = inode->i_private;
@@ -365,10 +365,10 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
 #endif
 	u8 *ext_csd;
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	u8 ext_csd_rev;
 	int err;
 	const char *str;
@@ -391,10 +391,10 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
 	if (err)
 		goto out_free;
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	ext_csd_rev = ext_csd[192];
 #else
 	for (i = 511; i >= 0; i--)
@@ -408,10 +408,10 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
 #endif
 
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 
 	switch (ext_csd_rev) {
        case 6:
@@ -611,10 +611,10 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
 #endif
 out_free:
 #ifndef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	kfree(buf);
 #endif
 	kfree(ext_csd);
@@ -622,9 +622,9 @@ out_free:
 }
 
 #ifdef CONFIG_MACH_LGE
-/* LGE_CHANGE
-* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-* 2012-10-30, J1-FS@lge.com
+/*           
+                                                                     
+                           
 */
 static int mmc_ext_csd_open(struct inode *inode, struct file *file)
 #else
@@ -633,10 +633,10 @@ static ssize_t mmc_ext_csd_read(struct file *filp, char __user *ubuf,
 #endif
 {
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	return single_open(file, mmc_ext_csd_read, inode->i_private);
 #else
 	char *buf = filp->private_data;
@@ -655,10 +655,10 @@ static int mmc_ext_csd_release(struct inode *inode, struct file *file)
 static const struct file_operations mmc_dbg_ext_csd_fops = {
 	.open		= mmc_ext_csd_open,
 #ifdef CONFIG_MACH_LGE
-	/* LGE_CHANGE
-	* http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg10669.html
-	* 2012-10-30, J1-FS@lge.com
-	*/
+	/*           
+                                                                      
+                            
+ */
 	.read		   = seq_read,
 	.llseek 		= seq_lseek,
 	.release		= single_release,

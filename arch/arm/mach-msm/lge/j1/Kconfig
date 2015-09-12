@@ -2,13 +2,6 @@ config BOARD_HEADER_FILE
 	string "LGE board specific header file name"
 	default ""
 
-config MACH_APQ8064_J1
-	depends on ARCH_APQ8064
-	select MACH_LGE
-		bool "APQ8064 J1"
-	help
-	  Support for the LGE Fusion3 J1 device.
-	
 config MACH_APQ8064_J1V
 	depends on ARCH_APQ8064
 	select MACH_LGE

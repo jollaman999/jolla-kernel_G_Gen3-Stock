@@ -464,6 +464,12 @@ config LGE_PM_EXT_GAUGE
 	help
 	  Say Y here to enable external fuel-gauge routines.
 
+config LGE_PM_CHARGING_CHARGERLOGO
+	bool "LGE Chargerlogo Feature"
+	depends on LGE_PM
+	help
+	  Say Y here to enable LGE charger logo
+
 config BATTERY_MAX17043
 	tristate "Maxim MAX17043 Fuel Gauge"
 	depends on I2C && LGE_PM
@@ -590,32 +596,5 @@ config LGE_DOCK
 	bool "LGE DOCK Check routine"
 	help
 	  Say Y to enable LG electronics Dock Chager connection sceanario
-
-config LGE_PM_BATTERY_SOC_RESCALING
-	bool "SOC Rescaling"
-	depends on LGE_PM
-	help
-	  Enable SOC Rescaling.
-  
-config LGE_PM_BMS_MIN_IAVG_CAL_TIME
-	bool "apply BMS_MIN_IAVG_CAL_TIME 20sec"
-	depends on LGE_PM
-	help
-	  Enable BMS_MIN_IAVG_CAL_TIME 20.
-
-config LGE_PM_LOW_BATTERY_VOLTAGE_SOC_CAL_TIME
-	bool "apply soc calculation time in low battery voltage(3 step)"
-	depends on LGE_PM
-	help
-	  apply soc calculation time in low battery voltage(3 step)
-	  normal_battery_voltage(over 3.6V) : 20s
-	  low_battery_voltage(3.2 < battery voltage < 3.6) : 5s
-	  very_low_battery_voltage(under 3.2V) : 2s
-
-config LGE_PM_CHANGE_IAVG_STEP_SIZE
-	bool "change the IAVG_STEP_SIZE_MA from 50 to 100"
-	depends on LGE_PM
-	help
-	  change the IAVG_STEP_SIZE_MA from 50 to 100
 
 endif # POWER_SUPPLY

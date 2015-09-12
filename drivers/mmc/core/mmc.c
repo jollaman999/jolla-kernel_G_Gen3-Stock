@@ -293,9 +293,9 @@ static int mmc_read_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	}
 
 	card->ext_csd.rev = ext_csd[EXT_CSD_REV];
-/* LGE_CHANGE_START jinyoun.park 2013-11-13, Support for TOSHIBA THGBMBG7D2KBAIL*/
+/*                                                                              */
 	if (card->ext_csd.rev > 7) {
-/* LGE_CHANGE_END jinyoun.park 2013-11-13, Support for TOSHIBA THGBMBG7D2KBAIL*/
+/*                                                                            */
 		printk(KERN_ERR "%s: unrecognised EXT_CSD revision %d\n",
 			mmc_hostname(card->host), card->ext_csd.rev);
 		err = -EINVAL;

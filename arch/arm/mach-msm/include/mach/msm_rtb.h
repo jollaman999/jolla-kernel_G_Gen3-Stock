@@ -63,40 +63,12 @@ int uncached_logk(enum logk_event_type log_type, void *data);
 			 } while (0)
 #else
 
-#if 1
-
 static inline int uncached_logk_pc(enum logk_event_type log_type,
 					void *caller,
 					void *data) { return 0; }
 
 static inline int uncached_logk(enum logk_event_type log_type,
-					void *data) { return 1; }
-
-#define ETB_WAYPOINT  do { \
-				BRANCH_TO_NEXT_ISTR; \
-				nop(); \
-				BRANCH_TO_NEXT_ISTR; \
-				nop(); \
-			} while (0)
-
-#define BRANCH_TO_NEXT_ISTR  asm volatile("b .+4\n" : : : "memory")
-/*
- * Due to a GCC bug, we need to have a nop here in order to prevent an extra
- * read from being generated after the write.
- */
-#define LOG_BARRIER	do { \
-				mb(); \
-				isb();\
-			 } while (0)
-
-#else
-
-static inline int uncached_logk_pc(enum logk_event_type log_type,
-                    void *caller,
-                    void *data) { return 0; }
-
-static inline int uncached_logk(enum logk_event_type log_type,
-                    void *data) { return 0; }
+					void *data) { return 0; }
 
 #define ETB_WAYPOINT
 #define BRANCH_TO_NEXT_ISTR
@@ -104,7 +76,6 @@ static inline int uncached_logk(enum logk_event_type log_type,
  * Due to a GCC bug, we need to have a nop here in order to prevent an extra
  * read from being generated after the write.
  */
-#define LOG_BARRIER     nop()
-#endif
+#define LOG_BARRIER		nop()
 #endif
 #endif

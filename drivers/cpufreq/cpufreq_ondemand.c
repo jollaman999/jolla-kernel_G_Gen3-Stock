@@ -1144,8 +1144,14 @@ static inline void dbs_timer_init(struct cpu_dbs_info_s *dbs_info)
 		delay -= jiffies % delay;
 
 	dbs_info->sample_type = DBS_NORMAL_SAMPLE;
-	INIT_DELAYED_WORK_DEFERRABLE(&dbs_info->work, do_dbs_timer);
+	mutex_lock(&dbs_info->timer_mutex);
+	if (delayed_work_pending(&dbs_info->work)) {
+		printk(KERN_WARNING "work is pending : cpu(%d)\n", dbs_info->cpu);
+		mutex_unlock(&dbs_info->timer_mutex);
+		return;
+	}
 	schedule_delayed_work_on(dbs_info->cpu, &dbs_info->work, delay);
+	mutex_unlock(&dbs_info->timer_mutex);
 }
 
 static inline void dbs_timer_exit(struct cpu_dbs_info_s *dbs_info)
@@ -1442,6 +1448,7 @@ static int __init cpufreq_gov_dbs_init(void)
 			&per_cpu(od_cpu_dbs_info, i);
 		mutex_init(&this_dbs_info->timer_mutex);
 		INIT_WORK(&per_cpu(dbs_refresh_work, i), dbs_refresh_callback);
+		INIT_DELAYED_WORK_DEFERRABLE(&this_dbs_info->work, do_dbs_timer);
 	}
 
 	return cpufreq_register_governor(&cpufreq_gov_ondemand);

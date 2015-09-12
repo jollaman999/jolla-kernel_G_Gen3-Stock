@@ -47,11 +47,11 @@
 #include <linux/miscdevice.h>
 #include <linux/uaccess.h>
 
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                      
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #include <linux/regulator/consumer.h>
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 
 #define GPIO_IRRC_PWM               34
 #define D_INV 0             /* QCT support invert bit for msm8960 */
@@ -80,15 +80,15 @@ struct irrc_ts_data {
     struct workqueue_struct *workqueue;
     struct delayed_work input_PWM_off_work;
 	struct delayed_work input_GPIO_off_work;
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                      
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	struct delayed_work irrc_power_off_work;
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 };
 
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                      
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 static struct regulator *vreg_l8 = NULL;
 static bool snddev_reg_8921_l8_status = false;
 
@@ -140,7 +140,7 @@ static int irrc_power_set(bool enable)
 	return 0;
 }
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 
 static struct msm_xo_voter *irrc_clock;
 
@@ -292,14 +292,14 @@ static long IRRC_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case IRRC_START:
 		printk(KERN_INFO "IRRC_START\n");
 		irrc_pwmon(PWM_CLK,duty);
-		//LGE_CHANGE_S 20130813 keunhui.park [IrRC] fix for long key press
+		//                                                                
 		if (delayed_work_pending(&ts->input_PWM_off_work)) {
 			cancel_delayed_work(&ts->input_PWM_off_work);
 		}
 		if (delayed_work_pending(&ts->irrc_power_off_work)) {
 			cancel_delayed_work(&ts->irrc_power_off_work);
 		}
-		//LGE_CHANGE_E 20130813 keunhui.park [IrRC] fix for long key press
+		//                                                                
 		break;
 	case IRRC_STOP:
 		printk(KERN_INFO "IRRC_STOP\n");
@@ -313,19 +313,19 @@ static long IRRC_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			cancel_delayed_work_sync(&ts->input_PWM_off_work);
 			queue_delayed_work(ts->workqueue,&ts->input_PWM_off_work, msecs_to_jiffies(1500));
 				}
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                      
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		if (lge_get_board_revno() >= HW_REV_A) {
 			printk(KERN_INFO "IRRC_power_off!\n");
 			cancel_delayed_work_sync(&ts->irrc_power_off_work);
 			queue_delayed_work(ts->workqueue,&ts->irrc_power_off_work, msecs_to_jiffies(1500));
 		}
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 		break;
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
+//                                                                                      
 	case IRRC_POWER:
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		if (lge_get_board_revno() >= HW_REV_A) {
 			printk(KERN_INFO "IRRC_POWER\n");
 			irrc_power_set(1);
@@ -335,7 +335,7 @@ static long IRRC_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		rc = -EPERM;
 #endif
 		break;
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 	default:
 		rc = -EINVAL;
 	}
@@ -429,11 +429,11 @@ static int android_irrc_probe(struct platform_device *pdev)
 
 		INIT_DELAYED_WORK(&ts->input_PWM_off_work, irrc_pwmoff_work_func);
 		INIT_DELAYED_WORK(&ts->input_GPIO_off_work, irrc_gpio_off_work_func);
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [START]
-#if defined (CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                      
+#if defined (CONFIG_MACH_APQ8064_AWIFI) || defined (CONFIG_MACH_APQ8064_ALTEV)
 		INIT_DELAYED_WORK(&ts->irrc_power_off_work, irrc_power_off_work_func);
 #endif
-//2013-06-11 Ilda_jung(ilda.jung@lge.com) [AWIFI] set power for SW_IRRC on AWIFI [END]
+//                                                                                    
 
 		INFO_MSG("Android IRRC Initialization was done\n");
 		return 0;

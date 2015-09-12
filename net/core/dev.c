@@ -5715,7 +5715,7 @@ static void netdev_wait_allrefs(struct net_device *dev)
 
 		refcnt = netdev_refcnt_read(dev);
 
-#if 1 /* LGE workaround */
+#if 1 /*                */
         if (time_after(jiffies, warning_time + 3 * HZ)) {
             pr_emerg("unregister_netdevice: %s timeout. Usage count = %d\n",
                     dev->name, refcnt);

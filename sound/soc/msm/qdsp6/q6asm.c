@@ -57,6 +57,7 @@
 #define OUT_BUFFER_SIZE 56
 #define IN_BUFFER_SIZE 24
 #endif
+#define FRAME_NUM   (8)
 static DEFINE_MUTEX(session_lock);
 
 /* session id: 0 reserved */
@@ -509,6 +510,9 @@ int q6asm_audio_client_buf_alloc(unsigned int dir,
 			pr_debug("%s: buffer already allocated\n", __func__);
 			return 0;
 		}
+
+		if (bufcnt > FRAME_NUM)
+			goto fail;
 		mutex_lock(&ac->cmd_lock);
 		buf = kzalloc(((sizeof(struct audio_buffer))*bufcnt),
 				GFP_KERNEL);
@@ -1601,9 +1605,6 @@ int q6asm_open_write(struct audio_client *ac, uint32_t format)
 	if (!rc) {
 		pr_err("%s: timeout. waited for OPEN_WRITE rc[%d]\n", __func__,
 			rc);
-#ifdef CONFIG_LGE_AUDIO
-		panic("Q6asm pcm open timeout : please contact kkfusion3-bsp-audio@lge.com");
-#endif
 		goto fail_cmd;
 	}
 	if (atomic_read(&ac->cmd_response)) {

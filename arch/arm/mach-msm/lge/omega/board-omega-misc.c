@@ -298,9 +298,9 @@ static struct platform_device *misc_devices[] __initdata = {
 #define ANX_AVDD33_EN            PM8921_GPIO_PM_TO_SYS(16)
 #define GPIO_SLIMPORT_RESET_N    31
 #define GPIO_SLIMPORT_INT_N      32
-//2012-111-06 soodong.kim@lge.com : set GPIO of SLIMPORT_INT_N for old Rev.[START]
+//                                                                                
 #define GPIO_SLIMPORT_INT_N_REV_OLD 43
-//2012-111-06 soodong.kim@lge.com : set GPIO of SLIMPORT_INT_N for old Rev.[END]
+//                                                                              
 
 static int anx7808_dvdd_onoff(bool on)
 {
@@ -416,11 +416,11 @@ static struct i2c_registry i2c_anx7808_devices __initdata = {
 
 static void __init lge_add_i2c_anx7808_device(void)
 {
-    //2012-11-06 soodong.kim@lge.com : set GPIO of SLIMPORT_INT_N for old Rev.[START]
+    //                                                                               
     anx7808_pdata.gpio_int =  GPIO_SLIMPORT_INT_N;
     printk(KERN_INFO "[Slimport] Revision Check SLIMPORT_INT_GPIO pin no : %d\n"
                             ,anx7808_pdata.gpio_int);
-    //2012-11-06 soodong.kim@lge.com : set GPIO of SLIMPORT_INT_N for old Rev.[END]
+    //                                                                             
 	i2c_register_board_info(i2c_anx7808_devices.bus,
 		i2c_anx7808_devices.info,
 		i2c_anx7808_devices.len);
@@ -549,7 +549,7 @@ void __init apq8064_init_misc(void)
 	hw_rev_type lge_bd_rev = HW_REV_EVB1;
 #endif
 
-//LGE_CHANGE_S, ar0804.han@lge.com vreg_l9 is used only for sensor
+//                                                                
 #if 0  
 	int rc = 0;
     static struct regulator *vreg_l9 = NULL;
@@ -568,7 +568,7 @@ void __init apq8064_init_misc(void)
 	rc = regulator_set_voltage(vreg_l9, 3000000, 3000000);
        rc = regulator_enable(vreg_l9);
 #endif
-//LGE_CHANGE_E, ar0804.han@lge.com
+//                                
 #if defined(CONFIG_ANDROID_VIBRATOR)
 	vibrator_gpio_init();
 #endif

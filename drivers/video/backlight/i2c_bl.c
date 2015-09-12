@@ -316,7 +316,7 @@ static void i2c_bl_set_main_current_level(struct i2c_client *client, int level)
 	mutex_unlock(&i2c_bl_dev->bl_mutex);
 
        //pr_info("[LCD][DEBUG] %s : backlight level=%d, cal_value=%d\n", __func__, level, i2c_bl_dev->cal_value);
-   pr_info("%s : backlight level=%d, cal_value=%d\n", __func__, level, i2c_bl_dev->cal_value);
+   pr_info("bl level=%d, cal_value=%d\n",level, i2c_bl_dev->cal_value);
 }
 
 static void i2c_bl_set_main_current_level_no_mapping(struct i2c_client *client, int level)

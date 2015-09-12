@@ -16,7 +16,7 @@
 #include <linux/mutex.h>
 #ifdef CONFIG_LGE_IRDA_FACTORY
 #include <linux/proc_fs.h>
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 
 #include <net/irda/irda.h>
 #include <net/irda/irda_device.h>
@@ -25,12 +25,12 @@
 #include "lge_irtty-sir.h"
 
 static int qos_mtt_bits = 0x03;      /* 5 ms or more */
-/* LGE_CHANGE
- * Added
- * modes to represent current state,
- * commands used by upper layer,
- * and magic codes to communicate with master/slave
- * 2012-03-30, chaeuk.lee@lge.com
+/*           
+        
+                                    
+                                
+                                                   
+                                 
  */
 #ifdef CONFIG_LGE_IRDA_FACTORY
 /* modes to find out in which state the phone is */
@@ -72,7 +72,7 @@ const unsigned char MAGIC_NUM_RESPONSE[] =
  */
 static struct sir_dev *_dev = NULL;
 irda_factory_mode factory_mode = IRDA_FACTORY_MODE_OFF;
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 
 module_param(qos_mtt_bits, int, 0);
 MODULE_PARM_DESC(qos_mtt_bits, "Minimum Turn Time");
@@ -248,11 +248,11 @@ static void irtty_receive_buf(struct tty_struct *tty, const unsigned char *cp,
 	struct sir_dev *dev;
 	struct sirtty_cb *priv = tty->disc_data;
 	int	i;
-/* LGE_CHANGE
- * When master receives MAGIC_NUM_CODE, it responses MAGIC_NUM_RESPONSE,
- * and when slave receives MAGIC_NUM_REPONSES, it changes current mode to PASS.
- * If current mode is neither master nor slave, all packets will be handled as normal.
- * 2012-03-30, chaeuk.lee@lge.com
+/*           
+                                                                        
+                                                                               
+                                                                                      
+                                 
  */
 #ifdef CONFIG_LGE_IRDA_FACTORY
 	if (factory_mode == IRDA_FACTORY_MODE_MASTER) {
@@ -273,7 +273,7 @@ static void irtty_receive_buf(struct tty_struct *tty, const unsigned char *cp,
 		factory_mode = IRDA_FACTORY_MODE_PASS;
 		return;
 	}
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 	IRDA_ASSERT(priv != NULL, return;);
 	IRDA_ASSERT(priv->magic == IRTTY_MAGIC, return;);
 
@@ -512,7 +512,7 @@ static int lge_irda_write_proc(struct file *file, const char __user *buffer,
 write_proc_failed:
 	return ret;
 }
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 /*
  *  Function irtty_open(tty)
  *
@@ -582,7 +582,7 @@ static int irtty_open(struct tty_struct *tty)
 
 #ifdef CONFIG_LGE_IRDA_FACTORY
 	_dev = dev;
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 	return 0;
 
 out_put:
@@ -642,7 +642,7 @@ static void irtty_close(struct tty_struct *tty)
 
 #ifdef CONFIG_LGE_IRDA_FACTORY
 	_dev = NULL;
-#endif /* CONFIG_LGE_IRDA_FACTORY */
+#endif /*                         */
 }
 
 /* ------------------------------------------------------- */
@@ -688,9 +688,9 @@ static int __init irtty_sir_init(void)
 		return err;
 	}
 
-/* LGE_CHANGE
- * Added procfs file : /proc/lge_irda_factory
- * 2012-03-30, chaeuk.lee@lge.com
+/*           
+                                             
+                                 
  */
 #ifdef CONFIG_LGE_IRDA_FACTORY
 	d_entry = create_proc_entry("lge_irda_factory",

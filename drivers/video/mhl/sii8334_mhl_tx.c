@@ -242,7 +242,7 @@ void MhlControl(void);
 
 #endif
 
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -344,7 +344,7 @@ bool SiiMhlTxChipInitialize (void)
 	fwPowerState = POWER_STATE_D0_MHL;
 
 	g_chipRevId = SiiRegRead(TX_PAGE_L0 | 0x04);
-	/*LGE block msleep*/
+	/*                */
 	//msleep(TX_HW_RESET_PERIOD + TX_HW_RESET_DELAY);
 
 	// setup device registers. Ensure RGND interrupt would happen.
@@ -862,16 +862,16 @@ void SwitchToD3 (void)
 		// low power mode, thereby allowing SiIMon to read/write register contents.
 		// Otherwise SiIMon reads all registers as 0xFF
 		//
-		/*	LGE_CHANGE :
-			remove always operate false condition
-			2011-10-25, jongyeol.yang@lge.com
-			if(PlatformGPIOGet(pinAllowD3))
-			{
-		//
-		// Change state to D3 by clearing bit 0 of 3D (SW_TPI, Page 1) register
-		// ReadModifyWriteIndexedRegister(INDEXED_PAGE_1, 0x3D, BIT0, 0x00);
-		//
-		 */
+		/*             
+                                        
+                                    
+                                  
+    
+    
+                                                                         
+                                                                      
+    
+   */
 		CLR_BIT(TX_PAGE_L1 | 0x003D, 0);
 
 		fwPowerState = POWER_STATE_D3;
@@ -3713,7 +3713,7 @@ void MhlControl(void)
 
 #endif /*CONFIG_LG_MAGIC_MOTION_REMOCON*/
 
-#endif /* CONFIG_MACH_LGE*/
+#endif /*                */
 
 /**
  *  File operations supported by the MHL driver
@@ -3830,7 +3830,7 @@ static int32_t sii8334_mhl_tx_probe(struct i2c_client *client,
 	mhl_common_state->hdmi_hpd_on = hdmi_common_set_hpd_on;
 	mhl_common_state->send_uevent = hdmi_common_send_uevent;
 
-#endif	/* CONFIG_MACH_LGE */
+#endif	/*                 */
 
 	sema_init(&sii8334_irq_sem, 1);
 

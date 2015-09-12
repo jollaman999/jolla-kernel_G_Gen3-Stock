@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2012, LGE Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -16,7 +17,7 @@
 #include <linux/gpio.h>
 #include <linux/platform_device.h>
 #include <linux/bootmem.h>
-#include <linux/msm_ion.h>
+#include <linux/ion.h>
 #include <asm/mach-types.h>
 #include <mach/msm_memtypes.h>
 #include <mach/board.h>
@@ -76,7 +77,7 @@ extern int refresh_qlut_display(void);
 #ifdef LGE_DSDR_SUPPORT
 #define MSM_FB_EXT_BUF_SIZE \
         (roundup((1920 * 1088 * 4), 4096) * 3) /* 4 bpp x 3 page */
-#else  /* LGE_DSDR_SUPPORT */
+#else  /*                  */
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 #define MSM_FB_EXT_BUF_SIZE \
 		(roundup((1920 * 1088 * 2), 4096) * 1) /* 2 bpp x 1 page */
@@ -86,7 +87,7 @@ extern int refresh_qlut_display(void);
 #else
 #define MSM_FB_EXT_BUF_SIZE	0
 #endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL */
-#endif /* LGE_DSDR_SUPPORT */
+#endif /*                  */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_PT) ||\
@@ -160,7 +161,7 @@ unsigned char apq8064_mhl_display_enabled(void)
 }
 
 static void set_mdp_clocks_for_wuxga(void);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 static int msm_fb_detect_panel(const char *name)
 {
@@ -210,7 +211,7 @@ static int msm_fb_detect_panel(const char *name)
 
 #else
 	return 0;
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 }
 
 static struct msm_fb_platform_data msm_fb_pdata = {
@@ -324,9 +325,6 @@ static struct msm_bus_scale_pdata mdp_bus_scale_pdata = {
 static struct msm_panel_common_pdata mdp_pdata = {
 	.gpio = MDP_VSYNC_GPIO,
 	.mdp_max_clk = 266667000,
-	.mdp_max_bw = 3080000000UL,
-	.mdp_bw_ab_factor = 180,
-	.mdp_bw_ib_factor = 190,
 	.mdp_bus_scale_table = &mdp_bus_scale_pdata,
 	.mdp_rev = MDP_REV_44,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
@@ -348,9 +346,6 @@ void __init apq8064_mdp_writeback(struct memtype_reserve* reserve_table)
 		mdp_pdata.ov0_wb_size;
 	reserve_table[mdp_pdata.mem_hid].size +=
 		mdp_pdata.ov1_wb_size;
-
-	pr_info("mem_map: mdp reserved with size 0x%lx in pool\n",
-			mdp_pdata.ov0_wb_size + mdp_pdata.ov1_wb_size);
 #endif
 }
 
@@ -371,7 +366,7 @@ static struct platform_device kcal_platrom_device = {
 		.platform_data = &kcal_pdata,
 	}
 };
-#endif /* CONFIG_LGE_KCAL */
+#endif /*                 */
 
 static struct resource hdmi_msm_resources[] = {
 	{
@@ -456,9 +451,11 @@ static int mipi_dsi_panel_power(int on)
 	static int gpio22;	// DSV_LOAD_EN (PM8921_GPIO_22)
 	int rc;
 
+	pr_debug("%s: state : %d\n", __func__, on);
+
 	if (!dsi_power_on) /* LCD initial start (power side) */
-  {
-  	pr_info("%s: initial start\n", __func__);
+       {
+	       printk(KERN_INFO "[LCD][DEBUG] %s: mipi lcd power initial\n", __func__);
 
 		reg_lvs6 = regulator_get(&msm_mipi_dsi1_device.dev, "dsi_iovcc");
 		if (IS_ERR(reg_lvs6)) {
@@ -484,7 +481,7 @@ static int mipi_dsi_panel_power(int on)
               {
                      rc = gpio_request(DSV_ONBST, "DSV_ONBST");
                      if (rc) {
-                            pr_err("%s: DSV_ONBST Request Fail, rc=%d\n", __func__, rc);
+                            pr_err(KERN_INFO "%s: DSV_ONBST Request Fail, rc=%d\n", __func__, rc);
                      }
                      gpio_tlmm_config(GPIO_CFG(DSV_ONBST, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_2MA), GPIO_CFG_ENABLE);
                      mdelay(50);
@@ -520,11 +517,11 @@ static int mipi_dsi_panel_power(int on)
               }
 		else if (lge_get_board_revno() == HW_REV_F)
               {
-                     /* LGE_CHANGE_S
-                      * jamin.koo@lge.com, 2012.09.04
-                      * Enable DSV_LOAD_EN
+                     /*             
+                                                     
+                                          
                       */
-#if defined(CONFIG_MACH_APQ8064_GKU) || defined(CONFIG_MACH_APQ8064_GKKT) || defined(CONFIG_MACH_APQ8064_GKSK) || defined(CONFIG_MACH_APQ8064_GVKT)
+#if defined(CONFIG_MACH_APQ8064_GVKT)
                      gpio22 = PM8921_GPIO_PM_TO_SYS(22);
                      rc = gpio_request(gpio22, "dsv_load_en");
                      if (rc) {
@@ -532,7 +529,7 @@ static int mipi_dsi_panel_power(int on)
                             return -ENODEV;
                      }
 #endif
-                     /* LGE_CHANGE_E */
+                     /*              */
 
                      rc = gpio_request(DSV_ONBST, "DSV_ONBST");
                      if (rc) {
@@ -552,10 +549,10 @@ static int mipi_dsi_panel_power(int on)
 		dsi_power_on = true;
 	}
 
-  pr_info("%s: onoff = %d\n", __func__, on);
-
 	if (on) /* LCD on start (power side) */
-  {
+       {
+              printk(KERN_INFO "[LCD][DEBUG] %s: lcd power on status (status=%d)\n", __func__, on);
+
 		if (lge_get_board_revno() == HW_REV_A || lge_get_board_revno() == HW_REV_B)
               {
                      /* LCD RESET LOW */
@@ -645,7 +642,7 @@ static int mipi_dsi_panel_power(int on)
                             pr_err("enable lvs6 failed, rc=%d\n", rc);
                             return -ENODEV;
                      }
-#if defined(CONFIG_MACH_APQ8064_GKU) || defined(CONFIG_MACH_APQ8064_GKKT) || defined(CONFIG_MACH_APQ8064_GKSK) || defined(CONFIG_MACH_APQ8064_GVKT)
+#if defined(CONFIG_MACH_APQ8064_GVKT)
                      gpio_set_value_cansleep(gpio22, 1);	// Turn on the DSV_LOAD_EN switch
 #endif
                      mdelay(20);
@@ -671,6 +668,7 @@ static int mipi_dsi_panel_power(int on)
 	}
        else /* LCD off start (power side) */
        {
+              printk(KERN_INFO "[LCD][DEBUG] %s: lcd power off (status=%d)\n", __func__, on);
 
 		if (lge_get_board_revno() == HW_REV_A || lge_get_board_revno() == HW_REV_B)
               {
@@ -746,7 +744,7 @@ static int mipi_dsi_panel_power(int on)
                      mdelay(10);
 
                      gpio_set_value_cansleep(DSV_ONBST, 0);
-#if defined(CONFIG_MACH_APQ8064_GKU) || defined(CONFIG_MACH_APQ8064_GKKT) || defined(CONFIG_MACH_APQ8064_GKSK) || defined(CONFIG_MACH_APQ8064_GVKT)
+#if defined(CONFIG_MACH_APQ8064_GVKT)
                      gpio_set_value_cansleep(gpio22, 0);	// Turn off the DSV_LOAD_EN switch
 #endif
                      mdelay(20);
@@ -978,7 +976,7 @@ static struct platform_device mipi_dsi_toshiba_panel_device = {
 	}
 };
 
-#endif  /* LGE Not Used */
+#endif  /*              */
 
 static struct msm_bus_vectors dtv_bus_init_vectors[] = {
 	{
@@ -1330,9 +1328,9 @@ static int mipi_lgit_backlight_level(int level, int max, int min)
 	return 0;
 }
 
-/* LGE_CHANGE_START
- * hyuk.myeong@lge.com, 2012.09.15
- * Change the initial sest for GK
+/*                 
+                                  
+                                 
  */
 static char exit_sleep_mode             [2] = {0x11,0x00};
 
@@ -1386,7 +1384,6 @@ static char ltps_timing_setting        [41] = {
 					0x00, 0x69, 0x10, 0x19, 0x07
 					};
 
-
 static char gamma_setting_a            [25] = {
 					0xC7,
 					0x00, 0x09, 0x14, 0x26, 0x31,
@@ -1396,7 +1393,8 @@ static char gamma_setting_a            [25] = {
 					0x5F, 0x67, 0x6B, 0x70
 					};
 
-static char gamma_setting_b            [25] = {
+
+static char gamma_setting_b           [25] = {
 					0xC8,
 					0x00, 0x09, 0x14, 0x26, 0x31,
 					0x48, 0x3B, 0x52, 0x5F, 0x67,
@@ -1404,6 +1402,7 @@ static char gamma_setting_b            [25] = {
 					0x26, 0x31, 0x48, 0x3B, 0x52,
 					0x5F, 0x67, 0x6B, 0x70
 					};
+
 
 static char gamma_setting_c            [25] = {
 					0xC9,
@@ -1432,7 +1431,7 @@ static char pwr_setting_internal_pwr   [27] = {
 					0x02, 0x37, 0x03, 0x3D, 0xBF,
 					0x00
 					};
-					
+
 static char vcom_setting                [8] = {
 					0xD5,
 					0x06, 0x00, 0x00, 0x01, 0x39,
@@ -1440,10 +1439,10 @@ static char vcom_setting                [8] = {
 					};
 
 static char vcom_setting_for_suspend    [8] = {
-					0xD5,
-					0x06, 0x00, 0x00, 0x00, 0x48,
-					0x00, 0x48
-					};
+                    0xD5,
+                    0x06, 0x00, 0x00, 0x00, 0x48,
+                    0x00, 0x48
+};
 
 static char display_on                  [2] = {0x29,0x00};
 
@@ -1458,15 +1457,14 @@ static char deep_standby_mode           [2] = {0xB1,0x01};
 #if defined(CONFIG_LGE_R63311_COLOR_ENGINE)
 static char color_enhancement          [33] = {
                                    0xCA,
-                                   0x01, 0x70, 0x90, 0xA0, 0xB0,
-                                   0x98, 0x90, 0x90, 0x3F, 0x3F,
+                                   0x01, 0x70, 0xB0, 0xC8, 0xB0,
+                                   0xB0, 0x98, 0x90, 0x3F, 0x3F,
                                    0x80, 0x78, 0x08, 0x38, 0x08,
                                    0x3F, 0x08, 0x90, 0x0C, 0x0C,
                                    0x0A, 0x06, 0x04, 0x04, 0x00,
                                    0xC8, 0x10, 0x10, 0x3F, 0x3F,
                                    0x3F, 0x3F
                                    };
-
 static char color_enhancement_off      [33] = {
                                    0xCA,
                                    0x00, 0x80, 0xDC, 0xF0, 0xDC,
@@ -1511,7 +1509,7 @@ static char write_cabc_still_on      [2] = {0x55, 0x02};
 static char write_cabc_off           [2] = {0x55, 0x00};
 
 static char backlight_ctrl_ui          [8] = {0xBA, 0x00, 0x3F, 0x04, 0x40, 0x9F, 0x1F, 0xD7};
-static char backlight_ctrl_movie_still [8] = {0xB9, 0x00, 0x02, 0x18, 0x18, 0x9F, 0x1F, 0x80};
+static char backlight_ctrl_movie_still [8] = {0xB9, 0x00, 0x3F, 0x18, 0x18, 0x9F, 0x1F, 0x80};
 static char backlight_ctrl_common      [26]= {0xB8,
                                        0x18, 0x80, 0x18, 0x18,
                                        0xCF, 0x1F, 0x00, 0x0C,
@@ -1521,6 +1519,7 @@ static char backlight_ctrl_common      [26]= {0xB8,
                                        0xB3, 0xFB, 0xFF, 0xFF,
                                        0xFF};
 #endif // CABC apply
+
 
 /* initialize device */
 static struct dsi_cmd_desc lgit_power_on_set_1[] = {
@@ -1572,7 +1571,7 @@ static struct dsi_cmd_desc lgit_power_on_set_2[] = {
 static struct dsi_cmd_desc lgit_power_on_set_3[] = {
        {DTYPE_DCS_LWRITE, 1, 0, 0, 0, sizeof(write_display_brightness), write_display_brightness},
 };
-#endif //CONFIG_LGE_R63311_BACKLIGHT_CABC
+#endif //                                
 #if defined(CONFIG_LGIT_COLOR_ENGINE_SWITCH)
 static struct dsi_cmd_desc lgit_color_engine_on[3] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(color_enhancement), color_enhancement},
@@ -1597,7 +1596,7 @@ static struct dsi_cmd_desc lgit_power_off_set[] = {
 	{DTYPE_DCS_WRITE, 1, 0, 0, 100, sizeof(enter_sleep_mode), enter_sleep_mode},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 40, sizeof(deep_standby_mode), deep_standby_mode}
 };
-/* LGE_CHANGE_END */
+/*                */
 
 static struct dsi_cmd_desc lgit_shutdown_set[] = {
        {DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(vcom_setting_for_suspend), vcom_setting_for_suspend},
@@ -1651,7 +1650,7 @@ void __init apq8064_init_fb(void)
 
 #ifndef CONFIG_MACH_LGE
 	platform_device_register(&lvds_chimei_panel_device);
-#endif /* CONFIG_MACH_LGE*/
+#endif /*                */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 	platform_device_register(&wfd_panel_device);
@@ -1667,12 +1666,12 @@ void __init apq8064_init_fb(void)
 		platform_device_register(&mipi_dsi_toshiba_panel_device);
 	if (machine_is_mpq8064_dtv())
 		platform_device_register(&lvds_frc_panel_device);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 	msm_fb_register_device("mdp", &mdp_pdata);
 #ifndef CONFIG_MACH_LGE
 	msm_fb_register_device("lvds", &lvds_pdata);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	msm_fb_register_device("mipi_dsi", &mipi_dsi_pdata);
 	platform_device_register(&hdmi_msm_device);
 	msm_fb_register_device("dtv", &dtv_pdata);
@@ -1871,4 +1870,4 @@ void __init apq8064_set_display_params(char *prim_panel, char *ext_panel,
 	msm_fb_pdata.ext_resolution = resolution;
         hdmi_msm_data.is_mhl_enabled = mhl_display_enabled;
 }
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */

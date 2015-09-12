@@ -258,6 +258,12 @@ config BACKLIGHT_MAX8925
 	  If you have a LCD backlight connected to the WLED output of MAX8925
 	  WLED output, say Y here to enable this driver.
 
+config LGE_FOTA_SILENT_RESET
+	tristate "Support Silent Reset for FOTA Update"
+	help
+	  If you want to turn off backlight when FOTA update,
+	  enable this feature.
+
 config BACKLIGHT_APPLE
        tristate "Apple Backlight Driver"
        depends on X86 && ACPI

@@ -843,7 +843,7 @@ int get_ic_info(struct synaptics_ts_data* ts, struct touch_fw_info* fw_info)
 		ts->fw_info.fw_rev = 0;
 		snprintf(ts->fw_info.config_id, sizeof(ts->fw_info.config_id), "ERR");
 #ifdef CUST_G_TOUCH
-		fw_info->fw_force_rework = true;
+		fw_info->fw_upgrade.fw_force_rework = true;
 #endif
 	}
 

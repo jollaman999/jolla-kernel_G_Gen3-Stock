@@ -193,7 +193,7 @@ static int acm_port_connect(struct f_acm *acm)
 			return ret;
 		}
 		break;
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	default:
 		pr_err("%s: Un-supported transport: %s\n", __func__,
 				xport_to_str(acm->transport));
@@ -228,7 +228,7 @@ static int acm_port_disconnect(struct f_acm *acm)
 		ghsic_ctrl_disconnect(&acm->port, port_num);
 		ghsic_data_disconnect(&acm->port, port_num);
 		break;
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	default:
 		pr_err("%s: Un-supported transport:%s\n", __func__,
 				xport_to_str(acm->transport));
@@ -991,6 +991,31 @@ static inline bool can_support_cdc(struct usb_configuration *c)
 	return true;
 }
 
+#ifdef CONFIG_USB_G_LGE_MULTICONFIG_ATF_WA
+/*
+                     
+                                     
+                                                        
+                                                              
+ */
+static int lge_acm_desc_change(struct usb_function *f, bool is_mac)
+{
+	if (is_mac == true) {
+		if (gadget_is_superspeed(f->config->cdev->gadget))
+			((struct usb_interface_descriptor *)f->ss_descriptors[1])->bInterfaceClass = USB_CLASS_VENDOR_SPEC;
+		((struct usb_interface_descriptor *)f->hs_descriptors[1])->bInterfaceClass = USB_CLASS_VENDOR_SPEC;
+		((struct usb_interface_descriptor *)f->descriptors[1])->bInterfaceClass = USB_CLASS_VENDOR_SPEC;
+		pr_info("MAC ACM bInterfaceClass change to %u \n", ((struct usb_interface_descriptor *)f->hs_descriptors[1])->bInterfaceClass);
+	} else {
+		if (gadget_is_superspeed(f->config->cdev->gadget))
+			((struct usb_interface_descriptor *)f->ss_descriptors[1])->bInterfaceClass = USB_CLASS_COMM;
+		((struct usb_interface_descriptor *)f->hs_descriptors[1])->bInterfaceClass = USB_CLASS_COMM;
+		((struct usb_interface_descriptor *)f->descriptors[1])->bInterfaceClass = USB_CLASS_COMM;
+		pr_info("WIN/LINUX ACM bInterfaceClass change to %u \n", ((struct usb_interface_descriptor *)f->hs_descriptors[1])->bInterfaceClass);
+	}
+	return 0;
+}
+#endif
 /**
  * acm_bind_config - add a CDC ACM function to a configuration
  * @c: the configuration to support the CDC ACM instance
@@ -1072,6 +1097,9 @@ int acm_bind_config(struct usb_configuration *c, u8 port_num)
 	acm->port.func.set_alt = acm_set_alt;
 	acm->port.func.setup = acm_setup;
 	acm->port.func.disable = acm_disable;
+#ifdef CONFIG_USB_G_LGE_MULTICONFIG_ATF_WA
+	acm->port.func.desc_change = lge_acm_desc_change;
+#endif
 
 	status = usb_add_function(c, &acm->port.func);
 	if (status)
@@ -1118,7 +1146,7 @@ static int acm_init_port(int port_num, const char *name, const char *port_name)
 		/*client port number will be updated in acm_port_setup*/
 		no_acm_hsic_sports++;
         break;
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 	default:
 		pr_err("%s: Un-supported transport transport: %u\n",
 				__func__, gacm_ports[port_num].transport);

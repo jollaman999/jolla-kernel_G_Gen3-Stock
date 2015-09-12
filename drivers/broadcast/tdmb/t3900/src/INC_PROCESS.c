@@ -825,7 +825,7 @@ INC_UINT8 INC_CHANNEL_START(INC_UINT8 ucI2CID, ST_SUBCH_INFO* pChInfo)
 }
 
 
-/* LGE ADD for Test */
+/*                  */
 INC_UINT8 INC_RE_SYNCDETECTOR(INC_UINT8 ucI2CID, ST_SUBCH_INFO* pChInfo)
 {
 	INC_UINT16 wEnsemble;
@@ -952,7 +952,7 @@ INC_UINT8 INC_STATUS_CHECK(INC_UINT8 ucI2CID)
 	INC_GET_PREBER(ucI2CID);
 	INC_GET_POSTBER(ucI2CID);
 	INC_GET_RSSI(ucI2CID);
-	//INC_GET_ANT_LEVEL(ucI2CID);  /* LGE don't use this value */
+	//                                                           
 
 	pInfo = INC_GET_STRINFO(ucI2CID);
 

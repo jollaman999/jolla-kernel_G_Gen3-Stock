@@ -37,10 +37,10 @@ VREG_CONSUMERS(L2) = {
 	REGULATOR_SUPPLY("dsi_vdda",		"mipi_dsi.1"),
 #endif
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, Power setting for J1 Camera, 2012.03.16, soojung.lim@lge.com */
+/*                                                                            */
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.0"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.1"), 
-/* LGE_CHANGE_E, Power setting for J1 Camera, 2012.03.16, soojung.lim@lge.com */
+/*                                                                            */
 #else //Qualcomm original
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.1"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.2"),
@@ -140,9 +140,9 @@ VREG_CONSUMERS(L16) = {
 };
 VREG_CONSUMERS(L17) = {
 	REGULATOR_SUPPLY("8921_l17",		NULL),
-// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+//                                                                                   
 #if defined(CONFIG_MACH_LGE) && (defined(CONFIG_IMX111) || (defined(CONFIG_IMX091)  && (defined(CONFIG_MACH_APQ8064_J1D) || defined(CONFIG_MACH_APQ8064_J1KD))))//yt.jeon 0420 adding defined
-// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+//                                                                                 
 	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx111 */
 #endif
 };
@@ -150,10 +150,10 @@ VREG_CONSUMERS(L18) = {
 	REGULATOR_SUPPLY("8921_l18",		NULL),
 };
 
-/* LGE_CHANGE_S, Power setting for 13M AF, 2012.04.20, yt.jeon@lge.com */
-// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+/*                                                                     */
+//                                                                                   
 #if defined(CONFIG_MACH_LGE) && defined(CONFIG_IMX091)  && !(defined(CONFIG_MACH_APQ8064_J1D) || defined(CONFIG_MACH_APQ8064_J1KD))
-// End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+//                                                                                 
 VREG_CONSUMERS(L21) = {
 	REGULATOR_SUPPLY("8921_l21",		NULL),
 	REGULATOR_SUPPLY("cam1_vaf",	"4-000d"), /* GSBI4, Slave Addr: 0x0d, imx091 */
@@ -163,7 +163,7 @@ VREG_CONSUMERS(L21) = {
 	REGULATOR_SUPPLY("8921_l21",		NULL),
 };
 #endif
-/* LGE_CHANGE_E, Power setting for 13M AF, 2012.04.20, yt.jeon@lge.com */
+/*                                                                     */
 
 VREG_CONSUMERS(L22) = {
 	REGULATOR_SUPPLY("8921_l22",		NULL),
@@ -685,7 +685,7 @@ msm8064_pm8921_regulator_pdata[] __devinitdata = {
 	 */
 	PM8XXX_NLDO1200(L26, "8921_l26", 0, 1, 375000, 1050000, 200, "8921_s7",
 		0, 1),
-#ifdef CONFIG_USB_OTG //#if defined(CONFIG_MACH_LGE)
+#ifdef CONFIG_USB_OTG //                            
 	/*           ID        name     always_on pd       en_t supply reg_ID */
 	PM8XXX_VS300(USB_OTG,  "8921_usb_otg",  0, 1,         0, "ext_5v", 2),
 #else //Qualcomm original
@@ -772,7 +772,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L13, 0, 0, 0, 2220000, 2220000, NULL,          0,     0),
 	RPM_LDO(L14, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL, 		   0, 	 19),	//yoogyeong.lee@lge.com
+	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL, 		   0, 	 19),	//                     
 #else
 	RPM_LDO(L15, 0, 1, 0, 1800000, 2950000, NULL,          0,     0),
 #endif
@@ -787,15 +787,15 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #else
 	RPM_LDO(L18, 0, 1, 0, 1300000, 1800000, "8921_s4",     0,     0),
 #endif
-/* LGE_CHANGE_S, Power setting for 13M AF, 2012.04.20, yt.jeon@lge.com */
+/*                                                                     */
 #if defined(CONFIG_MACH_LGE) && defined(CONFIG_IMX091)
 	RPM_LDO(L21, 0, 1, 0, 1800000, 1800000, "8921_s8",   0,	  0),
 #else
 	RPM_LDO(L21, 0, 1, 0, 1050000, 1050000, NULL,          0,     0),
 #endif
-/* LGE_CHANGE_E, Power setting for 13M AF, 2012.04.20, yt.jeon@lge.com */
+/*                                                                     */
 #if defined(CONFIG_MACH_LGE)
-	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),	//yoogyeong.lee@lge.com
+	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),	//                     
 #else
 	RPM_LDO(L22, 0, 1, 0, 2600000, 2600000, NULL,          0,     0),
 #endif	
@@ -804,16 +804,16 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L25, 1, 1, 0, 1250000, 1250000, "8921_s1", 10000, 10000),
 	RPM_LDO(L27, 0, 0, 0, 1100000, 1100000, "8921_s7",     0,     0),
 	RPM_LDO(L28, 0, 1, 0, 1050000, 1050000, "8921_s7",     0,     0),
-/* LGE_CHANGE_S sungwoo.cho@lge.com 
- * It is setting for HEADSET MICBIAS that is always on */
- //[LGE] seungkyu.joo, 2012-12-18 , HW Request for enabling apple headset mic
+/*                                  
+                                                       */
+ //                                                                          
 #if 1//defined(CONFIG_MACH_APQ8064_J1SK)|| defined(CONFIG_MACH_APQ8064_J1KT)|| defined(CONFIG_MACH_APQ8064_J1U)|| defined(CONFIG_MACH_APQ8064_J1A)
 	//||defined(CONFIG_MACH_APQ8064_J1R) || defined(CONFIG_MACH_APQ8064_J1B) || defined(CONFIG_MACH_APQ8064_J1TL) || defined(CONFIG_MACH_APQ8064_J1SP)
 	RPM_LDO(L29, 0, 1, 1, 2700000, 2700000, NULL,          0,     0), //8921_l29
 #else
 	RPM_LDO(L29, 0, 1, 1, 2000000, 2000000, NULL,          0,     0), //8921_l29
 #endif
-/* LGE_CHANGE_E sungwoo.cho@lge.com */ 
+/*                                  */ 
 	/*     ID  a_on pd ss                   supply */
 	RPM_VS(LVS1, 0, 1, 0,                   "8921_s4"),
 	RPM_VS(LVS3, 0, 1, 0,                   "8921_s4"),

@@ -31,7 +31,7 @@
 #ifdef CONFIG_SWITCH_MAX1462X 
 #include <linux/platform_data/hds_max1462x.h>
 #include <mach/board_lge.h>
-#include <linux/regulator/consumer.h> //[AUDIO_BSP], 20120730, sehwan.lee@lge.com PMIC L29 Control(because headset noise)
+#include <linux/regulator/consumer.h> //                                                                                 
 #endif
 #include "../../../../sound/soc/codecs/wcd9310.h"
 
@@ -181,7 +181,7 @@ static int __init lge_hsd_fsa8008_init(void)
     lge_bd_rev = lge_get_board_revno();
 
     if (lge_bd_rev == HW_REV_F) {
-        lge_hs_pdata.set_headset_mic_bias = NULL; //2012-08-24 mikyoung.chang@lge.com mic bias is controlled by mic_en
+        lge_hs_pdata.set_headset_mic_bias = NULL; //                                                                  
         printk(KERN_INFO "lge_bd_rev : %d, >= bd_rev : %d, so set set_headset_mic_bias = NULL!!!\n", lge_bd_rev, bd_rev);
     }
     else {
@@ -221,8 +221,8 @@ static struct platform_device lge_hsd_device = {
 	},
 };
 
-/* LGE_CHANGED_START 2012.10.25, gyuhwa.park@lge.com
- * PMIC L10 Control
+/*                                                  
+                   
 */
 static bool max1462x_mic_bias = false;
 #define REGLULATOR_VOLTAGE_L10_MIN	2500000
@@ -268,7 +268,7 @@ void set_headset_mic_bias_l10(int on)
 	}
 
 }
-/* LGE_CHANGED_END 2012.10.25, gyuhwa.park@lge.com */
+/*                                                 */
 
 static int __init lge_hsd_max1462x_init(void)
 {

@@ -26,6 +26,12 @@ void hsic_cleanup(void);
 #define ATD_HANDLE_BATT_THEM_ATCMD
 #define ATD_HANDLE_MDMLOG
 
+#ifdef CONFIG_MACH_APQ8064_ALTEV
+#define ATCMD_BUF_SIZE 20
+unsigned char atcmd_buf[ATCMD_BUF_SIZE] = {0,};
+int atcmd_enter = 0;
+#endif
+
 static const char *at_table[] = {
     /*
      * NOTICE: don't use "%QEM","+CKPD"
@@ -276,6 +282,44 @@ int atcmd_write_toatd(struct gdata_port *port, struct sk_buff *skb)
         return -EINVAL;
 
     ptr = skb->data + avail - 1;
+
+#ifdef CONFIG_MACH_APQ8064_ALTEV
+	if (avail == 1) {
+		if (strlen(atcmd_buf) == ATCMD_BUF_SIZE) {
+			printk("ATCMD BUF overflow\n");
+		    memset(&atcmd_buf, 0, sizeof(char)*ATCMD_BUF_SIZE);
+			goto out;
+		}
+
+		if (*(skb->data) == 127) {
+//			printk("receive del\n");
+			if(strlen(atcmd_buf) == 0) {
+				goto out;
+			} else {
+				atcmd_buf[strlen(atcmd_buf) - 1] = 0;
+				goto out;
+			}
+		} else if (*(skb->data) == 13) {
+//			printk("receive enter\n");
+
+			atcmd_enter = 1;
+
+			skb->len = strlen(atcmd_buf)+1;
+			avail = skb->len;
+			memcpy(skb->data,atcmd_buf,strlen(atcmd_buf));
+			*(skb->data + avail - 1) = '\r';
+			*(skb->data + avail) = '\n';
+			ptr = skb->data + avail - 1;
+			memset(&atcmd_buf, 0, ATCMD_BUF_SIZE);
+		} else {
+//			printk("receive else\n");
+			*(skb->data + 1) = 0;
+			strcat(atcmd_buf,skb->data);
+		}
+	}
+out :
+#endif
+
     if (strncasecmp(skb->data, "AT", 2) ||
         !(*ptr == '\r' || *ptr == '\n' || *ptr == '\0')) {
         return -EINVAL;
@@ -320,11 +364,22 @@ int atcmd_write_toatd(struct gdata_port *port, struct sk_buff *skb)
 
                 /* XXX only when writable and necessary */
                 tty_wakeup(tty);
-
+#ifdef CONFIG_MACH_APQ8064_ALTEV
+                atcmd_enter = 0;
+#endif
                 return 0;
             }
         }
     }
+
+#ifdef CONFIG_MACH_APQ8064_ALTEV
+	if (atcmd_enter == 1) {
+		*(skb->data) = 13;
+		*(skb->data+1) = '\r';
+		skb->len = 1;
+		atcmd_enter = 0;
+    }
+#endif
 
     kfree(cmd);
     return -ENOENT;

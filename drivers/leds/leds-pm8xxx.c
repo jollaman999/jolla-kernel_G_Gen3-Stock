@@ -123,12 +123,8 @@
 
 #define PM8XXX_LED_OFFSET(id) ((id) - PM8XXX_ID_LED_0)
 
-#ifdef CONFIG_LGE_PM_PWM_LED
-#define PM8XXX_LED_PWM_FLAGS	(PM_PWM_LUT_LOOP | PM_PWM_LUT_RAMP_UP)
-#else
-#define PM8XXX_LED_PWM_FLAGS   (PM_PWM_LUT_LOOP | PM_PWM_LUT_RAMP_UP | \
-                               PM_PWM_LUT_PAUSE_LO_EN | PM_PWM_LUT_PAUSE_HI_EN)
-#endif
+#define PM8XXX_LED_PWM_FLAGS	(PM_PWM_LUT_LOOP | PM_PWM_LUT_RAMP_UP | \
+				PM_PWM_LUT_PAUSE_LO_EN | PM_PWM_LUT_PAUSE_HI_EN)
 
 #define PM8XXX_LED_PWM_GRPFREQ_MAX	255
 #define PM8XXX_LED_PWM_GRPPWM_MAX	255
@@ -447,10 +443,6 @@ static int pm8xxx_adjust_brightness(struct led_classdev *led_cdev,
 
 static int pm8xxx_led_pwm_pattern_update(struct pm8xxx_led_data * led)
 {
-#ifdef CONFIG_LGE_PM_PWM_LED
-	int start_idx, idx_len0, idx_len1;
-	int rc=0;
-#else
 	int start_idx, idx_len;
 	int *pcts = NULL;
 	int i, rc = 0;
@@ -458,42 +450,11 @@ static int pm8xxx_led_pwm_pattern_update(struct pm8xxx_led_data * led)
 	int pwm_max = 0;
 	int total_ms, on_ms;
 	int flags;
-#endif
 
-#ifdef CONFIG_LGE_PM_PWM_LED
-	if (!led->pwm_duty_cycles || !led->pwm_duty_cycles->duty_pcts0 || !led->pwm_duty_cycles->duty_pcts1) {
+	if (!led->pwm_duty_cycles || !led->pwm_duty_cycles->duty_pcts) {
 		dev_err(led->cdev.dev, "duty_cycles and duty_pcts is not exist\n");
 		return -EINVAL;
 	}
-
-		start_idx = led->pwm_duty_cycles->start_idx;
-		idx_len0 = led->pwm_duty_cycles->num_duty_pcts0;
-		idx_len1 = led->pwm_duty_cycles->num_duty_pcts1;
-
-		if (idx_len0 >= PM_PWM_LUT_SIZE && start_idx) {
-			printk("Wrong LUT size or index\n");
-			return -EINVAL;
-		}
-		if ((start_idx + idx_len0) > PM_PWM_LUT_SIZE) {
-			printk("Exceed LUT limit\n");
-			return -EINVAL;
-		}
-		if (idx_len1 >= PM_PWM_LUT_SIZE && start_idx) {
-			printk("Wrong LUT size or index\n");
-			return -EINVAL;
-		}
-		if ((start_idx + idx_len1) > PM_PWM_LUT_SIZE) {
-			printk("Exceed LUT limit\n");
-			return -EINVAL;
-		}
-
-
-#else
-
-	if (!led->pwm_duty_cycles || !led->pwm_duty_cycles->duty_pcts) {
-                dev_err(led->cdev.dev, "duty_cycles and duty_pcts is not exist\n");
-                return -EINVAL;
-        }
 
 	if (led->pwm_grppwm > 0 && led->pwm_grpfreq > 0) {
 		total_ms = led->pwm_grpfreq * 50;
@@ -543,7 +504,6 @@ static int pm8xxx_led_pwm_pattern_update(struct pm8xxx_led_data * led)
 	}
 
 	flags = PM8XXX_LED_PWM_FLAGS;
-
 	switch (led->max_current) {
 	case PM8XXX_PWM_CURRENT_4MA:
 		flags |= PM_PWM_BANK_LO;
@@ -558,21 +518,13 @@ static int pm8xxx_led_pwm_pattern_update(struct pm8xxx_led_data * led)
 		flags |= (PM_PWM_BANK_LO | PM_PWM_BANK_HI);
 		break;
 	}
-#endif
 
-#ifdef CONFIG_LGE_PM_PWM_LED
-	rc = pm8xxx_pwm_lut_config(led->pwm_dev, led->pwm_period_us,
-				led->pwm_duty_cycles->duty_pcts0,
-				led->pwm_duty_cycles->duty_ms0,
-				start_idx, idx_len0, 0, 0,
-				PM8XXX_LED_PWM_FLAGS);
-#else
 	rc = pm8xxx_pwm_lut_config(led->pwm_dev, led->pwm_period_us,
 			led->pwm_duty_cycles->duty_pcts,
 			led->pwm_duty_cycles->duty_ms,
 			start_idx, idx_len, led->pwm_pause_lo, led->pwm_pause_hi,
 			flags);
-#endif
+
 	return rc;
 }
 
@@ -585,7 +537,6 @@ static int pm8xxx_led_pwm_work(struct pm8xxx_led_data *led)
 	level = pm8xxx_adjust_brightness(&led->cdev, led->cdev.brightness);
 
 	if (led->pwm_duty_cycles == NULL) {
-		printk("pm8xxx_led_pwm_work pwm_duty_cycles is NULL\n");
 		duty_us = (led->pwm_period_us * level) / LED_FULL;
 		rc = pwm_config(led->pwm_dev, duty_us, led->pwm_period_us);
 		if (led->cdev.brightness) {
@@ -599,18 +550,13 @@ static int pm8xxx_led_pwm_work(struct pm8xxx_led_data *led)
 		}
 	} else {
 		if (level) {
-#ifdef CONFIG_LGE_PM_PWM_LED
-#else
 			pm8xxx_led_pwm_pattern_update(led);
-#endif
 			led_rgb_write(led, SSBI_REG_ADDR_RGB_CNTL1, level);
 		}
 
 		rc = pm8xxx_pwm_lut_enable(led->pwm_dev, level);
 		if (!level)
-		{
 			led_rgb_write(led, SSBI_REG_ADDR_RGB_CNTL1, level);
-		}
 	}
 
 	return rc;
@@ -682,35 +628,9 @@ static void pm8xxx_led_set(struct led_classdev *led_cdev,
 	enum led_brightness value)
 {
 	struct	pm8xxx_led_data *led;
-#ifdef CONFIG_LGE_PM_PWM_LED
-	int idx_len0;
-	int idx_len1;
-#endif
 
 	led = container_of(led_cdev, struct pm8xxx_led_data, cdev);
 
-#ifdef CONFIG_LGE_PM_PWM_LED
-	if (led->id == PM8XXX_ID_LED_2 || led->id == PM8XXX_ID_LED_0) {
-		idx_len0 = led->pwm_duty_cycles->num_duty_pcts0;
-		idx_len1 = led->pwm_duty_cycles->num_duty_pcts1;
-
-		if(value == 0xFE) { //notification
-			pm8xxx_pwm_lut_config(led->pwm_dev, led->pwm_period_us,
-				led->pwm_duty_cycles->duty_pcts1,
-				led->pwm_duty_cycles->duty_ms1,
-				0, idx_len1, 0, 0,
-				PM8XXX_LED_PWM_FLAGS);
-				value = led->cdev.max_brightness;
-		}
-		else { //charging
-			pm8xxx_pwm_lut_config(led->pwm_dev, led->pwm_period_us,
-				led->pwm_duty_cycles->duty_pcts0,
-				led->pwm_duty_cycles->duty_ms0,
-				0, idx_len0, 0, 0,
-				PM8XXX_LED_PWM_FLAGS);
-		}
-	}
-#endif
 	if (value < LED_OFF || value > led->cdev.max_brightness) {
 		dev_err(led->cdev.dev, "Invalid brightness value exceeds");
 		return;
@@ -1132,36 +1052,13 @@ static ssize_t pm8xxx_led_status_show(struct device *dev,
 {
 	const struct pm8xxx_led_platform_data *pdata = dev->platform_data;
 	struct pm8xxx_led_data *leds =  (struct pm8xxx_led_data *)dev_get_drvdata(dev);
-#ifdef CONFIG_LGE_PM_PWM_LED
-	int start_idx = 0, idx_len0 = 0, idx_len1 = 0;
-#else
 	int start_idx = 0, idx_len = 0;
-#endif
 	int i, j, n = 0;
 
 	for (i = 0; i < pdata->num_configs; i++)
 	{
 		n += sprintf(&buf[n], "[%d] %s blink %d, adjust %d, max_current %d\n",
 				i, leds[i].cdev.name, leds[i].blink, leds[i].adjust_brightness, leds[i].max_current);
-#ifdef CONFIG_LGE_PM_PWM_LED
-		if (leds[i].pwm_duty_cycles != NULL && leds[i].pwm_duty_cycles->duty_pcts0 != NULL && leds[i].pwm_duty_cycles->duty_pcts1) {
-			start_idx = leds[i].pwm_duty_cycles->start_idx;
-			idx_len0 = leds[i].pwm_duty_cycles->num_duty_pcts0;
-			idx_len1 = leds[i].pwm_duty_cycles->num_duty_pcts1;
-			for (j = 0; j < idx_len0; j++)
-			{
-				n += sprintf(&buf[n], "%d ",
-						leds[i].pwm_duty_cycles->duty_pcts0[j]);
-			}
-			n += sprintf(&buf[n], "\n");
-			for (j = 0; j < idx_len1; j++)
-                        {
-                                n += sprintf(&buf[n], "%d ",
-                                                leds[i].pwm_duty_cycles->duty_pcts1[j]);
-                        }
-			n += sprintf(&buf[n], "\n");
-		}
-#else
 		if (leds[i].pwm_duty_cycles != NULL && leds[i].pwm_duty_cycles->duty_pcts != NULL) {
 			start_idx = leds[i].pwm_duty_cycles->start_idx;
 			idx_len = leds[i].pwm_duty_cycles->num_duty_pcts;
@@ -1172,7 +1069,6 @@ static ssize_t pm8xxx_led_status_show(struct device *dev,
 			}
 			n += sprintf(&buf[n], "\n");
 		}
-#endif
 		else
 			n += sprintf(&buf[n], "not exist\n");
 

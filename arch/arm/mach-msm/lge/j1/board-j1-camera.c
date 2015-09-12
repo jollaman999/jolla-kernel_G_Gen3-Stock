@@ -195,7 +195,7 @@ static struct msm_bus_vectors cam_preview_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 94003200, // org. 27648000 /* LGE_CHANGE, increase preview vector EBI bus band width, 2012.09.26, jungryoul.choi@lge.com */
+		.ab  = 94003200, //                                                                                                               
 		.ib  = 110592000,
 	},
 	{
@@ -237,8 +237,8 @@ static struct msm_bus_vectors cam_snapshot_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 411635520,  // org 274423680  /* LGE_CHANGE, increase VFE-EBI bandwidth for fix UI-freezing, 2012.12.27, seongjo.kim@lge.com */
-		.ib  = 1646542080, // org 1097694720 /* LGE_CHANGE, increase VFE-EBI bandwidth for fix UI-freezing, 2012.12.27, seongjo.kim@lge.com */
+		.ab  = 411635520,  //                                                                                                                 
+		.ib  = 1646542080, //                                                                                                                 
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -270,7 +270,7 @@ static struct msm_bus_vectors cam_zsl_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_JPEG_ENC,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 810000000, // org 540000000, /* LGE_CHANGE, increase JPEG_ENC ab value for fix TMS Issue, 2013.01.13, seongjo.kim@lge.com */
+		.ab  = 810000000, //                                                                                                               
 		.ib  = 2025000000,
 	},
 };
@@ -320,9 +320,9 @@ static struct camera_vreg_t apq_8064_back_cam_vreg[] = {
 	{"cam1_vdig", REG_LDO, 1200000, 1200000, 105000},
 	{"cam1_vio", REG_VS, 0, 0, 0},
 	{"cam1_vana", REG_LDO, 2850000, 2850000, 85600},
-// Start LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+//                                                                                   
 #if defined(CONFIG_IMX111) || (defined(CONFIG_IMX091) && (defined(CONFIG_MACH_APQ8064_J1D) || defined(CONFIG_MACH_APQ8064_J1KD)))
-   // End LGE_BSP_CAMERA::seongjo.kim@lge.com 2012-06-08 AF board setting for DCM_KDDI
+   //                                                                                 
 	{"cam1_vaf", REG_LDO, 2800000, 2800000, 300000},
 #else //yt.jeon 0420 2.8->1.8 revB(SPR), revC(LGU+)
 	{"cam1_vaf", REG_LDO, 1800000, 1800000, 150000},
@@ -332,7 +332,7 @@ static struct camera_vreg_t apq_8064_back_cam_vreg[] = {
 
 #ifdef CONFIG_IMX119
 static struct camera_vreg_t apq_8064_front_cam_vreg[] = {
-	{"cam2_vdig", REG_LDO, 1200000, 1200000, 105000}, //rearrange poweron sequence yt.jeon@lge.com 0619
+	{"cam2_vdig", REG_LDO, 1200000, 1200000, 105000}, //                                               
 	{"cam2_vio", REG_VS, 0, 0, 0},
 	{"cam2_vana", REG_LDO, 2800000, 2850000, 85600},
 };
@@ -368,13 +368,13 @@ static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf = {
 
 #ifdef CONFIG_IMX119
 static struct gpio apq8064_front_cam_gpio[] = {
-/* LGE_CHANGE_S, for old HW (LGU Rev.A,B VZW Rev.A,B ATT Rev.A), 2012.04.27, jungryoul.choi@lge.com */
+/*                                                                                                  */
 #if 1
 	{GPIO_CAM_MCLK2, GPIOF_DIR_IN, "CAMIF_MCLK"},
 #else
 	{GPIO_CAM_MCLK1, GPIOF_DIR_IN, "CAMIF_MCLK"},
 #endif
-/* LGE_CHANGE_E, for old HW (LGU Rev.A,B VZW Rev.A,B ATT Rev.A), 2012.04.27, jungryoul.choi@lge.com */
+/*                                                                                                  */
 	{GPIO_CAM2_RST_N, GPIOF_DIR_OUT, "CAM_RESET"},
 };
 
@@ -483,7 +483,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_imx091 = {
 };
 
 static struct i2c_board_info imx091_eeprom_i2c_info = {
-	I2C_BOARD_INFO("imx091_eeprom", 0x53), //LGE_Update yt.jeon@lge.com eeprom I2C address 0xA6>>1 20120702
+	I2C_BOARD_INFO("imx091_eeprom", 0x53), //                                                              
 };
 
 static struct msm_eeprom_info imx091_eeprom_info = {
@@ -574,14 +574,14 @@ void __init apq8064_init_cam(void)
 			ARRAY_SIZE(apq8064_cam_common_configs));
 	}
 
-/* LGE_CHANGE_S, bring up G KK OSU , 2014.01.28, yousung.kang@lge.com */
+/*                                                                    */
 /*	if (machine_is_apq8064_cdp()) {
 		sensor_board_info_imx074.mount_angle = 0;
 		sensor_board_info_mt9m114.mount_angle = 0;
 	} else if (machine_is_apq8064_liquid())
 		sensor_board_info_imx074.mount_angle = 180;
 */
-/* LGE_CHANGE_E, bring up G KK OSU , 2014.01.28, yousung.kang@lge.com */
+/*                                                                    */
 	platform_device_register(&msm_camera_server);
 	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2)
 		platform_device_register(&msm8960_device_i2c_mux_gsbi4);

@@ -60,7 +60,7 @@ static void mmc_clk_scaling(struct mmc_host *host, bool from_wq);
 #define MMC_BKOPS_MAX_TIMEOUT	(30 * 1000) /* max time to wait in ms */
 
 /* Flushing a large amount of cached data may take a long time. */
-#define MMC_FLUSH_REQ_TIMEOUT_MS 30000 /* msec */
+#define MMC_FLUSH_REQ_TIMEOUT_MS 90000 /* msec */
 
 static struct workqueue_struct *workqueue;
 
@@ -881,7 +881,7 @@ void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card)
 			limit_us = 3000000;
 		else
 #ifdef CONFIG_MACH_LGE
-            /* LGE_UPDATE_S apply D1L patch */
+            /*                              */
             limit_us = 300000;
 #else
 			limit_us = 100000;

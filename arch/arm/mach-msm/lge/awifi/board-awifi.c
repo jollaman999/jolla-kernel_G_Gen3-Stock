@@ -100,11 +100,11 @@
 #if defined(CONFIG_LGE_IRDA)
 #include <mach/clk-provider.h>
 #endif
-// [[LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 #include <sound/esxxx.h>
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 
 
 #define MSM_PMEM_ADSP_SIZE         0x7800000
@@ -120,7 +120,7 @@
 #define MSM_ION_MFC_META_SIZE  0x40000 /* 256 Kbytes */
 #define MSM_CONTIG_MEM_SIZE  0x65000
 #ifdef CONFIG_MSM_IOMMU
-#define MSM_ION_MM_SIZE		0x5F00000 //came from g ics for stability issue org : 0x3800000
+#define MSM_ION_MM_SIZE		0x6B00000 //increase size to support WV DASH + Miracast. org : 0x5F00000
 #define MSM_ION_SF_SIZE		0
 #define MSM_ION_QSECOM_SIZE	0x780000 /* (7.5MB) */
 #define MSM_ION_HEAP_NUM	8
@@ -313,17 +313,17 @@ static struct ion_cp_heap_pdata cp_mm_apq8064_ion_pdata = {
 	.reusable = FMEM_ENABLED,
 	.mem_is_fmem = FMEM_ENABLED,
 	.fixed_position = FIXED_MIDDLE,
-// jungjoo.nahm@lge.com [START]
+//                             
 // As per QC case #01116834, adjust is_cma value based on CONFIG_CMA kernel feature.
 // To QC integrator, please keep this SW change. It impacts to playback a widevine DRM contents
-//20130401, justin.yun@lge.com, To avoid memory fail when starting Miracast [START]
+//                                                                                 
 //#ifdef CONFIG_CMA
 //	.is_cma = 1,
 //#else
         .is_cma = 0,
 //#endif
-//20130401, justin.yun@lge.com, To avoid memory fail when starting Miracast [END]
-// jungjoo.nahm@lge.com [END]
+//                                                                               
+//                           
 	.no_nonsecure_alloc = 1,
 };
 
@@ -758,7 +758,7 @@ static void __init apq8064_reserve(void)
 #ifndef CONFIG_MACH_LGE
 	apq8064_set_display_params(prim_panel_name, ext_panel_name,
 		ext_resolution);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	msm_reserve();
 	lge_reserve();
 }
@@ -934,7 +934,7 @@ struct platform_device lge_android_usb_device = {
 	.platform_data = &lge_android_usb_pdata,
     },
 };
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
 static struct platform_device lg_diag_cmd_device = {
@@ -944,7 +944,7 @@ static struct platform_device lg_diag_cmd_device = {
 		.platform_data = 0, //&lg_diag_cmd_pdata
 	},
 };
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 
 /* Bandwidth requests (zero) if no vote placed */
 static struct msm_bus_vectors usb_init_vectors[] = {
@@ -984,10 +984,21 @@ static struct msm_bus_scale_pdata usb_bus_scale_pdata = {
 };
 
 static int phy_init_seq[] = {
-	0x38, 0x81, /* update DC voltage level */
-	0x24, 0x82, /* set pre-emphasis and rise/fall time */
+	0x44, 0x80, /* update DC voltage level */
+	0x39, 0x81, /* set pre-emphasis and rise/fall time */
+	0x21, 0x82,
+	0x33, 0x83,
 	-1
 };
+
+static int phy_init_host_seq[] = {
+	0x44, 0x80,
+	0x36, 0x81,
+	0x24, 0x82,
+	0x13, 0x83,
+	-1
+};
+
 
 #define PMIC_GPIO_DP		27    /* PMIC GPIO for D+ change */
 #define PMIC_GPIO_DP_IRQ	PM8921_GPIO_IRQ(PM8921_IRQ_BASE, PMIC_GPIO_DP)
@@ -1047,7 +1058,7 @@ static struct msm_otg_platform_data msm_otg_pdata = {
 #ifdef CONFIG_USB_OTG
 	.mode			= USB_OTG,
 #else
-	.mode				= USB_PERIPHERAL,
+	.mode			= USB_PERIPHERAL,
 #endif
 #else //QCT origin
 	.mode			= USB_OTG,
@@ -1058,6 +1069,7 @@ static struct msm_otg_platform_data msm_otg_pdata = {
 	.power_budget		= 750,
 	.bus_scale_table	= &usb_bus_scale_pdata,
 	.phy_init_seq		= phy_init_seq,
+	.phy_init_host_seq      = phy_init_host_seq,
 	.mpm_otgsessvld_int	= MSM_MPM_PIN_USB1_OTGSESSVLD,
 #ifdef CONFIG_USB_OTG
 	.vbus_power 		= msm_hsusb_vbus_power,
@@ -1538,7 +1550,7 @@ static struct slim_device apq8064_slim_tabla20 = {
 	},
 };
 
-// [[LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 static struct esxxx_platform_data apq8064_es325_data = {
 	.reset_gpio = ES325_RESET_GPIO,
@@ -1561,7 +1573,7 @@ static struct slim_device apq8064_slim_es325_gen0 = {
 	},
 };
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 
 #ifdef CONFIG_SND_SOC_CS8427
 /* enable the level shifter for cs8427 to make sure the I2C
@@ -1705,7 +1717,7 @@ static struct i2c_board_info isa1200_board_info[] __initdata = {
 		.platform_data = &isa1200_1_pdata,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 #ifdef CONFIG_TOUCHSCREEN_ATMEL_MXT
 /* configuration data for mxt1386e using V2.1 firmware */
@@ -2213,7 +2225,7 @@ static struct platform_device qcedev_device = {
 };
 #endif
 
-#if defined(CONFIG_MACH_APQ8064_ALTEV) /* sangyup.kim@lge.com To remove mdm modem */
+#if defined(CONFIG_MACH_APQ8064_ALTEV) /*                                         */
 static struct mdm_vddmin_resource mdm_vddmin_rscs = {
 	.rpm_id = MSM_RPM_ID_VDDMIN_GPIO,
 	.ap2mdm_vddmin_gpio = 30,
@@ -2398,8 +2410,8 @@ static struct platform_device msm8064_device_saw_regulator_core3 = {
 	},
 };
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct resource bluesleep_resources[] = {
@@ -2428,9 +2440,9 @@ static struct platform_device msm_bluesleep_device = {
 	.num_resources	= ARRAY_SIZE(bluesleep_resources),
 	.resource	= bluesleep_resources,
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+#endif //                     
+//                                           
+//                                                                   
 
 static struct msm_rpmrs_level msm_rpmrs_levels[] = {
 	{
@@ -2804,7 +2816,7 @@ static void __init mpq8064_pcie_init(void)
 	}
 }
 
-#ifdef CONFIG_USB_OTG //#if defined(CONFIG_MACH_LGE)
+#ifdef CONFIG_USB_OTG //                            
 static struct platform_device apq8064_device_ext_5v_vreg __devinitdata = {
 	.name	= GPIO_REGULATOR_DEV_NAME,
 	.id	= PM8921_MPP_PM_TO_SYS(7),
@@ -2931,23 +2943,23 @@ static struct platform_device *common_devices[] __initdata = {
 	&android_usb_device,
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 	&apq8064_device_qup_spi_gsbi5,
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 #ifdef CONFIG_USB_G_LGE_ANDROID
 	&lge_android_usb_device,
 #endif
 
-// [S] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                                                   
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 	&msm_bluesleep_device,
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
-// [E] LGE_BT: ADD/ilbeom.kim/'12-10-24 - [GK] BRCM Solution bring-up
+#endif //                     
+//                                           
+//                                                                   
 
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
 	&lg_diag_cmd_device,
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 
 #ifndef CONFIG_BCMDHD
 	&msm_device_wcnss_wlan,
@@ -3173,30 +3185,30 @@ late_initcall(rf4ce_gpio_init);
 /* GK Broadcom BCM4334 */
 #if defined(CONFIG_LGE_BLUESLEEP)
 #ifdef CONFIG_SERIAL_MSM_HS
-/* daeon.shon@lge.com temp block for build error
-static int configure_uart_gpios(int on)
-{
-	int ret = 0, i;
-	int uart_gpios[] = {14, 15, 16, 17};
+/*                                              
+                                       
+ 
+                
+                                     
 
-	for (i = 0; i < ARRAY_SIZE(uart_gpios); i++) {
-		if (on) {
-			ret = gpio_request(uart_gpios[i], NULL);
-			if (ret) {
-				pr_err("%s:unable to request uart gpio[%d]\n",
-						__func__, uart_gpios[i]);
-				break;
-			}
-		} else {
-			gpio_free(uart_gpios[i]);
-		}
-	}
+                                               
+           
+                                           
+             
+                                                  
+                               
+          
+    
+          
+                            
+   
+  
 
-	if (ret && on && i)
-		for (; i >= 0; i--)
-			gpio_free(uart_gpios[i]);
-	return ret;
-}
+                    
+                     
+                            
+            
+ 
 */
 static struct msm_serial_hs_platform_data mpq8064_gsbi6_uartdm_pdata = {
 //	.gpio_config		= configure_uart_gpios,
@@ -3237,7 +3249,7 @@ static struct platform_device *irrc_uart_devices[] __initdata = {
        &apq8064_device_uart_gsbi7,
 };
 #endif
-#if 0//sangwooha.ha@lge.com 20120813 GK ES3 UART bring up
+#if 0//                                                  
 static struct msm_spi_platform_data apq8064_qup_spi_gsbi5_pdata = {
 	.max_clock_speed = 1100000,
 };
@@ -3267,7 +3279,7 @@ static struct spi_board_info spi_broadcast_board_info[] __initdata = {
 
 
 };
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 static struct spi_board_info spi_board_info[] __initdata = {
 #if !(CONFIG_MACH_LGE)
@@ -3280,8 +3292,8 @@ static struct spi_board_info spi_board_info[] __initdata = {
 		.chip_select            = 2,
 		.mode                   = SPI_MODE_0,
 	},
-#endif /* LGE Not Used */
-#endif /* CONFIG_MACH_LGE */
+#endif /*              */
+#endif /*                 */
 #ifdef CONFIG_SENSORS_EPM_ADC
 	{
 		.modalias		= "epm_adc",
@@ -3304,7 +3316,7 @@ static struct slim_boardinfo apq8064_slim_devices[] = {
 		.bus_num = 1,
 		.slim_slave = &apq8064_slim_tabla20,
 	},
-// [[LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 #if defined(CONFIG_SND_SOC_ES325_SLIM)
 	{
 		.bus_num = 1,
@@ -3316,13 +3328,13 @@ static struct slim_boardinfo apq8064_slim_devices[] = {
         .slim_slave = &apq8064_slim_es325_gen0
 	},
 #endif /* CONFIG_SND_SOC_ES325_SLIM */
-// ]]LGE_BSP_AUDIO, jeremy.pi@lge.com, Audience eS325 ALSA SoC Audio driver
+//                                                                         
 
 	/* add more slimbus slaves as needed */
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi1_pdata = {
-	.clk_freq = 384000,//sangwooha.ha@lge.com GK ES3 bring up
+	.clk_freq = 384000,//                                    
 	.src_clk_rate = 24000000,
 };
 
@@ -3332,7 +3344,7 @@ static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi3_pdata = {
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi4_pdata = {
-	.clk_freq = 200000,  /* LGE_CHANGE, decrease i2c speed a bit from max. to avoid stability issue., 2013-06-19, john.park@lge.com */
+	.clk_freq = 200000,  /*                                                                                                         */
 	.src_clk_rate = 24000000,
 };
 
@@ -3350,7 +3362,7 @@ static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi7_pdata = {
 };
 #endif
 
-#if 0//sangwooha.ha@lge.com 20120813 GK ES3 UART bring up
+#if 0//                                                  
 static struct msm_i2c_platform_data mpq8064_i2c_qup_gsbi5_pdata = {
 	.clk_freq = 100000,
 	.src_clk_rate = 24000000,
@@ -3384,10 +3396,10 @@ static void __init apq8064_i2c_init(void)
 			//apq8064_i2c_qup_gsbi7_pdata.use_gsbi_shared_mode = 1;
 
 #endif
-	/* LGE_UPDATE_S GV DCM
-	 *  Setting protocol code to 0x60 for dual UART/I2C in GSBI3
-	 *  - Rev.B
-	 */
+	/*                    
+                                                             
+            
+  */
 #if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
 		gsbi_mem = ioremap_nocache(MSM_GSBI3_PHYS, 4);
 		writel_relaxed(GSBI_DUAL_MODE_CODE, gsbi_mem);
@@ -3422,7 +3434,7 @@ static void __init apq8064_i2c_init(void)
 				&apq8064_i2c_qup_gsbi5_pdata;
 #endif
 
-//sangwooha.ha@lge.com 20120813 GK ES3 UART bring up
+//                                                  
 	/* Setting protocol code to 0x60 for dual UART/I2C in GSBI4 */
 	gsbi_mem = ioremap_nocache(MSM_GSBI4_PHYS, 4);
 	if (lge_get_uart_mode()) {
@@ -3693,7 +3705,7 @@ static struct platform_device mpq_keypad_device = {
 		.platform_data  = &mpq_keypad_data,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 /* Sensors DSPS platform data */
 #define DSPS_PIL_GENERIC_NAME		"dsps"
@@ -3754,7 +3766,7 @@ static struct i2c_registry apq8064_i2c_devices[] __initdata = {
 		isa1200_board_info,
 		ARRAY_SIZE(isa1200_board_info),
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 #ifdef CONFIG_SND_SOC_CS8427
 	{
 		I2C_MPQ_CDP,
@@ -3851,17 +3863,17 @@ static void __init register_i2c_devices(void)
 		apq8064_camera_board_info.board_info,
 		apq8064_camera_board_info.num_i2c_board_info,
 	};
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 	struct i2c_registry apq8064_camera_i2c_devices_revA = {
 		I2C_SURF | I2C_FFA | I2C_LIQUID | I2C_RUMI,
 		APQ_8064_GSBI4_QUP_I2C_BUS_ID,
 		apq8064_camera_board_info_revA.board_info,
 		apq8064_camera_board_info_revA.num_i2c_board_info,
 	};
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
-/* [patch for Enabling flash LED for camera]
-  * 2012-03-14, jinsool.lee@lge.com
+/*                                          
+                                   
   */
 	struct i2c_registry apq8064_lge_camera_i2c_devices = {
 		I2C_SURF | I2C_FFA | I2C_RUMI | I2C_SIM | I2C_LIQUID | I2C_MPQ_CDP,
@@ -3879,6 +3891,8 @@ static void __init register_i2c_devices(void)
 		mach_mask = I2C_LIQUID;
 	else if (PLATFORM_IS_MPQ8064())
 		mach_mask = I2C_MPQ_CDP;
+	else if (machine_is_apq8064_awifi())
+		mach_mask = I2C_FFA;
 	//else if (machine_is_apq8064_gk())
 	//	mach_mask = I2C_FFA;
 	else
@@ -3893,7 +3907,7 @@ static void __init register_i2c_devices(void)
 						apq8064_i2c_devices[i].len);
 	}
 #ifdef CONFIG_MSM_CAMERA
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 	if(lge_get_board_revno() >= HW_REV_A){
 		if (apq8064_camera_i2c_devices_revA.machs & mach_mask)
 			i2c_register_board_info(apq8064_camera_i2c_devices_revA.bus,
@@ -3904,7 +3918,7 @@ static void __init register_i2c_devices(void)
 				apq8064_lge_camera_i2c_devices.info,
 				apq8064_lge_camera_i2c_devices.len);
 	}else{
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 	if (apq8064_camera_i2c_devices.machs & mach_mask)
 		i2c_register_board_info(apq8064_camera_i2c_devices.bus,
 			apq8064_camera_i2c_devices.info,
@@ -4038,7 +4052,7 @@ static void __init apq8064ab_update_retention_spm(void)
 
 static void __init apq8064_common_init(void)
 {
-#if defined(CONFIG_MACH_APQ8064_ALTEV) /* sangyup.kim@lge.com To remove mdm modem */
+#if defined(CONFIG_MACH_APQ8064_ALTEV) /*                                         */
 	u32 platform_version = socinfo_get_platform_version();
 #endif
 
@@ -4081,7 +4095,7 @@ static void __init apq8064_common_init(void)
 	register_i2c_devices();
 	register_i2c_backlight_devices();
 	lge_add_sound_devices();
-/* ehee.lee@lge.com [START] for NFC */
+/*                                  */
 #if defined(CONFIG_LGE_NFC)
 	lge_add_nfc_devices();
 #endif
@@ -4148,7 +4162,7 @@ static void __init apq8064_common_init(void)
 	apq8064_pm8xxx_gpio_mpp_init();
 	apq8064_init_mmc();
 
-#if defined(CONFIG_MACH_APQ8064_ALTEV) /* sangyup.kim@lge.com To remove mdm modem */
+#if defined(CONFIG_MACH_APQ8064_ALTEV) /*                                         */
 	if (machine_is_apq8064_mtp()) {
 		if (socinfo_get_platform_subtype() == PLATFORM_SUBTYPE_DSDA2) {
 			amdm_8064_device.dev.platform_data =
@@ -4177,10 +4191,10 @@ static void __init apq8064_common_init(void)
 			platform_device_register(&i2s_mdm_8064_device);
 		} else {
 			mdm_8064_device.dev.platform_data = &mdm_platform_data;
-			//LGE_Change_S jaseseung.noh MDM2AP_PBLRDY set to 81 -> altev 46
+			//                                                              
 				mdm_8064_device.resource[6].start = 46; // MDM2AP_PBLRDY
 				mdm_8064_device.resource[6].end = 46; // MDM2AP_PBLRDY
-			//LGE_Change_E jaseseung.noh MDM2AP_PBLRDY set to 81 -> altev 46
+			//                                                              
 			platform_device_register(&mdm_8064_device);
 		}
 	}
@@ -4211,7 +4225,7 @@ static void __init apq8064_common_init(void)
 	apq8064_epm_adc_init();
 #endif
 
-//2013-04-12 Meehwa-yun(meehwa.yun@lge.com) [Temporary_LGE] Enable modem power to fix the audio issue due to shared slimbus lines [START]
+//                                                                                                                                       
 #ifdef CONFIG_MACH_APQ8064_GK_KR
 	if (!gpio_request(27, "AP2MDM_KPDPWR_N")) {
 		gpio_direction_output(27, 1);
@@ -4219,7 +4233,7 @@ static void __init apq8064_common_init(void)
 		gpio_direction_output(27, 0);
 	}
 #endif
-//2013-04-12 Meehwa-yun(meehwa.yun@lge.com) [Temporary_LGE] Enable modem power to fix the audio issue due to shared slimbus lines [END] }
+//                                                                                                                                       
 }
 
 static void __init apq8064_allocate_memory_regions(void)
@@ -4331,18 +4345,18 @@ static void __init apq8064_cdp_init(void)
 		platform_device_register(&mpq_gpio_keys_pdev);
 		platform_device_register(&mpq_keypad_device);
 	}
-#endif /* LGE Not Used */
+#endif /*              */
 
 #if !defined(CONFIG_MACH_APQ8064_ALTEV)
-//2013-05-29 goensoo.kim@lge.com [AWIFI/Touch] Enable atmel touchscreen driver for REV_A [START]
+//                                                                                              
 	if (lge_get_board_revno() >= HW_REV_A) {
 		apq8064_awifi_init_input();
 	} else {
 		apq8064_init_input();
 	}
-//2013-05-29 goensoo.kim@lge.com [AWIFI/Touch] Enable atmel touchscreen driver for REV_A [END]
+//                                                                                            
 #else
-    /* 2013-09-26 jinyoun.park@lge.com In case of ALTEV board, atmel chipset is only supported */
+    /*                                                                                         */
 	apq8064_awifi_init_input();
 #endif
 
@@ -4351,6 +4365,18 @@ static void __init apq8064_cdp_init(void)
 	lge_add_lge_kernel_devices();
 #endif
 }
+
+MACHINE_START(APQ8064_AWIFI, "QCT APQ8064 AWIFI")
+	.map_io = apq8064_map_io,
+	.reserve = apq8064_reserve,
+	.init_irq = apq8064_init_irq,
+	.handle_irq = gic_handle_irq,
+	.timer = &msm_timer,
+	.init_machine = apq8064_cdp_init,
+	.init_early = apq8064_allocate_memory_regions,
+	.init_very_early = apq8064_early_reserve,
+	.restart = msm_restart,
+MACHINE_END
 
 MACHINE_START(APQ8064_CDP, "QCT APQ8064 CDP")
 	.map_io = apq8064_map_io,

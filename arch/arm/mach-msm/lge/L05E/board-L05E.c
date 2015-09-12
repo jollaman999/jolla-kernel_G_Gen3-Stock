@@ -100,10 +100,10 @@
 #if defined(CONFIG_LGE_IRDA)
 #include <mach/clk-provider.h>
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #include <mach/msm_serial_hs.h>
-//END: 0019632 chanha.park@lge.com 2012-05-31
+//                                           
 #define MSM_PMEM_ADSP_SIZE         0x7800000
 #define MSM_PMEM_AUDIO_SIZE        0x4CF000
 #ifdef CONFIG_FB_MSM_HDMI_AS_PRIMARY
@@ -314,17 +314,17 @@ static struct ion_cp_heap_pdata cp_mm_apq8064_ion_pdata = {
 	.reusable = FMEM_ENABLED,
 	.mem_is_fmem = FMEM_ENABLED,
 	.fixed_position = FIXED_MIDDLE,
-// jungjoo.nahm@lge.com [START]
+//                             
 // As per QC case #01116834, adjust is_cma value based on CONFIG_CMA kernel feature.
 // To QC integrator, please keep this SW change. It impacts to playback a widevine DRM contents
-//20130401, justin.yun@lge.com, To avoid memory fail when starting Miracast [START]
+//                                                                                 
 //#ifdef CONFIG_CMA
 //	.is_cma = 1,
 //#else
         .is_cma = 0,
 //#endif
-//20130401, justin.yun@lge.com, To avoid memory fail when starting Miracast [END]
-// jungjoo.nahm@lge.com [END]
+//                                                                               
+//                           
 	.no_nonsecure_alloc = 1,
 };
 
@@ -798,7 +798,7 @@ static void __init apq8064_reserve(void)
 #ifndef CONFIG_MACH_LGE
 	apq8064_set_display_params(prim_panel_name, ext_panel_name,
 		ext_resolution);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	msm_reserve();
 	lge_reserve();
 }
@@ -975,7 +975,7 @@ struct platform_device lge_android_usb_device = {
 	.platform_data = &lge_android_usb_pdata,
     },
 };
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 
 
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
@@ -986,7 +986,7 @@ static struct platform_device lg_diag_cmd_device = {
 		.platform_data = 0, //&lg_diag_cmd_pdata
 	},
 };
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 /* Bandwidth requests (zero) if no vote placed */
 static struct msm_bus_vectors usb_init_vectors[] = {
 	{
@@ -1437,7 +1437,7 @@ static struct i2c_board_info isa1200_board_info[] __initdata = {
 		.platform_data = &isa1200_1_pdata,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 #ifdef CONFIG_TOUCHSCREEN_ATMEL_MXT
 /* configuration data for mxt1386e using V2.1 firmware */
@@ -2122,7 +2122,7 @@ static struct platform_device msm8064_device_saw_regulator_core3 = {
 	},
 };
 
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct resource bluesleep_resources[] = {
@@ -2151,8 +2151,8 @@ static struct platform_device msm_bluesleep_device = {
 	.num_resources	= ARRAY_SIZE(bluesleep_resources),
 	.resource	= bluesleep_resources,
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 static struct msm_rpmrs_level msm_rpmrs_levels[] = {
 	{
 		MSM_PM_SLEEP_MODE_WAIT_FOR_INTERRUPT,
@@ -2479,11 +2479,11 @@ static void __init apq8064ab_update_krait_spm(void)
 #define GSBI_DUAL_MODE_CODE	0x60
 #define MSM_GSBI1_PHYS		0x12440000
 #define MSM_GSBI4_PHYS		0x16300000
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #define MSM_GSBI6_PHYS		0x16500000
 #define GSBI_4PIN_UART_MODE_CODE 0x40
-//END: 0019632 chanha.park@lge.com 2012-05-31
+//                                           
 
 #if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
 #define MSM_GSBI3_PHYS		0x16200000
@@ -2493,7 +2493,7 @@ static struct msm_serial_hslite_platform_data apq8064_felica_gsbi3_pdata = {
 	.uart_rx_gpio	= 7,
 	.line		= 2,
 };
-#endif /* CONFIG_LGE_FELICA */
+#endif /*                   */
 #if defined(CONFIG_LGE_IRDA)
 static struct msm_serial_hslite_platform_data apq8064_irda_pdata = {
 	.config_gpio	= 1,
@@ -2501,7 +2501,7 @@ static struct msm_serial_hslite_platform_data apq8064_irda_pdata = {
 	.uart_rx_gpio	= 11,
 	.line		= 3,
 };
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 static void __init apq8064_init_buses(void)
 {
 #if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
@@ -2526,7 +2526,7 @@ static void __init apq8064_init_buses(void)
 	wmb();
 		iounmap(gsbi_mem);
 		apq8064_device_felica_gsbi3.dev.platform_data = &apq8064_felica_gsbi3_pdata;
-#endif /* CONFIG_LGE_FELICA*/
+#endif /*                  */
 }
 
 /* PCIe gpios */
@@ -2556,7 +2556,7 @@ static void __init mpq8064_pcie_init(void)
 	}
 }
 
-#ifdef CONFIG_USB_OTG //#if defined(CONFIG_MACH_LGE)
+#ifdef CONFIG_USB_OTG //                            
 static struct platform_device apq8064_device_ext_5v_vreg __devinitdata = {
 	.name	= GPIO_REGULATOR_DEV_NAME,
 	.id	= PM8921_MPP_PM_TO_SYS(7),
@@ -2670,21 +2670,24 @@ static struct platform_device *common_devices[] __initdata = {
 	&apq8064_device_gadget_peripheral,
 	&apq8064_device_hsusb_host,
 	&android_usb_device,
+#ifdef CONFIG_WIRELESS_CHARGER
+	&wireless_charger,
+#endif
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 	&apq8064_device_qup_spi_gsbi5,
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 #ifdef CONFIG_USB_G_LGE_ANDROID
 	&lge_android_usb_device,
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 	&msm_bluesleep_device,
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
 	&lg_diag_cmd_device,
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 
 #ifndef CONFIG_BCMDHD
 	&msm_device_wcnss_wlan,
@@ -2960,8 +2963,8 @@ static struct msm_spi_platform_data apq8064_qup_spi_gsbi5_pdata = {
 	.max_clock_speed = 1100000,
 };
 #define KS8851_IRQ_GPIO		43
-#endif /* LGE Not Used */
-#endif /* CONFIG_MACH_LGE */
+#endif /*              */
+#endif /*                 */
 
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 #define ONESEG_SPIS_XIRQ	77
@@ -3011,7 +3014,7 @@ static struct spi_board_info spi_broadcast_board_info[] __initdata = {
 	},
 #endif
 };
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 static struct spi_board_info spi_board_info[] __initdata = {
 #if !(CONFIG_MACH_LGE)
 #if defined(CONFIG_KS8851) || defined(CONFIG_KS8851_MODULE)
@@ -3023,8 +3026,8 @@ static struct spi_board_info spi_board_info[] __initdata = {
 		.chip_select            = 2,
 		.mode                   = SPI_MODE_0,
 	},
-#endif /* LGE Not Used */
-#endif /* CONFIG_MACH_LGE */
+#endif /*              */
+#endif /*                 */
 #ifdef CONFIG_SENSORS_EPM_ADC
 	{
 		.modalias		= "epm_adc",
@@ -3061,7 +3064,7 @@ static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi3_pdata = {
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi4_pdata = {
-	.clk_freq = 200000, // LGE_update jungryoul.choi@lge.com 0906 decrease i2c speed a bit from max. to avoid stability issue.
+	.clk_freq = 200000, //                                                                                                    
 	.src_clk_rate = 24000000,
 };
 
@@ -3108,10 +3111,10 @@ static void __init apq8064_i2c_init(void)
 			//apq8064_i2c_qup_gsbi7_pdata.use_gsbi_shared_mode = 1;			
 		}
 #endif
-	/* LGE_UPDATE_S GV DCM
-	 *  Setting protocol code to 0x60 for dual UART/I2C in GSBI3
-	 *  - Rev.B
-	 */
+	/*                    
+                                                             
+            
+  */
 #if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
 		gsbi_mem = ioremap_nocache(MSM_GSBI3_PHYS, 4);
 		writel_relaxed(GSBI_DUAL_MODE_CODE, gsbi_mem);
@@ -3409,7 +3412,7 @@ static struct platform_device mpq_keypad_device = {
 		.platform_data  = &mpq_keypad_data,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 /* Sensors DSPS platform data */
 #define DSPS_PIL_GENERIC_NAME		"dsps"
@@ -3470,7 +3473,7 @@ static struct i2c_registry apq8064_i2c_devices[] __initdata = {
 		isa1200_board_info,
 		ARRAY_SIZE(isa1200_board_info),
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 #ifdef CONFIG_SND_SOC_CS8427
 	{
 		I2C_MPQ_CDP,
@@ -3827,10 +3830,10 @@ static void __init apq8064_common_init(void)
 			platform_device_register(&i2s_mdm_8064_device);
 		} else {
 			mdm_8064_device.dev.platform_data = &mdm_platform_data;
-			//LGE_Change_S jaseseung.noh MDM2AP_PBLRDY set to 81
+			//                                                  
 			mdm_8064_device.resource[6].start = 81; // MDM2AP_PBLRDY
 			mdm_8064_device.resource[6].end = 81; // MDM2AP_PBLRDY
-			//LGE_Change_E jaseseung.noh MDM2AP_PBLRDY set to 81
+			//                                                  
 			platform_device_register(&mdm_8064_device);
 		}
 	}
@@ -3889,19 +3892,19 @@ static void __init apq8064_cdp_init(void)
 		spi_register_board_info(spi_board_info,
 						ARRAY_SIZE(spi_board_info));
 	}
-/*  2012-04-25 jaejoong.kim@lge.com
-    This case is only for NTT Docomo/KDDI. 
+/*                                 
+                                           
     
-    GSBI_4(GPIO_10/11) is sharing for JTAG-UART and IrDA in Docomo H/W.
-    We are using Felica(like NFC), IrDA devices. And these devices use 
-    UART communication with APQ8064. Three devices are using 2-pin UART and
-    2-pin UART is using msm_serail_hs_lite struct. (If 4-pin UART and High speed
-    UART, it will be use msm_serial_hs not msm_serial_hs_lite.)
+                                                                       
+                                                                       
+                                                                           
+                                                                                
+                                                               
 
-    To avoid conflict with id nuber of IRDA and Debuggin-UART
-        msm_serial_hsl.0 : Debugging-UART  if uart_enable
-        msm_serial_hsl.3 : IrDA	if uart_disable
-        msm_serial_hsl.2 : Felica
+                                                             
+                                                         
+                                               
+                                 
 */
 		if (lge_get_uart_mode()) {
 			apq8064_device_uart_gsbi4.id = 0;
@@ -3923,7 +3926,7 @@ static void __init apq8064_cdp_init(void)
 
 	spi_register_board_info(spi_broadcast_board_info,
 					 ARRAY_SIZE(spi_broadcast_board_info));
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 
 #if defined(CONFIG_LGE_FELICA) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
 		platform_add_devices(felica_uart_gsbi3_devices, ARRAY_SIZE(felica_uart_gsbi3_devices));
@@ -3933,22 +3936,22 @@ static void __init apq8064_cdp_init(void)
 	pr_info("[NORMAL-DEBUG] apq8064_device_uart_gsbi4.id : %d",  apq8064_device_uart_gsbi4.id);
 	pr_info("[DEBUG] uart_enable : %d", lge_get_uart_mode() );
 
-// LGE_BROADCAST_ONESEG {
+//                       
 #if defined(CONFIG_LGE_BROADCAST_TDMB) || defined(CONFIG_LGE_BROADCAST_ONESEG)
 	apq8064_device_qup_spi_gsbi5.dev.platform_data =
 						&apq8064_qup_spi_gsbi5_pdata;
 
 	spi_register_board_info(spi_broadcast_board_info,
 					 ARRAY_SIZE(spi_broadcast_board_info));
-#endif /* CONFIG_LGE_BROADCAST */
-// LGE_BROADCAST_ONESEG }
+#endif /*                      */
+//                       
 	apq8064_init_fb();
 	apq8064_init_gpu();
 	platform_add_devices(apq8064_footswitch, apq8064_num_footswitch);
 #ifdef CONFIG_MSM_CAMERA
 	apq8064_init_cam();
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 	/* Broadcom BCM4334 */
 	platform_device_register(&mpq8064_device_uartdm_gsbi6);
@@ -3957,7 +3960,7 @@ static void __init apq8064_cdp_init(void)
 	mpq8064_gsbi6_uartdm_pdata.wakeup_irq = gpio_to_irq(15);
 	mpq8064_device_uartdm_gsbi6.dev.platform_data =
 			&mpq8064_gsbi6_uartdm_pdata;
-//END: 0019632 chanha.park@lge.com 2012-05-31
+//                                           
 
 #if !defined(CONFIG_MACH_LGE)
 	if (machine_is_apq8064_cdp() || machine_is_apq8064_liquid())
@@ -3970,7 +3973,7 @@ static void __init apq8064_cdp_init(void)
 		platform_device_register(&mpq_gpio_keys_pdev);
 		platform_device_register(&mpq_keypad_device);
 	}
-#endif /* LGE Not Used */
+#endif /*              */
 	apq8064_init_input();	
 	apq8064_init_misc();
 #ifdef CONFIG_LGE_ECO_MODE

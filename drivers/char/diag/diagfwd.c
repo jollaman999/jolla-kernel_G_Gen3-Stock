@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2013, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2008-2014, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -46,11 +46,11 @@
 #define MODE_CMD		41
 #define RESET_ID		2
 
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 #include "lg_dm_dev_tty.h"
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 #ifdef CONFIG_LGE_DM_APP
 #include "lg_dm_tty.h"
 #endif
@@ -471,30 +471,30 @@ void diag_smd_send_req(struct diag_smd_info *smd_info)
      else if (smd_info->ch && !buf &&
 		(driver->logging_mode == DM_DEV_MODE)) {
 //			chk_logging_wakeup();
-/* LGE_CHANGE_S, modified to wake up tty driver when buf is empty, secheol.pyo@lge.com, 2013-07-21 */
+/*                                                                                                 */
 	  	  lge_dm_dev_tty->set_logging = 1;
 		  wake_up_interruptible(&lge_dm_dev_tty->waitq);
-/* LGE_CHANGE_E, modified to wake up tty driver when buf is empty, secheol.pyo@lge.com, 2013-07-21 */
+/*                                                                                                 */
 	}
-#endif /*CONFIG_LGE_DM_DEV */
+#endif /*                  */
 
 #ifdef CONFIG_LGE_DM_APP
     else if (smd_info->ch && (driver->logging_mode == DM_APP_MODE)) {
 			chk_logging_wakeup();
-/* LGE_CHANGE_S, modified to wake up tty driver when buf is empty, secheol.pyo@lge.com, 2013-07-21 */
-/* LGE_CHANGE_S, when reading and writing a DMdata simultaneously, diag driver was into abnormal status. secheol.pyo@lge.com, 2013-11-01 */
+/*                                                                                                 */
+/*                                                                                                                                       */
 			if( buf != NULL && smd_info->in_busy_1 == 0){
 				smd_info->in_busy_1 = 1;
 			}
 			else if(buf != NULL && smd_info->in_busy_2 == 0){
 				smd_info->in_busy_2 = 1;
 			}
-/* LGE_CHANGE_E, when reading and writing a DMdata simultaneously, diag driver was into abnormal status. secheol.pyo@lge.com, 2013-11-01 */
+/*                                                                                                                                       */
 	  	  lge_dm_tty->set_logging = 1;
 		  wake_up_interruptible(&lge_dm_tty->waitq);
-/* LGE_CHANGE_E, modified to wake up tty driver when buf is empty, secheol.pyo@lge.com, 2013-07-21 */
+/*                                                                                                 */
 	}
-#endif /*CONFIG_LGE_DM_APP*/
+#endif /*                 */
 
 }
 
@@ -699,7 +699,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 	}
 #endif /* DIAG OVER USB */
 
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 		if (driver->logging_mode == DM_DEV_MODE) {
 			/* only diag cmd #250 for supporting testmode tool */
@@ -749,8 +749,8 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 		wake_up_interruptible(&lge_dm_dev_tty->waitq);
 
 	}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2012-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 #ifdef CONFIG_LGE_DM_APP
 	if (driver->logging_mode == DM_APP_MODE) {
@@ -805,7 +805,7 @@ int diag_device_write(void *buf, int data_type, struct diag_request *write_ptr)
 		wake_up_interruptible(&lge_dm_tty->waitq);
 
 	}
-#endif /*CONFIG_LGE_DM_APP */
+#endif /*                  */
     return err;
 }
 
@@ -853,7 +853,7 @@ static int diag_check_mode_reset(unsigned char *buf)
 {
 	int is_mode_reset = 0;
 
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
     if (chk_apps_master() && (int)(*(char *)buf) == MODE_CMD)
         is_mode_reset = 1;
 #else
@@ -904,6 +904,38 @@ void diag_send_data(struct diag_master_table entry, unsigned char *buf,
 	}
 }
 
+#if defined(CONFIG_LGE_DIAG_USB_ACCESS_LOCK)
+extern int get_diag_enable(void);
+#define DIAG_ENABLE			1
+#define DIAG_DISABLE			0
+#define COMMAND_PORT_LOCK		0xA1
+#define COMMAND_WEB_DOWNLOAD		0xEF
+#define COMMAND_ASYNC_HDLC_FLAG		0x7E
+#define COMMAND_DLOAD_RESET		0x3A
+#define COMMAND_TEST_MODE		0xFA
+#define COMMAND_TEST_MODE_RESET		0x29
+
+int is_filtering_command(char *buf)
+{
+	if (buf == NULL)
+		return 0;
+
+	switch(buf[0]) {
+		case COMMAND_PORT_LOCK :
+		case COMMAND_WEB_DOWNLOAD :
+		case COMMAND_ASYNC_HDLC_FLAG :
+		case COMMAND_DLOAD_RESET :
+		case COMMAND_TEST_MODE :
+		case COMMAND_TEST_MODE_RESET :
+			return 1;
+		default:
+			break;
+	}
+
+	return 0;
+}
+#endif
+
 int diag_process_apps_pkt(unsigned char *buf, int len)
 {
 	uint16_t subsys_cmd_code;
@@ -914,6 +946,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 	int mask_ret;
 #if defined(CONFIG_DIAG_OVER_USB)
 	unsigned char *ptr;
+#endif
+
+#if defined(CONFIG_LGE_DIAG_USB_ACCESS_LOCK)
+	/* buf[0] : 0xA1(161) is a diag command for mdm port lock */
+	if (!is_filtering_command(buf) && (get_diag_enable() == DIAG_DISABLE))
+		return 0;
 #endif
 
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
@@ -935,12 +973,12 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 	temp += 2;
 	data_type = APPS_DATA;
 	/* Dont send any command other than mode reset */
-/*	2012/10/05  bk.choi@lge.com ======== For sending RESET CMD to ATD in FRST 20121005 
+/*                                                                                    
 
-	if (chk_apps_master() && cmd_code == MODE_CMD) {
-		if (subsys_id != RESET_ID)
-			data_type = MODEM_DATA;
-	}
+                                                 
+                            
+                          
+  
 */
 	pr_debug("diag: %d %d %d", cmd_code, subsys_id, subsys_cmd_code);
 	for (i = 0; i < diag_max_reg; i++) {
@@ -1079,7 +1117,9 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		*(uint16_t *)(driver->apps_rsp_buf + 94) = MSG_SSID_21_LAST;
 		*(uint16_t *)(driver->apps_rsp_buf + 96) = MSG_SSID_22;
 		*(uint16_t *)(driver->apps_rsp_buf + 98) = MSG_SSID_22_LAST;
-		encode_rsp_and_send(99);
+		*(uint16_t *)(driver->apps_rsp_buf + 100) = MSG_SSID_23;
+		*(uint16_t *)(driver->apps_rsp_buf + 102) = MSG_SSID_23_LAST;
+		encode_rsp_and_send(103);
 		return 0;
 	}
 	/* Check for Apps Only Respond to Get Subsys Build mask */
@@ -1334,7 +1374,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 	 /* Check for ID for NO MODEM present */
 	else if (chk_polling_response()) {
 		/* respond to 0x0 command */
-		//LGE_CHANGE_S, dong.kim@lge.com 20120414 VERNO cmd redefine
+		//                                                          
 		#if 0
 		if (*buf == 0x00) {
 			for (i = 0; i < 55; i++)
@@ -1348,7 +1388,7 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 		#endif
 		/* respond to 0x7c command */
 		if (*buf == 0x7c) {
-		//LGE_CHANGE_E
+		//            
 			driver->apps_rsp_buf[0] = 0x7c;
 			for (i = 1; i < 8; i++)
 				driver->apps_rsp_buf[i] = 0;
@@ -1462,7 +1502,7 @@ void diag_process_hdlc(void *data, unsigned len)
 	for (i = 0; i < hdlc.dest_idx; i++)
 		printk(KERN_DEBUG "\t%x", *(((unsigned char *)
 							driver->hdlc_buf)+i));
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 #endif /* DIAG DEBUG */
 	/* ignore 2 bytes for CRC, one for 7E and send */
 	if ((driver->smd_data[MODEM_DATA].ch) && (ret) && (type) &&
@@ -1502,7 +1542,7 @@ int diagfwd_connect(void)
 	int err;
 	int i;
 
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 	if (driver->logging_mode == DM_DEV_MODE) {
 		driver->usb_connected = 1;
@@ -1517,8 +1557,8 @@ int diagfwd_connect(void)
 
 		return 0;
 	}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 #ifdef CONFIG_LGE_DM_APP
 	if (driver->logging_mode == DM_APP_MODE) {
@@ -1570,7 +1610,7 @@ int diagfwd_disconnect(void)
 {
 	int i;
 
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 	if (driver->logging_mode == DM_DEV_MODE) {
 		driver->usb_connected = 0;
@@ -1579,8 +1619,8 @@ int diagfwd_disconnect(void)
 
 		return 0;
 	}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 #ifdef CONFIG_LGE_DM_APP
 	if (driver->logging_mode == DM_APP_MODE) {
@@ -1680,7 +1720,7 @@ int diagfwd_read_complete(struct diag_request *diag_read_ptr)
 				queue_work(driver->diag_wq,
 						 &(driver->diag_read_work));
 		}
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [START]
+//                                                                             
 #ifdef CONFIG_LGE_DM_DEV
 		if (driver->logging_mode == DM_DEV_MODE) {
 			if (status != -ECONNRESET && status != -ESHUTDOWN)
@@ -1690,8 +1730,8 @@ int diagfwd_read_complete(struct diag_request *diag_read_ptr)
 				queue_work(driver->diag_wq,
 						 &(driver->diag_read_work));
 		}
-#endif /*CONFIG_LGE_DM_DEV*/
-//2013-03-06 seongmook.yim(seongmook.yim@lge.com) [P6/MDMBSP] ADD LGODL [END]
+#endif /*                 */
+//                                                                           
 
 #ifdef CONFIG_LGE_DM_APP
 		if (driver->logging_mode == DM_APP_MODE) {

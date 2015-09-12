@@ -48,9 +48,9 @@ extern int set_qlut_kcal_values(int kcal_r, int kcal_g, int kcal_b);
 extern int refresh_qlut_display(void);
 #else
 #error only kcal by Qucalcomm LUT is supported now!!!
-#endif //CONFIG_LGE_QC_LCDC_LUT
-#endif //CONFIG_LGE_KCAL
-#endif //#if defined(CONFIG_MACH_LGE)
+#endif //                      
+#endif //               
+#endif //                            
 
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 /* prim = 1366 x 768 x 3(bpp) x 3(pages) */
@@ -77,7 +77,7 @@ extern int refresh_qlut_display(void);
 #ifdef LGE_DSDR_SUPPORT
 #define MSM_FB_EXT_BUF_SIZE \
         (roundup((1920 * 1088 * 4), 4096) * 3) /* 4 bpp x 3 page */
-#else  /* LGE_DSDR_SUPPORT */
+#else  /*                  */
 #ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
 #define MSM_FB_EXT_BUF_SIZE \
 		(roundup((1920 * 1088 * 2), 4096) * 1) /* 2 bpp x 1 page */
@@ -87,7 +87,7 @@ extern int refresh_qlut_display(void);
 #else
 #define MSM_FB_EXT_BUF_SIZE	0
 #endif /* CONFIG_FB_MSM_HDMI_MSM_PANEL */
-#endif /* LGE_DSDR_SUPPORT */
+#endif /*                  */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_PT) ||\
@@ -161,7 +161,7 @@ unsigned char apq8064_mhl_display_enabled(void)
 }
 
 static void set_mdp_clocks_for_wuxga(void);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 static int msm_fb_detect_panel(const char *name)
 {
@@ -211,7 +211,7 @@ static int msm_fb_detect_panel(const char *name)
 
 #else
 	return 0;
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 }
 
 static struct msm_fb_platform_data msm_fb_pdata = {
@@ -368,7 +368,7 @@ static struct platform_device kcal_platrom_device = {
 		.platform_data = &kcal_pdata,
 	}
 };
-#endif /* CONFIG_LGE_KCAL */
+#endif /*                 */
 
 static struct resource hdmi_msm_resources[] = {
 	{
@@ -780,7 +780,7 @@ static struct platform_device mipi_dsi_toshiba_panel_device = {
 	}
 };
 
-#endif  /* LGE Not Used */
+#endif  /*              */
 
 static struct msm_bus_vectors dtv_bus_init_vectors[] = {
 	{
@@ -1132,9 +1132,9 @@ static int mipi_lgit_backlight_level(int level, int max, int min)
 	return 0;
 }
 
-/* LGE_CHANGE_START
- * hyuk.myeong@lge.com, 2012.09.15
- * Change the initial sest for GK
+/*                 
+                                  
+                                 
  */
 static char exit_sleep_mode             [2] = {0x11,0x00};
 
@@ -1423,7 +1423,7 @@ static struct dsi_cmd_desc lgit_power_on_set_2[] = {
 static struct dsi_cmd_desc lgit_power_on_set_3[] = {
        {DTYPE_DCS_LWRITE, 1, 0, 0, 0, sizeof(write_display_brightness), write_display_brightness},
 };
-#endif //CONFIG_LGE_R63311_BACKLIGHT_CABC
+#endif //                                
 #if defined(CONFIG_LGIT_COLOR_ENGINE_SWITCH)
 static struct dsi_cmd_desc lgit_color_engine_on[3] = {
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(color_enhancement), color_enhancement},
@@ -1448,7 +1448,7 @@ static struct dsi_cmd_desc lgit_power_off_set[] = {
 	{DTYPE_DCS_WRITE, 1, 0, 0, 100, sizeof(enter_sleep_mode), enter_sleep_mode},
 	{DTYPE_GEN_LWRITE, 1, 0, 0, 40, sizeof(deep_standby_mode), deep_standby_mode}
 };
-/* LGE_CHANGE_END */
+/*                */
 
 static struct dsi_cmd_desc lgit_shutdown_set[] = {
        {DTYPE_GEN_LWRITE, 1, 0, 0, 0, sizeof(vcom_setting_for_suspend), vcom_setting_for_suspend},
@@ -1502,7 +1502,7 @@ void __init apq8064_init_fb(void)
 
 #ifndef CONFIG_MACH_LGE
 	platform_device_register(&lvds_chimei_panel_device);
-#endif /* CONFIG_MACH_LGE*/
+#endif /*                */
 
 #ifdef CONFIG_FB_MSM_WRITEBACK_MSM_PANEL
 	platform_device_register(&wfd_panel_device);
@@ -1518,12 +1518,12 @@ void __init apq8064_init_fb(void)
 		platform_device_register(&mipi_dsi_toshiba_panel_device);
 	if (machine_is_mpq8064_dtv())
 		platform_device_register(&lvds_frc_panel_device);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 	msm_fb_register_device("mdp", &mdp_pdata);
 #ifndef CONFIG_MACH_LGE
 	msm_fb_register_device("lvds", &lvds_pdata);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	msm_fb_register_device("mipi_dsi", &mipi_dsi_pdata);
 	platform_device_register(&hdmi_msm_device);
 	msm_fb_register_device("dtv", &dtv_pdata);
@@ -1720,4 +1720,4 @@ void __init apq8064_set_display_params(char *prim_panel, char *ext_panel,
 	msm_fb_pdata.ext_resolution = resolution;
         hdmi_msm_data.is_mhl_enabled = mhl_display_enabled;
 }
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */

@@ -41,27 +41,27 @@
 #define AGC_COMPRESIION_RATE        0
 #define AGC_OUTPUT_LIMITER_DISABLE  1
 #define AGC_FIXED_GAIN              15
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [START]
+//                                                                           
 #ifdef CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER
 #define MSM_AMP2_EN (PM8921_GPIO_PM_TO_SYS(20))
 #endif
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [END]
+//                                                                         
 
 #define GPIO_EAR_SENSE_N            38
 #define GPIO_EAR_MIC_EN             PM8921_GPIO_PM_TO_SYS(31)
 #define GPIO_EARPOL_DETECT          PM8921_GPIO_PM_TO_SYS(32)
-//LGE_CHANGE_S 20130710 ilda.jung[Audio] Disable not using GPIO
-#if !defined(CONFIG_MACH_APQ8064_AWIFI)
+//                                                             
+#if !defined(CONFIG_MACH_APQ8064_AWIFI) && !defined(CONFIG_MACH_APQ8064_ALTEV)
 #define GPIO_MIC_BIAS_CONTROL       PM8921_GPIO_PM_TO_SYS(32)
 #endif
-//LGE_CHANGE_E 20130710 ilda.jung[Audio] Disable not using GPIO
+//                                                             
 #define GPIO_EAR_KEY_INT            23
-//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [START]
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+//                                                                                           
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #define GPIO_2V8_AUDIO_PWR_EN       PM8921_GPIO_PM_TO_SYS(22)
 #define GPIO_HPH_3V0_EN             PM8921_GPIO_PM_TO_SYS(16)
 #endif
-//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [END]
+//                                                                                         
 
 #define I2C_SURF 1
 #define I2C_FFA  (1 << 1)
@@ -135,7 +135,7 @@ static struct audio_amp_platform_data amp_platform_data =  {
 };
 #endif
 
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [START]
+//                                                                           
 #ifdef CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER
 int amp2_enable(int on_state)
 {
@@ -195,7 +195,7 @@ static struct audio_amp_platform_data amp2_platform_data =  {
 };
 
 #endif
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [END]
+//                                                                         
 
 
 
@@ -208,7 +208,7 @@ static struct i2c_board_info msm_i2c_audiosubsystem_info[] = {
 #endif
 };
 
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [START]
+//                                                                           
 #ifdef CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER
 static struct i2c_board_info msm_i2c_audiosubsystem2_info[] = {
 	{
@@ -217,7 +217,7 @@ static struct i2c_board_info msm_i2c_audiosubsystem2_info[] = {
 	} 
 };
 #endif
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [END]
+//                                                                         
 
 static struct i2c_registry msm_i2c_audiosubsystem __initdata = {
 	/* Add the I2C driver for Audio Amp */
@@ -227,7 +227,7 @@ static struct i2c_registry msm_i2c_audiosubsystem __initdata = {
 	ARRAY_SIZE(msm_i2c_audiosubsystem_info),
 };
 
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [START]
+//                                                                           
 #ifdef CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER
 #define APQ_8064_GSBI7_QUP_I2C_BUS_ID 7
 
@@ -239,7 +239,7 @@ static struct i2c_registry msm_i2c_audiosubsystem2 __initdata = {
 	ARRAY_SIZE(msm_i2c_audiosubsystem2_info),
 };
 #endif
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [END]
+//                                                                         
 
 
 static void __init lge_add_i2c_tpa2028d_devices(void)
@@ -249,13 +249,13 @@ static void __init lge_add_i2c_tpa2028d_devices(void)
 				msm_i2c_audiosubsystem.info,
 				msm_i2c_audiosubsystem.len);
 
-//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [START]
+//                                                                           
 #ifdef CONFIG_SND_SOC_TPA2028D_DUAL_SPEAKER
 	i2c_register_board_info(msm_i2c_audiosubsystem2.bus,
 				msm_i2c_audiosubsystem2.info,
 				msm_i2c_audiosubsystem2.len);
 	#endif
-	//[AUDIO_BSP][AWIFI] ilda.jung@lge.com 2013-04-16 enable dual speaker [END]	
+	//                                                                          
 }
 
 #ifdef CONFIG_SWITCH_FSA8008
@@ -270,12 +270,12 @@ static struct fsa8008_platform_data lge_hs_pdata_fsa8008 = {
 	.gpio_jpole  = GPIO_EARPOL_DETECT,
 	.gpio_key    = GPIO_EAR_KEY_INT,
 	.set_headset_mic_bias = NULL,
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [START]
-	#if defined(CONFIG_MACH_APQ8064_AWIFI)
+	//                                                                                           
+	#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	.gpio_power_en = GPIO_2V8_AUDIO_PWR_EN,
 	.gpio_hph_en = GPIO_HPH_3V0_EN,
 	#endif
-	//2013-04-17 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] Enable earjack power(LDO) [END]
+	//                                                                                         
 
 	.latency_for_detection = 75,
 };
@@ -297,13 +297,13 @@ static int __init lge_hsd_fsa8008_init(void)
   //  lge_bd_rev = lge_get_board_revno();
 
 
-		//2013-05-08 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] mic bias is controlled by mic_en[START]
-		#if defined(CONFIG_MACH_APQ8064_AWIFI)
+		//                                                                                                 
+		#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 		lge_hs_pdata_fsa8008.set_headset_mic_bias = NULL;
 		#else
         lge_hs_pdata_fsa8008.set_headset_mic_bias = tabla_codec_micbias3_ctl;
 		#endif
-		//2013-05-08 Ilda_jung(ilda.jung@lge.com) [AWIFI/AUDIO BSP] mic bias is controlled by mic_en[END]
+		//                                                                                               
    //     printk(KERN_INFO "lge_bd_rev : %d, < bd_rev : %d, so set_mic_bias = tabla_codec_micbias2_ctl!!!\n", lge_bd_rev, bd_rev);
 
 	return platform_device_register(&lge_hsd_device_fsa8008);
@@ -326,11 +326,11 @@ static struct max1462x_platform_data lge_hs_pdata_max1462x = {
 	.gpio_mode	= GPIO_EAR_MIC_EN,		              // .gpio_mic_en = GPIO_EAR_MIC_EN,
 	.gpio_det	= GPIO_EAR_SENSE_N,		              // .gpio_detect = GPIO_EAR_SENSE_N,
 	.gpio_swd	= GPIO_EAR_KEY_INT,		       // .gpio_key    = GPIO_EAR_KEY_INT,										
-//LGE_CHANGE_S 20130710 ilda.jung[Audio] Disable not using GPIO
-#if !defined(CONFIG_MACH_APQ8064_AWIFI)
+//                                                             
+#if !defined(CONFIG_MACH_APQ8064_AWIFI) && !defined(CONFIG_MACH_APQ8064_ALTEV)
 	.external_ldo_mic_bias	= GPIO_MIC_BIAS_CONTROL,	// .gpio_jpole  = GPIO_EARPOL_DETECT
 #endif
-//LGE_CHANGE_E 20130710 ilda.jung[Audio] Disable not using GPIO
+//                                                             
 
 	.latency_for_detection = 75,
 	.latency_for_key = 50,                                 //latency for key detect (ms)
@@ -357,7 +357,8 @@ static int __init lge_hsd_max1462x_init(void)
 
 //    lge_bd_rev = lge_get_board_revno();
 //#ifndef CONFIG_MACH_APQ8064_GKATT
-#if !(defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI))
+#if !(defined(CONFIG_MACH_APQ8064_GKATT) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV))
+ 
         lge_hs_pdata_max1462x.set_headset_mic_bias = set_headset_mic_bias_l10;
         printk(KERN_INFO "lge_bd_rev : %d, >= bd_rev : %d\n", lge_bd_rev, bd_rev);
 
@@ -378,7 +379,7 @@ static void __exit lge_hsd_max1462x_exit(void)
 void __init lge_add_sound_devices(void)
 {
 	lge_add_i2c_tpa2028d_devices();
-//LGE_CHANGE_S 20130528 keunhui.park [Audio] Bring up for Rev A
+//                                                             
 	if (lge_get_board_revno() == HW_REV_EVB2){
 #ifdef CONFIG_SWITCH_FSA8008
 	lge_hsd_fsa8008_init();
@@ -388,5 +389,5 @@ void __init lge_add_sound_devices(void)
 	lge_hsd_max1462x_init();
 #endif
 	}
-//LGE_CHANGE_E 20130528 keunhui.park [Audio] Bring up for Rev A
+//                                                             
 }

@@ -49,7 +49,7 @@ static struct gpiomux_setting oneseg_int_pin = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
+#endif	 /*                             */
 #else
 #include "board-8064.h"
 #endif
@@ -101,9 +101,9 @@ static struct gpiomux_setting gpio_epm_spi_cs_config = {
 	.pull = GPIOMUX_PULL_UP,
 };
 #endif
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct gpiomux_setting bt_pcm = {
@@ -142,8 +142,8 @@ static struct gpiomux_setting bt_wakeup_suspend_cfg = {
 	.drv = GPIOMUX_DRV_2MA,
 	.pull = /*GPIOMUX_PULL_UP,*/ GPIOMUX_PULL_NONE,
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 
 #if defined(CONFIG_LGE_FELICA_NFC) || defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
 static struct gpiomux_setting felica_pon_cfg = {
@@ -192,7 +192,7 @@ static struct gpiomux_setting snfc_hvdd_cfg = {
     .dir = GPIOMUX_OUT_LOW,
 };
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct msm_gpiomux_config bt_pcm_configs[] __initdata = {
@@ -225,8 +225,8 @@ static struct msm_gpiomux_config bt_pcm_configs[] __initdata = {
 		},
 	}
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 
 #ifdef CONFIG_MSM_VCAP
 static struct gpiomux_setting gpio_vcap_config[] = {
@@ -518,7 +518,7 @@ static struct gpiomux_setting gpio_i2c_config_sus = {
 };
 #endif
 
-//[AUDIO_BSP][L05E] gooyeon.jung@lge.com 2013-02-14 WCD9310's MBHC is blocked [START]
+//                                                                                   
 #if defined(CONFIG_WCD9310_MBHC) && !(defined(CONFIG_SWITCH_FSA8008)||defined(CONFIG_SWITCH_MAX1462X))
 static struct gpiomux_setting mbhc_hs_detect = {
 	.func = GPIOMUX_FUNC_1,
@@ -526,7 +526,7 @@ static struct gpiomux_setting mbhc_hs_detect = {
 	.pull = GPIOMUX_PULL_NONE,
 };
 #endif
-//[AUDIO_BSP][L05E] gooyeon.jung@lge.com 2013-02-14 WCD9310's MBHC is blocked [END]
+//                                                                                 
 
 static struct gpiomux_setting cdc_mclk = {
 	.func = GPIOMUX_FUNC_1,
@@ -578,7 +578,7 @@ static struct gpiomux_setting gsbi3_felica_active = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_UP,
 };
-#endif /* CONFIG_LGE_FELICA */
+#endif /*                   */
 
 #if !defined(CONFIG_MACH_LGE)
 static struct gpiomux_setting ext_regulator_config = {
@@ -601,7 +601,7 @@ static struct gpiomux_setting gsbi7_func2_cfg = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 #if defined (CONFIG_MACH_LGE)
 static struct gpiomux_setting gsbi1_suspended_cfg = {
@@ -652,7 +652,7 @@ static struct gpiomux_setting gsbi7_func2_cfg = {
 	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
-#endif //#if defined(CONFIG_MACH_LGE)
+#endif //                            
 
 static struct gpiomux_setting gsbi3_suspended_cfg = {
 	.func = GPIOMUX_FUNC_1,
@@ -809,7 +809,7 @@ static struct msm_gpiomux_config tk_gpio_configs[] __initdata = {
 	},	
 };
 #endif //CONFIG_TOUCHSCREEN_S340010_SYNAPTICS_TK
-#endif //CONFIG_MACH_LGE
+#endif //               
 
 #ifdef CONFIG_USB_EHCI_MSM_HSIC
 #if !defined(CONFIG_MACH_LGE)
@@ -873,7 +873,7 @@ static struct msm_gpiomux_config cyts_gpio_alt_config[] __initdata = {
 };
 #endif
 
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct msm_gpiomux_config msm8960_bt_host_wakeup_configs[] __initdata = {
@@ -895,8 +895,8 @@ static struct msm_gpiomux_config msm8960_bt_wakeup_configs[] __initdata = {
 		},
 	},
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 static struct gpiomux_setting hsic_act_cfg = {
 	.func = GPIOMUX_FUNC_1,
 #ifdef CONFIG_USB_G_LGE_ANDROID
@@ -1058,7 +1058,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 		},
 	},
 #if defined(CONFIG_MACH_LGE)
-// LGE_BROADCAST_ONESEG }
+//                       
 #if defined(CONFIG_LGE_BROADCAST_ONESEG)
 	{
 		.gpio	   = 51,		/* GSBI5 QUP 1SEG SPI_MOSI */
@@ -1108,8 +1108,8 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 		},
 	},
 	#endif
-#endif	 /* CONFIG_LGE_BROADCAST_ONESEG */
-#endif /* CONFIG_MACH_LGE */
+#endif	 /*                             */
+#endif /*                 */
 
 
 #if !defined(CONFIG_MACH_LGE)
@@ -1145,7 +1145,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 		},
 	},
 #endif
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 
 #if !defined(CONFIG_MACH_LGE)
@@ -1193,7 +1193,7 @@ static struct msm_gpiomux_config apq8064_gsbi_configs[] __initdata = {
 			[GPIOMUX_ACTIVE] = &gpio_i2c_config,
 		},
 	},
-#endif /* LGE Not Used */
+#endif /*              */
 
 #if defined(CONFIG_LGE_FELICA_NFC)|| defined(CONFIG_LGE_NFC_SONY_CXD2235AGG)
     /* FELICA PON */
@@ -1379,7 +1379,7 @@ static struct msm_gpiomux_config apq8064_irda_configs[] __initdata = {
 };
 #endif
 
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct gpiomux_setting gsbi6_uartdm_active = {
@@ -1424,11 +1424,11 @@ static struct msm_gpiomux_config mpq8064_uartdm_configs[] __initdata = {
 		},
 	},
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 
 static struct msm_gpiomux_config apq8064_audio_codec_configs[] __initdata = {
-//[AUDIO_BSP][L05E] gooyeon.jung@lge.com 2013-02-14 WCD9310's MBHC is blocked [START]
+//                                                                                   
 #if defined(CONFIG_WCD9310_MBHC) && !(defined(CONFIG_SWITCH_FSA8008)||defined(CONFIG_SWITCH_MAX1462X))
 	{
 		.gpio = 38,
@@ -1437,7 +1437,7 @@ static struct msm_gpiomux_config apq8064_audio_codec_configs[] __initdata = {
 		},
 	},
 #endif
-//[AUDIO_BSP][L05E] gooyeon.jung@lge.com 2013-02-14 WCD9310's MBHC is blocked [END]
+//                                                                                 
 	{
 		.gpio = 39,
 		.settings = {
@@ -1541,9 +1541,9 @@ static struct msm_gpiomux_config mdm_configs[] __initdata = {
 	},
 	/* MDM2AP_PBL_READY*/
 	{
-	//LGE_Change_S jaseseung.noh MDM2AP_PBLRDY set to 81
+	//                                                  
 		.gpio = 81,
-	//LGE_Change_E jaseseung.noh MDM2AP_PBLRDY set to 81
+	//                                                  
 		.settings = {
 			[GPIOMUX_SUSPENDED] = &mdm2ap_pblrdy,
 		}
@@ -1848,7 +1848,7 @@ static struct msm_gpiomux_config mpq8064_gsbi5_i2c_configs[] __initdata = {
 		},
 	},
 };
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 
 static struct gpiomux_setting ir_suspended_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
@@ -2304,13 +2304,13 @@ void __init apq8064_init_gpiomux(void)
 #endif
 
 #if !defined(CONFIG_LGE_FELICA_NFC)
-/* ehee.lee@lge.com [START] for NFC */
+/*                                  */
 #if defined(CONFIG_LGE_NFC)
 	msm_gpiomux_install(apq8064_nfc_configs,
 			ARRAY_SIZE(apq8064_nfc_configs));
 #endif
 #endif
-/* ehee.lee@lge.com [END] for NFC */
+/*                                */
 
 	if (machine_is_apq8064_cdp() || machine_is_apq8064_liquid())
 		msm_gpiomux_install(apq8064_mxt_configs,
@@ -2337,7 +2337,7 @@ void __init apq8064_init_gpiomux(void)
 
 	msm_gpiomux_install(apq8064_sdc3_configs,
 			ARRAY_SIZE(apq8064_sdc3_configs));
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 	msm_gpiomux_install(bt_pcm_configs,
@@ -2348,6 +2348,6 @@ void __init apq8064_init_gpiomux(void)
 			ARRAY_SIZE(msm8960_bt_host_wakeup_configs));
 	msm_gpiomux_install(msm8960_bt_wakeup_configs,
 			ARRAY_SIZE(msm8960_bt_wakeup_configs));
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 }

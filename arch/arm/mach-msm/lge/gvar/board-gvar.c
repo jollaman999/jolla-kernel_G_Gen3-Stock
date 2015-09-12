@@ -113,7 +113,7 @@
 #define MSM_ION_MFC_META_SIZE  0x40000 /* 256 Kbytes */
 #define MSM_CONTIG_MEM_SIZE  0x65000
 #ifdef CONFIG_MSM_IOMMU
-#define MSM_ION_MM_SIZE		0x5F00000 //came from g ics for stability issue org : 0x3800000
+#define MSM_ION_MM_SIZE		0x6B00000 //increase size to support WV DASH + Miracast. org : 0x5F00000
 #define MSM_ION_SF_SIZE		0
 #define MSM_ION_QSECOM_SIZE	0x780000 /* (7.5MB) */
 #define MSM_ION_HEAP_NUM	8
@@ -742,7 +742,7 @@ static void __init apq8064_reserve(void)
 #ifndef CONFIG_MACH_LGE
 	apq8064_set_display_params(prim_panel_name, ext_panel_name,
 		ext_resolution);
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 	msm_reserve();
 	lge_reserve();
 }
@@ -919,7 +919,7 @@ struct platform_device lge_android_usb_device = {
 	.platform_data = &lge_android_usb_pdata,
     },
 };
-#endif /* CONFIG_USB_G_LGE_ANDROID */
+#endif /*                          */
 
 
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
@@ -930,7 +930,7 @@ static struct platform_device lg_diag_cmd_device = {
 		.platform_data = 0, //&lg_diag_cmd_pdata
 	},
 };
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 /* Bandwidth requests (zero) if no vote placed */
 static struct msm_bus_vectors usb_init_vectors[] = {
 	{
@@ -1530,7 +1530,7 @@ static struct i2c_board_info isa1200_board_info[] __initdata = {
 		.platform_data = &isa1200_1_pdata,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 /* configuration data for mxt1386e using V2.1 firmware */
 static const u8 mxt1386e_config_data_v2_1[] = {
 	/* T6 Object */
@@ -2216,7 +2216,7 @@ static struct platform_device msm8064_device_saw_regulator_core3 = {
 	},
 };
 
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 static struct resource bluesleep_resources[] = {
@@ -2245,8 +2245,8 @@ static struct platform_device msm_bluesleep_device = {
 	.num_resources	= ARRAY_SIZE(bluesleep_resources),
 	.resource	= bluesleep_resources,
 };
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 static struct msm_rpmrs_level msm_rpmrs_levels[] = {
 	{
 		MSM_PM_SLEEP_MODE_WAIT_FOR_INTERRUPT,
@@ -2573,11 +2573,11 @@ static void __init apq8064ab_update_krait_spm(void)
 #define GSBI_DUAL_MODE_CODE	0x60
 #define MSM_GSBI1_PHYS		0x12440000
 #define MSM_GSBI4_PHYS		0x16300000
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #define MSM_GSBI6_PHYS		0x16500000
 #define GSBI_4PIN_UART_MODE_CODE 0x40
-//END: 0019632 chanha.park@lge.com 2012-05-31
+//                                           
 static void __init apq8064_init_buses(void)
 {
 	msm_bus_rpm_set_mt_mask();
@@ -2621,7 +2621,7 @@ static void __init mpq8064_pcie_init(void)
 	}
 }
 
-#ifdef CONFIG_USB_OTG //#if defined(CONFIG_MACH_LGE)
+#ifdef CONFIG_USB_OTG //                            
 static struct platform_device apq8064_device_ext_5v_vreg __devinitdata = {
 	.name	= GPIO_REGULATOR_DEV_NAME,
 	.id	= PM8921_MPP_PM_TO_SYS(7),
@@ -2735,15 +2735,15 @@ static struct platform_device *common_devices[] __initdata = {
 #ifdef CONFIG_USB_G_LGE_ANDROID
 	&lge_android_usb_device,
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 #ifdef CONFIG_LGE_BLUESLEEP
 	&msm_bluesleep_device,
-#endif // CONFIG_LGE_BLUESLEEP
-//END: 0019632 chanha.park@lge.com 2012-05-31
+#endif //                     
+//                                           
 #ifdef CONFIG_LGE_USB_DIAG_DISABLE
 	&lg_diag_cmd_device,
-#endif //#ifdef CONFIG_LGE_USB_DIAG_DISABLE
+#endif //                                  
 #ifndef CONFIG_BCMDHD
 	&msm_device_wcnss_wlan,
 #endif
@@ -3016,8 +3016,8 @@ static struct msm_spi_platform_data apq8064_qup_spi_gsbi5_pdata = {
 };
 
 #define KS8851_IRQ_GPIO		43
-#endif /* LGE Not Used */
-#endif /* CONFIG_MACH_LGE */
+#endif /*              */
+#endif /*                 */
 
 #if defined(CONFIG_LGE_BROADCAST_TDMB) 
 #define DMB_IRQ_GPIO    77
@@ -3042,7 +3042,7 @@ static struct spi_board_info spi_broadcast_board_info[] __initdata = {
 
 
 };
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 static struct spi_board_info spi_board_info[] __initdata = {
 #if !(CONFIG_MACH_LGE)
@@ -3055,8 +3055,8 @@ static struct spi_board_info spi_board_info[] __initdata = {
 		.chip_select            = 2,
 		.mode                   = SPI_MODE_0,
 	},
-#endif /* LGE Not Used */
-#endif /* CONFIG_MACH_LGE */
+#endif /*              */
+#endif /*                 */
 #ifdef CONFIG_SENSORS_EPM_ADC
 	{
 		.modalias		= "epm_adc",
@@ -3083,7 +3083,7 @@ static struct slim_boardinfo apq8064_slim_devices[] = {
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi1_pdata = {
-	.clk_freq = 384000,//sangwooha.ha@lge.com GK ES3 bring up
+	.clk_freq = 384000,//                                    
 	.src_clk_rate = 24000000,
 };
 
@@ -3093,7 +3093,7 @@ static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi3_pdata = {
 };
 
 static struct msm_i2c_platform_data apq8064_i2c_qup_gsbi4_pdata = {
-	.clk_freq = 384000,//sangwooha.ha@lge.com 20120813 GK ES3 UART bring up
+	.clk_freq = 384000,//                                                  
 	.src_clk_rate = 24000000,
 };
 
@@ -3402,7 +3402,7 @@ static struct platform_device mpq_keypad_device = {
 		.platform_data  = &mpq_keypad_data,
 	},
 };
-#endif /* LGE Not Used */
+#endif /*              */
 
 /* Sensors DSPS platform data */
 #define DSPS_PIL_GENERIC_NAME		"dsps"
@@ -3463,7 +3463,7 @@ static struct i2c_registry apq8064_i2c_devices[] __initdata = {
 		isa1200_board_info,
 		ARRAY_SIZE(isa1200_board_info),
 	},
-#endif /* CONFIG_MACH_LGE */
+#endif /*                 */
 #ifdef CONFIG_SND_SOC_CS8427
 	{
 		I2C_MPQ_CDP,
@@ -3560,14 +3560,14 @@ static void __init register_i2c_devices(void)
 		apq8064_camera_board_info.board_info,
 		apq8064_camera_board_info.num_i2c_board_info,
 	};
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
 	struct i2c_registry apq8064_camera_i2c_devices_revE = {
 		I2C_SURF | I2C_FFA | I2C_LIQUID | I2C_RUMI,
 		APQ_8064_GSBI4_QUP_I2C_BUS_ID,
 		apq8064_camera_board_info_revE.board_info,
 		apq8064_camera_board_info_revE.num_i2c_board_info,
 	};	
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 #endif
 	/* Build the matching 'supported_machs' bitmask */
 	if (machine_is_apq8064_cdp())
@@ -3592,7 +3592,7 @@ static void __init register_i2c_devices(void)
 						apq8064_i2c_devices[i].len);
 	}
 #ifdef CONFIG_MSM_CAMERA
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[Start] */
+/*                                                                          */
  	if(lge_get_board_revno() >= HW_REV_A){
 		if (apq8064_camera_i2c_devices_revE.machs & mach_mask)
 			i2c_register_board_info(apq8064_camera_i2c_devices_revE.bus,
@@ -3600,7 +3600,7 @@ static void __init register_i2c_devices(void)
 				apq8064_camera_i2c_devices_revE.len);
 	 }
 	else
-/* LGE_CHANGE_S, For GK/GV Rev.E bring-up, 2012.10.26, gayoung85.lee[End] */
+/*                                                                        */
 	{
 		if (apq8064_camera_i2c_devices.machs & mach_mask)
 			i2c_register_board_info(apq8064_camera_i2c_devices.bus,
@@ -3713,7 +3713,7 @@ static void __init apq8064_common_init(void)
 	lge_add_nfc_devices();
 #endif
 
-/* LGE_CHANGE, 2013-0313, lee.sangchul@lge.com, cmcc use maxim fuel gauge 17048 */
+/*                                                                              */
 #ifdef CONFIG_BATTERY_MAX17048
 	lge_add_i2c_pm_subsystem_devices();
 #endif
@@ -3802,10 +3802,10 @@ static void __init apq8064_common_init(void)
 			platform_device_register(&i2s_mdm_8064_device);
 		} else {
 			mdm_8064_device.dev.platform_data = &mdm_platform_data;
-			//LGE_Change_S jaseseung.noh MDM2AP_PBLRDY set to 81
+			//                                                  
 			mdm_8064_device.resource[6].start = 81; // MDM2AP_PBLRDY
 			mdm_8064_device.resource[6].end = 81; // MDM2AP_PBLRDY
-			//LGE_Change_E jaseseung.noh MDM2AP_PBLRDY set to 81
+			//                                                  
 			platform_device_register(&mdm_8064_device);
 		}
 	}
@@ -3875,7 +3875,7 @@ static void __init apq8064_cdp_init(void)
 
 	spi_register_board_info(spi_broadcast_board_info,
 					 ARRAY_SIZE(spi_broadcast_board_info));
-#endif /* CONFIG_LGE_BROADCAST */
+#endif /*                      */
 
 	apq8064_init_fb();
 	apq8064_init_gpu();
@@ -3887,7 +3887,7 @@ static void __init apq8064_cdp_init(void)
 #ifdef CONFIG_MSM_CAMERA
 	apq8064_init_cam();
 #endif
-//BEGIN: 0019632 chanha.park@lge.com 2012-05-31
+//                                             
 //ADD: 0019632: [F200][BT] Bluetooth board bring-up
 	/* Broadcom BCM4334 */
 	platform_device_register(&mpq8064_device_uartdm_gsbi6);
@@ -3896,7 +3896,7 @@ static void __init apq8064_cdp_init(void)
 	mpq8064_gsbi6_uartdm_pdata.wakeup_irq = gpio_to_irq(15);
 	mpq8064_device_uartdm_gsbi6.dev.platform_data =
 			&mpq8064_gsbi6_uartdm_pdata;
-//END: 0019632 chanha.park@lge.com 2012-05-31
+//                                           
 
 #if !defined(CONFIG_MACH_LGE)
 	if (machine_is_apq8064_cdp() || machine_is_apq8064_liquid())
@@ -3909,7 +3909,7 @@ static void __init apq8064_cdp_init(void)
 		platform_device_register(&mpq_gpio_keys_pdev);
 		platform_device_register(&mpq_keypad_device);
 	}
-#endif /* LGE Not Used */
+#endif /*              */
 	apq8064_init_input();	
 	apq8064_init_misc();
 #ifdef CONFIG_LGE_ECO_MODE

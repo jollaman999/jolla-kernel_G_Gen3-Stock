@@ -156,8 +156,7 @@ int lge_pm_get_cable_info(struct chg_cable_info *cable_info)
 	struct chg_cable_info_table *table;
 	int table_size = ARRAY_SIZE(pm8921_acc_cable_type_data);
 	int acc_read_value = 0;
-	int acc_read_value_data[5] = {0};
-	int i, j, rc;
+	int i, rc;
 	int count = 5;
 
 	if (!info) {
@@ -182,22 +181,8 @@ int lge_pm_get_cable_info(struct chg_cable_info *cable_info)
 			return rc;
 		}
 
-		acc_read_value_data[i] = (int)result.physical;
+		acc_read_value = (int)result.physical;
 		pr_info("%s: acc_read_value - %d\n", __func__, (int)result.physical);
-
-		for(j = 0; j < i; j++)
-		{
-			if(abs(acc_read_value_data[i] - acc_read_value_data[i-j-1]) > 100000)
-			{
-				count = 0;
-				acc_read_value = 1800000;
-				pr_info("%s: abnormal acc_read_value\n", __func__);
-				break;
-			}
-			else
-				acc_read_value = (int)result.physical;
-
-		}
 		mdelay(10);
 	}
 
@@ -342,6 +327,10 @@ static int __init display_kcal_setup(char *kcal)
 __setup("lge.kcal=", display_kcal_setup);
 #endif
 
+#ifdef CONFIG_LGE_PM_CHARGING_CHARGERLOGO
+int lge_boot_mode_for_touch = (int)LGE_BOOT_MODE_NORMAL;
+#endif
+
 /* get boot mode information from cmdline.
  * If any boot mode is not specified,
  * boot mode is normal type.
@@ -369,6 +358,9 @@ int __init lge_boot_mode_init(char *s)
 		lge_set_charger_logo_state(0);
 #endif
 
+#ifdef CONFIG_LGE_PM_CHARGING_CHARGERLOGO
+	lge_boot_mode_for_touch = (int)lge_boot_mode;
+#endif
 	return 1;
 }
 __setup("androidboot.mode=", lge_boot_mode_init);
@@ -460,6 +452,34 @@ void __init lge_reserve(void)
 	lge_add_persistent_ram();
 }
 
+#ifdef CONFIG_LGE_FOTA_SILENT_RESET
+static int boot_reason_info = -1;
+static int __init lge_check_bootreason(char *reason)
+{
+	int ret = 0;
+
+	/* handle corner case of kstrtoint */
+	if (!strcmp(reason, "0xffffffff")) {
+		boot_reason_info = 0xffffffff;
+		return 1;
+	}
+
+	ret = kstrtoint(reason, 16, &boot_reason_info);
+	if (!ret)
+		pr_info("LGE REBOOT REASON: %x\n", boot_reason_info);
+	else
+		pr_info("LGE REBOOT REASON: Couldn't get bootreason -%d\n",
+				ret);
+	return 1;
+}
+__setup("lge.bootreason=", lge_check_bootreason);
+
+int lge_get_bootreason(void)
+{
+	return boot_reason_info;
+}
+#endif
+
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
 static char bootreason[128] = {0,};
 int __init lge_boot_reason(char *s)
@@ -504,7 +524,7 @@ void __init lge_add_panic_handler_devices(void)
 {
 	platform_device_register(&panic_handler_device);
 }
-#endif /* CONFIG_LGE_CRASH_HANDLER */
+#endif /*                          */
 
 #ifdef CONFIG_LGE_ECO_MODE
 static struct platform_device lge_kernel_device = {
@@ -520,7 +540,7 @@ void __init lge_add_lge_kernel_devices(void)
 
 #ifdef CONFIG_LGE_QFPROM_INTERFACE
 static struct platform_device qfprom_device = {
-	.name = "lge-apq8064-qfprom",
+	.name = "lge-qfprom",
 	.id = -1,
 };
 void __init lge_add_qfprom_devices(void)
@@ -559,3 +579,21 @@ void __init lge_add_boot_time_checker(void)
 		platform_device_register(&boot_time_device);
 }
 #endif
+
+#ifdef CONFIG_LGE_DIAG_USB_ACCESS_LOCK
+static struct platform_device lg_diag_cmd_device = {
+	.name = "lg_diag_cmd",
+	.id = -1,
+	.dev    = {
+		.platform_data = 0, /* &lg_diag_cmd_pdata */
+	},
+};
+
+static int __init lge_diag_devices_init(void)
+{
+	return platform_device_register(&lg_diag_cmd_device);
+}
+arch_initcall(lge_diag_devices_init);
+#endif
+
+

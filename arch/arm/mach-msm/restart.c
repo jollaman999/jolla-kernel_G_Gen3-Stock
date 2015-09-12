@@ -236,7 +236,7 @@ void set_kernel_crash_magic_number(void)
 	else
 		__raw_writel(restart_mode, restart_reason);
 }
-#endif /* CONFIG_LGE_CRASH_HANDLER */
+#endif /*                          */
 
 void msm_restart(char mode, const char *cmd)
 {
@@ -272,9 +272,12 @@ void msm_restart(char mode, const char *cmd)
 			__raw_writel(0x77665500, restart_reason);
 		} else if (!strncmp(cmd, "recovery", 8)) {
 			__raw_writel(0x77665502, restart_reason);
+			/* FOTA : Add restart reason */
+		} else if (!strncmp(cmd, "fota", 4)) {
+			__raw_writel(0x77665566, restart_reason);
 			/* PC Sync B&R : Add restart reason */
-		} else if (!strncmp(cmd, "--bnr_recovery", 14)) {
-			__raw_writel(0x77665555, restart_reason);
+//		} else if (!strncmp(cmd, "--bnr_recovery", 14)) {
+//			__raw_writel(0x77665555, restart_reason);
 		} else if (!strncmp(cmd, "oem-", 4)) {
 			unsigned long code;
 			code = simple_strtoul(cmd + 4, NULL, 16) & 0xff;
@@ -285,13 +288,12 @@ void msm_restart(char mode, const char *cmd)
 			writel(0x6d63c423, restart_reason);
 		}
 #endif
-#if defined(CONFIG_MACH_APQ8064_ALTEV)
-		/*[start] Power Off for Testmode(#250-105-1)*/
-		else if(!strncmp(cmd,"diag_power_off",14)) {
-			/*LGE_CHANGE_S 2012-08-11 jungwoo.yun@lge.com */
-			__raw_writel(0x77665503, restart_reason);
+#ifdef CONFIG_LGE_FOTA_SILENT_RESET
+		else if (!strncmp(cmd, "FOTA LCD off", 12)) {
+			__raw_writel(0x77665560, restart_reason);
+		} else if (!strncmp(cmd, "FOTA LCD OUT off", 16)) {
+			__raw_writel(0x77665561, restart_reason);
 		}
-		/*[end] Power Off for Testmode(#250-105-1)*/
 #endif
 		else {
 			__raw_writel(0x77665501, restart_reason);
@@ -303,7 +305,7 @@ void msm_restart(char mode, const char *cmd)
 	if (in_panic == 1)
 		set_kernel_crash_magic_number();
 reset:
-#endif /* CONFIG_LGE_CRASH_HANDLER */
+#endif /*                          */
 
 	__raw_writel(0, msm_tmr0_base + WDT0_EN);
 #ifndef CONFIG_LGE_BITE_RESET
@@ -315,6 +317,7 @@ reset:
 	}
 #endif
 #ifdef CONFIG_LGE_PM
+//donghyuk.yang
 #if !defined(CONFIG_MACH_APQ8064_ALTEV)
         pr_notice("check battery fet\n");
         if(pm8921_chg_batfet_get_ext() > 0 && lge_get_factory_boot())

@@ -32,10 +32,10 @@ VREG_CONSUMERS(L2) = {
 	REGULATOR_SUPPLY("dsi_vdda",		"mipi_dsi.1"),
 #endif
 #if defined(CONFIG_MACH_LGE)
-/* LGE_CHANGE_S, Power setting for J1 Camera, 2012.03.16, soojung.lim@lge.com */
+/*                                                                            */
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.0"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.1"), 
-/* LGE_CHANGE_E, Power setting for J1 Camera, 2012.03.16, soojung.lim@lge.com */
+/*                                                                            */
 #else //Qualcomm original
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.1"),
 	REGULATOR_SUPPLY("mipi_csi_vdd",	"msm_csid.2"),
@@ -735,7 +735,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #else
 	RPM_SMPS(S4, 1, 1, 0, 1800000, 1800000, NULL, 100000, 1p60, AUTO, AUTO),
 #endif
-//#if defined(CONFIG_MACH_LGE)//for support 1.7GHz
+//                                                
 //	RPM_SMPS(S7, 0, 1, 0, 1300000, 1300000, NULL, 100000, 3p20, NONE, NONE),
 //#else
     RPM_SMPS(S7, 0, 0, 0, 1300000, 1300000, NULL, 100000, 3p20, NONE, NONE),
@@ -779,7 +779,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	RPM_LDO(L13, 0, 0, 0, 2220000, 2220000, NULL,          0,     0),
 	RPM_LDO(L14, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),
 #if defined(CONFIG_MACH_LGE)
-	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL,	       0,    19),	//yoogyeong.lee@lge.com
+	RPM_LDO(L15, 0, 1, 0, 3300000, 3300000, NULL,	       0,    19),	//                     
 #else
 	RPM_LDO(L15, 0, 1, 0, 1800000, 2950000, NULL,          0,     0),
 #endif
@@ -791,8 +791,8 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 #endif
 	RPM_LDO(L18, 0, 1, 0, 1300000, 1800000, "8921_s4",     0,     0),
 #if defined(CONFIG_MACH_LGE)
-	RPM_LDO(L21, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),       //doosan.baek@lge.com
-	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),	//yoogyeong.lee@lge.com
+	RPM_LDO(L21, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),       //                   
+	RPM_LDO(L22, 0, 1, 0, 1800000, 1800000, NULL,          0,     0),	//                     
 #else
 	RPM_LDO(L21, 0, 1, 0, 1050000, 1050000, NULL,          0,     0),
 	RPM_LDO(L22, 0, 1, 0, 2600000, 2600000, NULL,          0,     0),

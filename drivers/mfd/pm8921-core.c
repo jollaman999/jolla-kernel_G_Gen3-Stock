@@ -382,7 +382,7 @@ static struct mfd_cell ccadc_cell __devinitdata = {
 };
 
 static struct mfd_cell vibrator_cell __devinitdata = {
-#if defined(CONFIG_MACH_APQ8064_AWIFI) && defined(CONFIG_TSPDRV)
+#if (defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)) && defined(CONFIG_TSPDRV)
 	.name           = "tspdrv",
 #else
 	.name           = PM8XXX_VIBRATOR_DEV_NAME,
@@ -888,7 +888,8 @@ unsigned int pm8921_get_watch_dog_status(void)
 	}
 
 	/* upper 8bit is pmic_dog_reset state form SBL3. */
-	//pr_info("smem pm_power_on_reason=0x%x, dog_status=%d\n", (0xff & *power_on_status), !!(0xff00 & *power_on_status));
+	/* pr_info("smem pm_power_on_reason=0x%x, dog_status=%d\n",
+		(0xff & *power_on_status), !!(0xff00 & *power_on_status)); */
 	return *power_on_status;
 }
 
@@ -904,7 +905,8 @@ unsigned int pm8921_get_battery_weak_status(void)
 		return -EFAULT;
 	}
 
-	//pr_info("smem battery_threshold=%d, weak=%d\n", (0xffff & *batt_weak), !!(0xffff0000 & *batt_weak));
+	/* pr_info("smem battery_threshold=%d, weak=%d\n",
+		(0xffff & *batt_weak), !!(0xffff0000 & *batt_weak)); */
 	return *batt_weak;
 }
 #endif

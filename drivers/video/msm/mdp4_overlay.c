@@ -114,7 +114,7 @@ int mdp4_set_dmb_status(int flag) {
 	dmb_status = flag;
 	return 0;
 }
-#endif /* LGE_BROADCAST */
+#endif /*               */
 
 struct mdp4_overlay_perf {
 	u32 mdp_clk_rate;
@@ -873,9 +873,9 @@ void mdp4_overlay_rgb_setup(struct mdp4_overlay_pipe *pipe)
 	mask = 0xFFFEFFFF;
 	pipe->op_mode = (pipe->op_mode & mask) | (curr & ~mask);
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WUXGA_INVERSE_PT) || defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_INVERSE_PT)
-	//2012-11-20 taewonee.kim@lge.com : QCT pre patch for the inverted clone image [START]
+	//                                                                                    
 	if((pipe->mfd->panel_info.type != DTV_PANEL)&&(pipe->mfd->panel_info.type != WRITEBACK_PANEL))
-	//2012-11-20 taewonee.kim@lge.com : QCT pre patch for the inverted clone image [END]
+	//                                                                                  
 	{
 		if (panel_rotate_180 && (pipe->pipe_num == OVERLAY_PIPE_RGB1 || pipe->pipe_num == OVERLAY_PIPE_RGB2))
 		{
@@ -1013,9 +1013,9 @@ void mdp4_overlay_vg_setup(struct mdp4_overlay_pipe *pipe)
 	uint32 format, pattern, luma_offset, chroma_offset;
 #if defined (CONFIG_LGE_BROADCAST_TDMB) || defined (CONFIG_LGE_BROADCAST_ONESEG)
 	uint32 mask, curr, addr;
-#else /* LGE_BROADCAST */
+#else /*               */
 	uint32 mask;
-#endif /* LGE_BROADCAST */
+#endif /*               */
 	int pnum, ptype, i;
 	uint32_t block;
 
@@ -1094,9 +1094,9 @@ void mdp4_overlay_vg_setup(struct mdp4_overlay_pipe *pipe)
 
 
 #if defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_WUXGA_INVERSE_PT) || defined(CONFIG_FB_MSM_MIPI_LGIT_VIDEO_FHD_INVERSE_PT)
-	//2012-11-20 taewonee.kim@lge.com : QCT pre patch for the inverted clone image [START]
+	//                                                                                    
 	if((pipe->mfd->panel_info.type != DTV_PANEL) && (pipe->mfd->panel_info.type != WRITEBACK_PANEL))
-	//2012-11-20 taewonee.kim@lge.com : QCT pre patch for the inverted clone image [END]
+	//                                                                                  
 	{
 		if (panel_rotate_180)
 		{
@@ -1127,7 +1127,7 @@ void mdp4_overlay_vg_setup(struct mdp4_overlay_pipe *pipe)
 		outpdw(vg_base + 0x0048, frame_size);	/* TILE frame size */
 	/* TILE frame size */
 	if (pipe->frame_format != MDP4_FRAME_FORMAT_LINEAR) {
-	#ifndef CONFIG_MACH_APQ8064_AWIFI
+	#if !defined(CONFIG_MACH_APQ8064_AWIFI) && !defined(CONFIG_MACH_APQ8064_ALTEV)
 		if ((ctrl->panel_mode & MDP4_PANEL_DSI_CMD && pipe->mixer_num == 0) ||
 			(ctrl->panel_mode & MDP4_PANEL_WRITEBACK && pipe->mixer_num == 2))
 			outpdw(vg_base + 0x0048, frame_size);
@@ -1207,7 +1207,7 @@ void mdp4_overlay_vg_setup(struct mdp4_overlay_pipe *pipe)
 #endif	/* updates in real time video display color tunnung csc table for 1seg */
 	}
 	pipe->op_mode = (pipe->op_mode & mask) | (curr & ~mask);
-#endif /* LGE_BROADCAST*/
+#endif /*              */
 
 	/* luma component plane */
 	outpdw(vg_base + 0x0010, pipe->srcp0_addr + luma_offset);
@@ -2327,8 +2327,8 @@ static void mdp4_set_blend_by_op(struct mdp4_overlay_pipe *s_pipe,
 	blend->co3_sel = 1; /* use fg alpha */
 	op = s_pipe->blend_op;
 	if (op == BLEND_OP_OPAQUE) {
-		blend->bg_alpha = 0;
-		blend->fg_alpha = 0xff;
+		blend->op = MDP4_BLEND_FG_ALPHA_FG_CONST |
+			MDP4_BLEND_BG_ALPHA_BG_CONST;
 	} else if ((op == BLEND_OP_PREMULTIPLIED) &&
 			(!alpha_drop) && s_alpha) {
 		blend->op = MDP4_BLEND_FG_ALPHA_FG_CONST |
@@ -2900,6 +2900,13 @@ static int mdp4_overlay_req2pipe(struct mdp_overlay *req, int mixer,
 
 	pipe->transp = req->transp_mask;
 
+	if ((pipe->flags & MDP_SECURE_OVERLAY_SESSION) &&
+		(!(req->flags & MDP_SECURE_OVERLAY_SESSION))) {
+		pr_err("%s Switch secure %d", __func__, pipe->pipe_ndx);
+#if defined COMPILE_ERROR  //L OS migration error 2014.10.04
+		mfd->sec_active = FALSE;
+#endif
+	}
 	pipe->flags = req->flags;
 
 	*ppipe = pipe;

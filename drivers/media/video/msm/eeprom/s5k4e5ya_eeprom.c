@@ -49,21 +49,21 @@ static struct v4l2_subdev_ops s5k4e5ya_eeprom_subdev_ops = {
 
 uint8_t s5k4e5ya_wbcalib_data[6];
 struct msm_calib_wb s5k4e5ya_wb_data;
-uint8_t s5k4e5ya_lsccalib_data[896]; //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+uint8_t s5k4e5ya_lsccalib_data[896]; //                                                                    
 struct msm_calib_lsc s5k4e5ya_lsc_data;
 uint8_t s5k4e5ya_afcalib_data[4];
 struct msm_calib_af s5k4e5ya_af_data;
 
 static struct msm_camera_eeprom_info_t s5k4e5ya_calib_supp_info = {
 	{ TRUE, 4, 2, 1}, // af
-	{ TRUE, 6, 0, 1024},  // wb //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
-	{ TRUE, 896, 1, 255}, // lsc  //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+	{ TRUE, 6, 0, 1024},  //                                                                          
+	{ TRUE, 896, 1, 255}, //                                                                            
 	{FALSE, 0, 0, 1},
 };
 
 static struct msm_camera_eeprom_read_t s5k4e5ya_eeprom_read_tbl[] = {
 	{0x60, &s5k4e5ya_wbcalib_data[0], 6, 1},
-	{0x70, &s5k4e5ya_lsccalib_data[0], /* 884 */896, 0}, //LSC //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+	{0x70, &s5k4e5ya_lsccalib_data[0], /* 884 */896, 0}, //                                                                          
 	{0x66, &s5k4e5ya_afcalib_data[0], 4, 1},
 };
 
@@ -74,23 +74,23 @@ static struct msm_camera_eeprom_data_t s5k4e5ya_eeprom_data_tbl[] = {
 	{&s5k4e5ya_af_data, sizeof(struct msm_calib_af)},
 };
 
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 #define R_OVER_G_TYP 692
 #define B_OVER_G_TYP 671
 #define GR_OVER_GB_TYP 1024
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 static void s5k4e5ya_format_wbdata(void)
 {
 
 #if 1
-	/* QCT_CHANGE_S, change order  for calibration error, 2013-02-20, donghyun.kwon@lge.com */
+	/*                                                                                      */
 	s5k4e5ya_wb_data.r_over_g = (uint16_t)(s5k4e5ya_wbcalib_data[0] << 8) |
 		s5k4e5ya_wbcalib_data[1];
 	s5k4e5ya_wb_data.b_over_g = (uint16_t)(s5k4e5ya_wbcalib_data[2] << 8) |
 		s5k4e5ya_wbcalib_data[3];
 	s5k4e5ya_wb_data.gr_over_gb = (uint16_t)(s5k4e5ya_wbcalib_data[4] << 8) |
 		s5k4e5ya_wbcalib_data[5];
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
     if (s5k4e5ya_wb_data.r_over_g > R_OVER_G_TYP + (R_OVER_G_TYP >> 2) || /* +- 25% */
 		s5k4e5ya_wb_data.r_over_g < R_OVER_G_TYP - (R_OVER_G_TYP >> 2) ||
 		s5k4e5ya_wb_data.b_over_g > B_OVER_G_TYP + (R_OVER_G_TYP >> 2) ||
@@ -103,8 +103,8 @@ static void s5k4e5ya_format_wbdata(void)
 			s5k4e5ya_wb_data.gr_over_gb);
 	  s5k4e5ya_calib_supp_info.wb.is_supported = FALSE;
     }
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
-	/* QCT_CHANGE_E, change order for calibration error, 2013-02-20, donghyun.kwon@lge.com */
+//                                                                      
+	/*                                                                                     */
 #else
 	s5k4e5ya_wb_data.r_over_g = (uint16_t)(s5k4e5ya_wbcalib_data[1] << 8) |
 		s5k4e5ya_wbcalib_data[0];
@@ -120,7 +120,7 @@ static void s5k4e5ya_format_wbdata(void)
 static void s5k4e5ya_format_lscdata(void)
 {
   int i;
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
   uint16_t r_sum = 0, gr_sum = 0, gb_sum = 0, b_sum = 0;
   
   for (i = 0; i < 221; i++) {
@@ -145,7 +145,7 @@ static void s5k4e5ya_format_lscdata(void)
 	  s5k4e5ya_calib_supp_info.lsc.is_supported = FALSE;
   }
 
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 }
 
 static void s5k4e5ya_format_afdata(void)

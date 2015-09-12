@@ -146,6 +146,9 @@ enum event_type {
 #define EVENT_STR_LEN	5
 
 static int in_progress;
+static int ready_gpio;
+static int pbl_gpio;
+static int err_fatal_gpio;
 
 static void do_restart(struct work_struct *dummy)
 {
@@ -153,9 +156,14 @@ static void do_restart(struct work_struct *dummy)
         int on_pbl = 0;
 	int err_fatal=0;
 
-	normal_boot = gpio_get_value(__mehci->ready_gpio);
-	on_pbl = gpio_get_value(__mehci->pbl_gpio);
-	err_fatal = gpio_get_value(__mehci->err_fatal);
+	if( !gpio_is_valid(ready_gpio) || !gpio_is_valid(pbl_gpio) || !gpio_is_valid(err_fatal_gpio))
+	{
+		pr_info("[%s] GPIO value is not valid\n!!!!!", __func__);
+		return;
+	}
+	normal_boot = gpio_get_value(ready_gpio);
+	on_pbl = gpio_get_value(pbl_gpio);
+	err_fatal = gpio_get_value(err_fatal_gpio);
 #ifdef HSIC_DISCONNECT_DEBUG
 	pr_info("[DEBUG] normal_boot:%d, on_pbl:%d, err_fatal:%d \n",
 		normal_boot, on_pbl, err_fatal);
@@ -1850,6 +1858,7 @@ static int __devinit ehci_hsic_msm_probe(struct platform_device *pdev)
 	if (res) {
 	    dev_dbg(mehci->dev, "pblrdy: %d\n", res->start);
 	    mehci->pbl_gpio = res->start;
+		pbl_gpio = res->start;
 	}
 
 	res = platform_get_resource_byname(pdev,
@@ -1857,12 +1866,14 @@ static int __devinit ehci_hsic_msm_probe(struct platform_device *pdev)
 	if (res) {
 		dev_dbg(mehci->dev, "AP2MDM_HSICRDY: %d\n", res->start);
 		mehci->ready_gpio = res->start;
+		ready_gpio = res->start;
 	}
 	res = platform_get_resource_byname(pdev,
 			IORESOURCE_IO, "MDM2AP_ERRFATAL");
 	if (res) {
 		dev_dbg(mehci->dev, "MDM2AP_ERRFATAL: %d\n", res->start);
 		mehci->err_fatal = res->start;
+		err_fatal_gpio = res->start;
 	}
 	ret = msm_hsic_init_clocks(mehci, 1);
 	if (ret) {

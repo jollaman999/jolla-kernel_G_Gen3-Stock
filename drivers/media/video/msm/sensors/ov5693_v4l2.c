@@ -613,7 +613,7 @@ static struct msm_camera_i2c_reg_conf ov5693_snap_settings[] = {
 #endif
 };
 
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0
 static struct msm_camera_i2c_reg_conf ov5693_prev_settings[] = {
 // OV5693_Key_1280x960_30FPS_2lane
@@ -676,13 +676,13 @@ static struct msm_camera_i2c_reg_conf ov5693_prev_settings[] = {
 #endif
 };
 #endif
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 
 static struct msm_camera_i2c_reg_conf ov5693_video_settings[] = {
 #if 0 // from QCT Reference driver
 // Video register set was not included in QCT Reference driver
 #else
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0
 // OV5693_Key_1936x1088_30fps_2lane
 	{0x3708, 0xe2},
@@ -744,7 +744,7 @@ static struct msm_camera_i2c_reg_conf ov5693_video_settings[] = {
 
 	{0x4004, 0x08},
 #endif
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 	#endif
 };
 
@@ -756,7 +756,7 @@ static struct msm_camera_i2c_conf_array ov5693_init_conf[] = {
 static struct msm_camera_i2c_conf_array ov5693_confs[] = {
 	{&ov5693_snap_settings[0],
 	ARRAY_SIZE(ov5693_snap_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0
 	{&ov5693_prev_settings[0],
 	ARRAY_SIZE(ov5693_prev_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
@@ -764,7 +764,7 @@ static struct msm_camera_i2c_conf_array ov5693_confs[] = {
 	{&ov5693_snap_settings[0],
 	ARRAY_SIZE(ov5693_snap_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
 #endif	
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 	{&ov5693_video_settings[0],
 	ARRAY_SIZE(ov5693_video_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
 };
@@ -792,7 +792,7 @@ static struct msm_sensor_output_info_t ov5693_dimensions[] = {
 		.binning_factor = 0x1,
 	},
 #else
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0	
 	/* preview : 1280 * 960 */
 	{
@@ -816,9 +816,9 @@ static struct msm_sensor_output_info_t ov5693_dimensions[] = {
 		.binning_factor = 0x1,
 	},
 #endif
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #endif
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0
 	/* FHD video : 1920 * 1088 */
 	{
@@ -842,7 +842,7 @@ static struct msm_sensor_output_info_t ov5693_dimensions[] = {
 		.binning_factor = 0x1,
 	},
 #endif
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 };
 
 static struct msm_camera_i2c_client ov5693_sensor_i2c_client = {

@@ -135,6 +135,7 @@ int long_press_check = 0;
 int finger_subtraction_check_count = 0;
 bool ghost_detection = 0;
 int ghost_detection_count = 0;
+int lockscreen_stat = 0;
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)|| defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR) || defined(CONFIG_MACH_APQ8064_GV_KR)
 /* keygaurd state rebase */
 int multi_touch_detection = 0;
@@ -1277,7 +1278,7 @@ static void safety_reset(struct lge_touch_data *ts)
 #ifdef CUST_G_TOUCH
         if(ts->fw_info.fw_upgrade.is_downloading) {
 		if (likely(touch_debug_mask & DEBUG_BASE_INFO))
-               		TOUCH_INFO_MSG("%s: under f/w updating.. [%d]", __FUNCTION__, ts->fw_info.fw_upgrade.is_downloading);
+			TOUCH_INFO_MSG("%s: under f/w updating.. [%d]", __FUNCTION__, ts->fw_info.fw_upgrade.is_downloading);
 		return;
 	}
 #endif
@@ -1409,7 +1410,7 @@ static int touch_ic_init(struct lge_touch_data *ts)
 		TOUCH_INFO_MSG("%s %s(%s): FW ver[%s], force[u:%d,r:%d]\n",
 		        ts->pdata->maker, ts->fw_info.ic_fw_identifier,
 		        ts->pdata->role->operation_mode?"Interrupt mode":"Polling mode",
-		        ts->fw_info.ic_fw_version, ts->fw_info.fw_upgrade.fw_force_upgrade, ts->fw_info.fw_force_rework);
+		        ts->fw_info.ic_fw_version, ts->fw_info.fw_upgrade.fw_force_upgrade, ts->fw_info.fw_upgrade.fw_force_rework);
 		TOUCH_INFO_MSG("irq_pin[%d] next_work[%d] ghost_stage[0x%x]\n",
 				ts->int_pin_state, next_work, ts->gf_ctrl.stage);
 	}
@@ -1914,11 +1915,16 @@ static void check_log_finger_changed(struct lge_touch_data *ts, u8 total_num)
 					total_num, id,
 					ts->ts_data.curr_data[id].pressure);
 #else
+		if (lockscreen_stat) {
+			TOUCH_INFO_MSG("%d finger pressed : <%d> x[xxxx] y[xxxx] z[xx]\n",
+			total_num, id);
+		} else {
 			TOUCH_INFO_MSG("%d finger pressed : <%d> x[%4d] y[%4d] z[%3d]\n",
-					total_num, id,
-					ts->ts_data.curr_data[id].x_position,
-					ts->ts_data.curr_data[id].y_position,
-					ts->ts_data.curr_data[id].pressure);
+			total_num, id,
+			ts->ts_data.curr_data[id].x_position,
+			ts->ts_data.curr_data[id].y_position,
+			ts->ts_data.curr_data[id].pressure);
+		}
 #endif
 		} else {
 		/* Finger subtracted */
@@ -1961,11 +1967,16 @@ static void check_log_finger_changed(struct lge_touch_data *ts, u8 total_num)
 						total_num, tmp_r, tmp_p,
 						ts->ts_data.curr_data[id].pressure);
 #else
+		if (lockscreen_stat) {
+			TOUCH_INFO_MSG("%d finger changed : <%d -> %d> x[xxxx] y[xxxx] z[xx]\n",
+			total_num, tmp_r, tmp_p);
+		} else {
 			TOUCH_INFO_MSG("%d finger changed : <%d -> %d> x[%4d] y[%4d] z[%3d]\n",
 						total_num, tmp_r, tmp_p,
 						ts->ts_data.curr_data[id].x_position,
 						ts->ts_data.curr_data[id].y_position,
 						ts->ts_data.curr_data[id].pressure);
+		}
 #endif
 		}
 	}
@@ -1989,10 +2000,15 @@ static void check_log_finger_released(struct lge_touch_data *ts)
 	TOUCH_INFO_MSG("touch_release[%s] : <%d> x[****] y[****]\n",
 			ts->ts_data.palm?"Palm":"", id);
 #else
+	if (lockscreen_stat) {
+		TOUCH_INFO_MSG("touch_release[%s] : <%d> x[xxxx] y[xxxx]\n",
+		ts->ts_data.palm?"Palm":" ", id);
+	} else {
 	TOUCH_INFO_MSG("touch_release[%s] : <%d> x[%4d] y[%4d]\n",
-			ts->ts_data.palm?"Palm":"", id,
+			ts->ts_data.palm?"Palm":" ", id,
 			ts->ts_data.prev_data[id].x_position,
 			ts->ts_data.prev_data[id].y_position);
+		}
 #endif
 }
 
@@ -2621,7 +2637,7 @@ static void touch_fw_upgrade_func(struct work_struct *work_fw_upgrade)
 	if (likely(touch_debug_mask & (DEBUG_FW_UPGRADE | DEBUG_BASE_INFO)))
 		TOUCH_INFO_MSG("IC identifier[%s] fw_version[%s:%s] : force[u:%d,r:%d]\n",
 				ts->fw_info.ic_fw_identifier, ts->fw_info.ic_fw_version,
-				ts->fw_info.syna_img_fw_version, ts->fw_info.fw_upgrade.fw_force_upgrade, ts->fw_info.fw_force_rework);
+				ts->fw_info.syna_img_fw_version, ts->fw_info.fw_upgrade.fw_force_upgrade, ts->fw_info.fw_upgrade.fw_force_rework);
 
 	ts->fw_info.fw_upgrade.is_downloading = UNDER_DOWNLOADING;
 
@@ -2630,11 +2646,15 @@ static void touch_fw_upgrade_func(struct work_struct *work_fw_upgrade)
 		TOUCH_INFO_MSG("DO NOT UPDATE 7020 gff, 7020 g2, 3203 g2 FW-upgrade is not executed\n");
 		goto out;
 	} else {
-		if(ts->fw_info.fw_force_rework) {
+		if(ts->fw_info.fw_upgrade.fw_force_rework) {
 			TOUCH_INFO_MSG("FW-upgrade Force Rework.\n");
 		} else {
 			TOUCH_INFO_MSG("ic %s img %s\n",ts->fw_info.ic_fw_version,ts->fw_info.syna_img_fw_version);
+#if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)|| defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR) || defined(CONFIG_MACH_APQ8064_GV_KR)
 			if( ((int)simple_strtoul(&ts->fw_info.ic_fw_version[1], NULL, 10) ==
+#else
+			if( ((int)simple_strtoul(&ts->fw_info.ic_fw_version[1], NULL, 10) >= 
+#endif
 				 (int)simple_strtoul(&ts->fw_info.syna_img_fw_version[1], NULL, 10))
 				 && !ts->fw_info.fw_upgrade.fw_force_upgrade) {		   		
 				TOUCH_INFO_MSG("FW-upgrade is not executed\n");
@@ -3289,35 +3309,15 @@ static ssize_t store_keyguard_info(struct lge_touch_data *ts, const char *buf, s
 	sscanf(buf, "%d", &value);
 
 	if(value == KEYGUARD_ENABLE)
-		ts->gf_ctrl.stage = GHOST_STAGE_1 | GHOST_STAGE_2 | GHOST_STAGE_4;
+		lockscreen_stat = 1;
 	else if(value == KEYGUARD_RESERVED)
-		ts->gf_ctrl.stage &= ~GHOST_STAGE_2;
-
-	if (touch_debug_mask & DEBUG_GHOST || touch_debug_mask & DEBUG_BASE_INFO){
-		TOUCH_INFO_MSG("ghost_stage [0x%x]\n", ts->gf_ctrl.stage);
-		if(value == KEYGUARD_RESERVED)
-			TOUCH_INFO_MSG("ghost_stage2 : cleared[0x%x]\n", ts->gf_ctrl.stage);
-	}
+		lockscreen_stat = 0;
 
 	return count;
 }
 
 static ssize_t store_ime_status_info(struct lge_touch_data *ts, const char *buf, size_t count)
 {
-	int value;
-	sscanf(buf, "%d", &value);
-
-	if(value == KEYGUARD_ENABLE)
-		ts->gf_ctrl.stage = GHOST_STAGE_1 | GHOST_STAGE_2 | GHOST_STAGE_4;
-	else if(value == KEYGUARD_RESERVED)
-		ts->gf_ctrl.stage &= ~GHOST_STAGE_2;
-
-	if (touch_debug_mask & DEBUG_GHOST || touch_debug_mask & DEBUG_BASE_INFO){
-		TOUCH_INFO_MSG("ghost_stage [0x%x]\n", ts->gf_ctrl.stage);
-		if(value == KEYGUARD_RESERVED)
-			TOUCH_INFO_MSG("ghost_stage2 : cleared[0x%x]\n", ts->gf_ctrl.stage);
-	}
-
 	return count;
 }
 
@@ -3711,6 +3711,7 @@ static LGE_TOUCH_ATTR(show_touches, S_IRUGO | S_IWUSR, show_show_touches, store_
 static LGE_TOUCH_ATTR(pointer_location, S_IRUGO | S_IWUSR, show_pointer_location, store_pointer_location);
 static LGE_TOUCH_ATTR(incoming_call, S_IRUGO | S_IWUSR, NULL, store_incoming_call);
 static LGE_TOUCH_ATTR(f54, S_IRUGO | S_IWUSR, show_f54, store_f54);
+static LGE_TOUCH_ATTR(sd, S_IRUGO | S_IWUSR, show_f54, store_f54);
 static LGE_TOUCH_ATTR(report_mode, S_IRUGO | S_IWUSR, NULL, store_report_mode);
 static LGE_TOUCH_ATTR(ta_debouncing_count, S_IRUGO | S_IWUSR, NULL, store_debouncing_count);
 static LGE_TOUCH_ATTR(ta_debouncing_finger_num, S_IRUGO | S_IWUSR, NULL, store_debouncing_finger_num);
@@ -3736,6 +3737,7 @@ static struct attribute *lge_touch_attribute_list[] = {
 	&lge_touch_attr_pointer_location.attr,
 	&lge_touch_attr_incoming_call.attr,
 	&lge_touch_attr_f54.attr,
+	&lge_touch_attr_sd.attr,
 	&lge_touch_attr_report_mode.attr,
 	&lge_touch_attr_ta_debouncing_count.attr,
 	&lge_touch_attr_ta_debouncing_finger_num.attr,
@@ -3850,7 +3852,7 @@ static int touch_probe(struct i2c_client *client, const struct i2c_device_id *id
 	ts->client = client;
 #ifdef CUST_G_TOUCH
 	ds4_i2c_client = client;
-	ts->fw_info.fw_force_rework = false;
+	ts->fw_info.fw_upgrade.fw_force_rework = false;
 #endif
 	i2c_set_clientdata(client, ts);
 

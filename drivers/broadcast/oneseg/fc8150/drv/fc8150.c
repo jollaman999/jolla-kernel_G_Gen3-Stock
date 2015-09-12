@@ -22,7 +22,7 @@
 #include "fci_hal.h"
 #include <linux/wakelock.h> 		/* wake_lock, unlock */
 
-// eric0.kim@lge.com [2012.08.07]
+//                               
 #define ONESEG_KDDI_ANT_CTL
 
 
@@ -305,7 +305,7 @@ int isdbt_open (struct inode *inode, struct file *filp)
 
 	mutex_lock(&ringbuffer_lock);
 	
-// add to fill user buffer fully - hyewon.eum@lge.com 20110825[Start]
+//                                                                   
 	if((remain_ts_len != 0) && (remain_ts_len <= INT_THR_SIZE))
 	{
 		if(count >= remain_ts_len)
@@ -323,7 +323,7 @@ int isdbt_open (struct inode *inode, struct file *filp)
 
 		remain_ts_len = 0;
 	}
-// add to fill user buffer fully - hyewon.eum@lge.com 20110825[End]
+//                                                                 
 
     while(1)
     {
@@ -338,7 +338,7 @@ int isdbt_open (struct inode *inode, struct file *filp)
         len = FCI_RINGBUFFER_PEEK(cibuf, 0) << 8;
         len |= FCI_RINGBUFFER_PEEK(cibuf, 1);
 
-		// add to fill user buffer fully - hyewon.eum@lge.com 20110825[Start]
+		//                                                                   
 		if ((avail < len + 2) || ((count-total_len) == 0))
 		{
 			PRINTF(hInit, "not enough data or user buffer avail %d, len %d, remain user buffer %d\n",avail, len, count-total_len);
@@ -360,7 +360,7 @@ int isdbt_open (struct inode *inode, struct file *filp)
 			PRINTF(hInit, "total_len %d, count %d\n",total_len, count);
 			break;
 		}
-		// add to fill user buffer fully - hyewon.eum@lge.com 20110825[End]
+		//                                                                 
 		
 		FCI_RINGBUFFER_SKIP(cibuf, 2);
 
@@ -406,7 +406,7 @@ static  ssize_t ioctl_isdbt_read(ISDBT_OPEN_INFO_T *hOpen  ,void __user *arg)
 
 	mutex_lock(&ringbuffer_lock);
 	
-// add to fill user buffer fully - hyewon.eum@lge.com 20110825[Start]
+//                                                                   
 	if((remain_ts_len != 0) && (remain_ts_len <= INT_THR_SIZE))
 	{
 		if(count >= remain_ts_len)
@@ -424,7 +424,7 @@ static  ssize_t ioctl_isdbt_read(ISDBT_OPEN_INFO_T *hOpen  ,void __user *arg)
 
 		remain_ts_len = 0;
 	}
-// add to fill user buffer fully - hyewon.eum@lge.com 20110825[End]
+//                                                                 
 
     while(1)
     {
@@ -439,7 +439,7 @@ static  ssize_t ioctl_isdbt_read(ISDBT_OPEN_INFO_T *hOpen  ,void __user *arg)
         len = FCI_RINGBUFFER_PEEK(cibuf, 0) << 8;
         len |= FCI_RINGBUFFER_PEEK(cibuf, 1);
 
-		// add to fill user buffer fully - hyewon.eum@lge.com 20110825[Start]
+		//                                                                   
 		if ((avail < len + 2) || ((count-total_len) == 0))
 		{
 			PRINTF(hInit, "not enough data or user buffer avail %d, len %d, remain user buffer %d\n",avail, len, count-total_len);
@@ -461,7 +461,7 @@ static  ssize_t ioctl_isdbt_read(ISDBT_OPEN_INFO_T *hOpen  ,void __user *arg)
 			PRINTF(hInit, "total_len %d, count %d\n",total_len, count);
 			break;
 		}
-		// add to fill user buffer fully - hyewon.eum@lge.com 20110825[End]
+		//                                                                 
 		
 		FCI_RINGBUFFER_SKIP(cibuf, 2);
 
@@ -885,7 +885,7 @@ long isdbt_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 			{
 				struct broadcast_dmb_set_ch_info udata;
 				u32 f_rf;
-				//PRINTF(0, "LGE_BROADCAST_DMB_IOCTL_SET_CH \n");	
+				//                                                
 				
 				if(lge_get_board_revno() >= HW_REV_C)
 					isdbt_dm_enable(hInit, 0);
@@ -934,7 +934,7 @@ long isdbt_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 		case LGE_BROADCAST_DMB_IOCTL_GET_SIG_INFO:
 			{
 				struct broadcast_dmb_sig_info udata;				
-				//PRINTF(0, "LGE_BROADCAST_DMB_IOCTL_GET_SIG_INFO \n");		
+				//                                                       
 				
 				if(lge_get_board_revno() >= HW_REV_C)
 					isdbt_get_signal_info(hInit, &isdbt_signal_info.lock, &isdbt_signal_info.ber, &isdbt_signal_info.per, &isdbt_signal_info.rssi, &isdbt_signal_info.cn);
@@ -984,7 +984,7 @@ long isdbt_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 			break;
 
 		case LGE_BROADCAST_DMB_IOCTL_GET_DMB_DATA:
-			//PRINTF(0, "LGE_BROADCAST_DMB_IOCTL_GET_DMB_DATA \n");
+			//                                                     
 			res = ioctl_isdbt_read(hOpen,argp);
 			break;
 		case LGE_BROADCAST_DMB_IOCTL_OPEN:

@@ -30,7 +30,7 @@
 
 #ifdef CONFIG_LGE_PM
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)\
-	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
+	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
 #define DEF_ALLOWED_MAX_FREQ 	918000
 #define DEF_ALLOWED_MAX_FREQ_1 1026000
 #define DEF_ALLOWED_MAX_FREQ_2 1242000
@@ -52,7 +52,7 @@ static int limit_idx_low;
 static int limit_idx_high;
 static struct cpufreq_frequency_table *table;
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)\
-	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
+	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
 static struct timer_list limit_timer;
 extern int limit_cpufreq;
 #endif
@@ -186,7 +186,7 @@ static void __cpuinit check_temp(struct work_struct *work)
 	}
 
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)\
-		|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
+		|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
 	if (lge_get_factory_boot())
 		return;
 	do_core_control(temp);
@@ -208,7 +208,7 @@ static void __cpuinit check_temp(struct work_struct *work)
 
 	if (temp >= msm_thermal_info.limit_temp_degC
 #if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-//LGE_PM_L05E : samin.ryu, need check
+//                                   
 		|| temp <= msm_thermal_info.limit_temp_degC_low
 #endif
 		) {
@@ -227,7 +227,7 @@ static void __cpuinit check_temp(struct work_struct *work)
 	} else if ( (temp < msm_thermal_info.limit_temp_degC -
 		 msm_thermal_info.temp_hysteresis_degC)
 #if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-//LGE_PM_L05E : samin.ryu, need check
+//                                   
 		 && (temp > msm_thermal_info.limit_temp_degC_low)
 #endif
 		) {
@@ -261,7 +261,7 @@ reschedule:
 }
 
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)\
-	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
+	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
 static void msm_thermal_limit_holding_timer(unsigned long data)
 {
 	int cpu = 0;
@@ -308,7 +308,7 @@ static void __cpuinit disable_msm_thermal(void)
 	flush_scheduled_work();
 
 #if defined(CONFIG_MACH_APQ8064_GK_KR) || defined(CONFIG_MACH_APQ8064_GKATT)\
-	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
+	|| defined(CONFIG_MACH_APQ8064_GVDCM) || defined(CONFIG_MACH_APQ8064_GV_KR) || defined(CONFIG_MACH_APQ8064_GKGLOBAL) || defined(CONFIG_MACH_APQ8064_OMEGAR_KR) || defined(CONFIG_MACH_APQ8064_OMEGA_KR)
 	if (lge_get_factory_boot())
 		return;
 
@@ -335,7 +335,7 @@ static void __cpuinit disable_msm_thermal(void)
 		return;
 
 #if defined(CONFIG_MACH_APQ8064_GVAR_CMCC)
-//LGE_PM_L05E : samin.ryu, need check
+//                                   
 	if (limited_max_freq == DEF_ALLOWED_MAX_FREQ) {
 		pr_info("msm_thermal: continue  max_freq = %d..\n", DEF_ALLOWED_MAX_FREQ);
 		return;

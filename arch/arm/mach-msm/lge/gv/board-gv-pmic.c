@@ -121,9 +121,9 @@ struct pm8xxx_mpp_init {
 
 /* Initial PM8921 GPIO configurations */
 static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
-// LGE_BROADCAST_ONESEG {
+//                       
 // 1-Seg & MMBi different RF S/W problem
-// eric0.kim@lge.com [2012.08.07]
+//                               
 #if 0	//(1){
 #if defined(CONFIG_LGE_BROADCAST_ONESEG) && defined(CONFIG_LGE_BROADCAST_ONESEG_FC8150) //GJ_KDDI
 
@@ -134,18 +134,18 @@ static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
 	PM8921_GPIO_OUTPUT(11, 1, HIGH),
 	PM8921_GPIO_OUTPUT(12, 0, HIGH),
 #endif		// Oneseg Retractble Ant. Select}
-#endif //defined(CONFIG_LGE_BROADCAST_ONESEG) && defined(CONFIG_LGE_BROADCAST_ONESEG_FC8150)
+#endif //                                                                                   
 #endif	//(1)}
 
 
 #if defined(CONFIG_LGE_BROADCAST_ONESEG) && defined(CONFIG_MACH_APQ8064_GVDCM) /* GV_DCM only */
 	PM8921_GPIO_OUTPUT(11, 0, HIGH), /* 1SEG Internel/Ear Antenna Select Switch */
-#endif	/* CONFIG_LGE_BROADCAST_ONESEG */
-// LGE_BROADCAST_ONESEG }
+#endif	/*                             */
+//                       
 	PM8921_GPIO_OUTPUT(14, 1, HIGH),	/* HDMI Mux Selector */
 	PM8921_GPIO_OUTPUT(13, 0, HIGH), /* ISP_STBY */
 	PM8921_GPIO_OUTPUT_BUFCONF(25, 0, LOW, CMOS), /* DISP_RESET_N */
-// [S] LGE_BT: MOD/ilbeom.kim/'12-10-26 - [GK] BRCM INITIAL PORTING
+//                                                                 
 #ifdef CONFIG_LGE_BLUESLEEP
 	PM8921_GPIO_OUTPUT(26, 0, HIGH),
 #else
@@ -154,7 +154,7 @@ static struct pm8xxx_gpio_init pm8921_gpios[] __initdata = {
 
 
 #endif
-// [E] LGE_BT: MOD/ilbeom.kim/'12-10-26 - [GK] BRCM INITIAL PORTING
+//                                                                 
 	PM8921_GPIO_OUTPUT_VIN(30, 1, PM_GPIO_VIN_VPH), /* SMB349 susp line */
 	PM8921_GPIO_OUTPUT_BUFCONF(36, 1, LOW, OPEN_DRAIN),
 #ifdef CONFIG_BCMDHD
@@ -294,14 +294,14 @@ static struct pm8xxx_mpp_init pm8xxx_disabled_mpps[] __initdata = {
 
 #ifdef CONFIG_SWITCH_MAX1462X
 static struct pm8xxx_mpp_init pm8xxx_max1462x_mpps[] __initdata = {
-	/* add by ehgrace.kim@lge.com for headset */
+	/*                                        */
 	PM8921_MPP_INIT(9, D_INPUT, PM8921_MPP_DIG_LEVEL_S4, DIN_TO_INT),
 	PM8921_MPP_INIT(10, D_INPUT, PM8921_MPP_DIG_LEVEL_S4, DIN_TO_INT),
 	/*MPP1 is used to read ADC for headset 3 Button read key*/
 	PM8921_MPP_INIT(1, D_INPUT, PM8921_MPP_DIG_LEVEL_S4, DIN_TO_INT),
 };
 #endif
-/* LGE_CHANGE_E, For GV Rev.C bring-up, 2012.10.29, jungki.kim[Start] */
+/*                                                                    */
 #if defined (CONFIG_IMX132) || defined(CONFIG_CE1702)
 struct pm_gpio pm_gpio_cam_rst_ctrl = {
 	.direction = PM_GPIO_DIR_OUT,
@@ -315,7 +315,7 @@ struct pm_gpio pm_gpio_cam_rst_ctrl = {
 	.disable_pin = 0
 };
 #endif
-/* LGE_CHANGE_E, For GV Rev.C bring-up, 2012.10.29, jungki.kim[End] */
+/*                                                                  */
 
 void __init apq8064_configure_gpios(struct pm8xxx_gpio_init *data, int len)
 {
@@ -446,7 +446,7 @@ static struct led_info pm8921_led_info_rev_a[] = {
 		.default_trigger	= "ac-online",
 	},
 #endif
-#if defined(CONFIG_MACH_LGE)	/* yoogyeong.lee@lge.com KEY_LED */
+#if defined(CONFIG_MACH_LGE)	/*                               */
 			[1] = {
 				.name			= "button-backlight",
 			},
@@ -474,7 +474,7 @@ static struct led_info pm8921_led_info_rev_b[] = {
 		.default_trigger	= "ac-online",
 	},
 #endif
-#if defined(CONFIG_MACH_LGE)	/* yoogyeong.lee@lge.com KEY_LED */
+#if defined(CONFIG_MACH_LGE)	/*                               */
 			[1] = {
 				.name			= "button-backlight",
 			},
@@ -548,7 +548,7 @@ static struct pm8xxx_led_config pm8921_led_configs_rev_a[] = {
 	},
 #endif
 
-#if defined(CONFIG_MACH_LGE)	/* yoogyeong.lee@lge.com KEY_LED */
+#if defined(CONFIG_MACH_LGE)	/*                               */
 			[1] = {
 				.id = PM8XXX_ID_LED_KB_LIGHT,
 				.mode = PM8XXX_LED_MODE_MANUAL,
@@ -589,7 +589,7 @@ static struct pm8xxx_led_config pm8921_led_configs_rev_b[] = {
 	},
 #endif
 
-#if defined(CONFIG_MACH_LGE)	/* yoogyeong.lee@lge.com KEY_LED */
+#if defined(CONFIG_MACH_LGE)	/*                               */
 			[1] = {
 				.id = PM8XXX_ID_LED_1,
 				.mode = PM8XXX_LED_MODE_MANUAL,
@@ -958,10 +958,10 @@ static struct i2c_registry gv_i2c_pm_subsystem __initdata = {
 
 void __init lge_add_i2c_pm_subsystem_devices(void)
 {
-	/* LGE_CHANGE
-	 * 2011-12-03, hyuncheol0.kim@lge.com
-	 * Work-around code to support old H/W revision.
-	 */
+	/*           
+                                      
+                                                 
+  */
 
 	/* Run the array and install devices as appropriate */
 	i2c_register_board_info(gv_i2c_pm_subsystem.bus,
@@ -1003,13 +1003,13 @@ void __init apq8064_init_pmic(void)
 			= &apq8064_pm8921_leds_pdata_rev_b;
 		}
 
-/* junhee.lee@lge.com by Rev B. Touch Keypad */
+/*                                           */
 	if(lge_get_board_revno() < HW_REV_B) {
 		keypad_data.keymap_data = &keymap_data_rev_a;
 	}
 
 #ifndef CONFIG_MACH_LGE
-/* LGE_S jungshik.park@lge.com 2012-04-18 for lge battery type */
+/*                                                             */
 	if (machine_is_apq8064_mtp()) {
 		apq8064_pm8921_bms_pdata.battery_type = BATT_PALLADIUM;
 	} else if (machine_is_apq8064_liquid()) {
@@ -1017,7 +1017,7 @@ void __init apq8064_init_pmic(void)
 	} else if (machine_is_apq8064_cdp()) {
 		apq8064_pm8921_chg_pdata.has_dc_supply = true;
 	}
-/* LGE_E jungshik.park@lge.com 2012-04-18 for lge battery type */
+/*                                                             */
 #endif
 
 	apq8064_pm8921_adc_pdata.apq_therm = true;

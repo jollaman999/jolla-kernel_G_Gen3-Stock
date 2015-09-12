@@ -15,7 +15,7 @@ sbl1_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 	unsigned char *ioremap_address;
 
 	len = snprintf(buf, PAGE_SIZE, "\n******** display sbl1 log! ********\n");
-//LGE_UPDATE_S, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	if (SBL1_LOG_SIZE < 4096)
 	    ioremap_address = ioremap(SBL1_LOG_ADDR, SBL1_LOG_SIZE);
 	else
@@ -34,7 +34,7 @@ sbl1_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 		len += snprintf(buf + len, PAGE_SIZE - len, "%c", sbl_log);
 	}
 #endif
-//LGE_UPDATE_E, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
 	return len;
 }
@@ -47,7 +47,7 @@ sbl2_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 	unsigned char *ioremap_address;
 
 	len = snprintf(buf, PAGE_SIZE, "\n******** display sbl2 log! ********\n");
-//LGE_UPDATE_S, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	if (SBL2_LOG_SIZE < 4096)
 	    ioremap_address = ioremap(SBL2_LOG_ADDR, SBL2_LOG_SIZE);
 	else
@@ -66,7 +66,7 @@ sbl2_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 		len += snprintf(buf + len, PAGE_SIZE - len, "%c", sbl_log);
 	}
 #endif
-//LGE_UPDATE_E, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
 	return len;
 }
@@ -80,7 +80,7 @@ sbl3_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 	unsigned char *ioremap_address;
 
 	len = snprintf(buf, PAGE_SIZE, "\n******** display sbl3 log! ********\n");
-//LGE_UPDATE_S, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	if (SBL3_LOG_SIZE < 4096)
 		ioremap_address = ioremap(SBL3_LOG_ADDR, SBL3_LOG_SIZE);
 	else
@@ -100,7 +100,7 @@ sbl3_log_show(struct device *dev, struct device_attribute *attr, char *buf)
 		len += snprintf(buf + len, PAGE_SIZE - len, "%c", sbl_log);
 	}
 #endif
-//LGE_UPDATE_E, inho.oh@lge.com, 2012-08-03 - Using ioremap cause Memory Leakage because there is no iounmap
+//                                                                                                          
 	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
 	return len;
 }

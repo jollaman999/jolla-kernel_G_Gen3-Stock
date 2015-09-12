@@ -1,16 +1,16 @@
-/*===========================================================================
- *	FILE:
- *	ddm_tty_forward.c
- *
- *	DESCRIPTION:
+/*                                                                           
+        
+                    
+  
+               
 
- *   
- *	Edit History:
- *	YYYY-MM-DD		who 						why
- *	-----------------------------------------------------------------------------
- *	2012-12-13	 	secheol.pyo@lge.com	  	Release
- *	2012-12-15		secheol.pyo@lge.com		added debugfs file.
- *==========================================================================================
+     
+                
+                            
+                                                                                
+                                              
+                                                       
+                                                                                            
 */
 
 #include <linux/slab.h>
@@ -403,7 +403,7 @@ static int ddm_probe(struct platform_device *pdev)
 	struct ddm_dev	*dev = ddm_drv;
 	int			ret = 0;
 	
-/* This function should work in SSR Level=3, Secheol.pyo@lge.com */
+/*                                                               */
 	ddm_drv->in_busy_hsic_read = 0;
 	ddm_drv->loopback_mode = 0;
 

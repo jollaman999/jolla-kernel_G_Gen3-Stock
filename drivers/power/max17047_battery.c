@@ -117,9 +117,9 @@ extern const MmcPartition *lge_mmc_find_partition_by_name(const char *name);
 //bool save_battery_info_flag = 0; //0 = Not yet. 1 = Already saved.
 
 #endif
-/* 121031 doosan.baek@lge.com Implement Power test SOC quickstart */
+/*                                                                */
 extern int lge_power_test_flag;
-/* 121031 doosan.baek@lge.com Implement Power test SOC quickstart */
+/*                                                                */
 
 //static int max17047_access_control_of_flash(void);
 //bool max17047_count_control(u8 select, u8 count_up);
@@ -1191,7 +1191,7 @@ int max17047_battery_exchange_program(void)
 {
 	int ret = 0;
 
-//	if(lge_bd_rev > LGE_REV_C) kwon temporary
+//                                          
 	{
 		//Call max17047_new_custom_model_write
 		ret = max17047_force_custom_model_write();
@@ -1589,7 +1589,7 @@ static ssize_t at_fuel_guage_level_show(struct device *dev, struct device_attrib
 	int r = 0;
 	int guage_level = 0;
 
-	/* 121128 doosan.baek@lge.com Implement Power test SOC quickstart */
+	/*                                                                */
 	if(lge_power_test_flag == 1){
 		
 		pm8921_charger_enable(0);
@@ -1617,7 +1617,7 @@ static ssize_t at_fuel_guage_level_show(struct device *dev, struct device_attrib
 		
 		return sprintf(buf, "%d\n", guage_level);
 	}
-	/* 121128 doosan.baek@lge.com Implement Power test SOC quickstart */
+	/*                                                                */
 	guage_level = max17047_get_capacity_percent();
 	printk( " [AT_CMD][at_fuel_guage_level_show] not quick start BATT guage_level = %d\n", guage_level);
 	r = sprintf(buf, "%d\n", guage_level);
@@ -1631,7 +1631,7 @@ static ssize_t at_batt_level_show(struct device *dev, struct device_attribute *a
 	int battery_level = 0;
 
 
-	/* 121128 doosan.baek@lge.com Implement Power test SOC quickstart */
+	/*                                                                */
 	if(lge_power_test_flag == 1){
 		pm8921_charger_enable(0);
 		pm8921_disable_source_current(1);
@@ -1647,7 +1647,7 @@ static ssize_t at_batt_level_show(struct device *dev, struct device_attribute *a
 
 		return snprintf(buf, PAGE_SIZE, "%d\n", battery_level);
 	}
-	/* 121128 doosan.baek@lge.com Implement Power test SOC quickstart */
+	/*                                                                */
 
 	battery_level =  max17047_get_battery_mvolts();
 	printk( " [AT_CMD][at_batt_level_show] not quick start BATT LVL = %d\n", battery_level);

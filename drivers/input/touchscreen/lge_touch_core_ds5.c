@@ -2830,7 +2830,7 @@ static void touch_fw_upgrade_func(struct work_struct *work_fw_upgrade)
 		} else {
 			TOUCH_INFO_MSG("FW-upgrade is executed\n");
 		}
-#endif	//#ifdef CONFIG_LGE_Z_TOUCHSCREEN
+#endif	//                               
 	}
 #else
 	if ((!strcmp(ts->pdata->fw_version, ts->fw_info.ic_fw_version)

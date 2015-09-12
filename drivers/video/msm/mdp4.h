@@ -268,7 +268,7 @@ enum {
 #define MDP4_PIPE_PER_MIXER	2
 
 #define MDP4_MAX_PLANE		4
-#if defined(CONFIG_MACH_APQ8064_AWIFI)
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #define VSYNC_PERIOD		250
 #else
 #define VSYNC_PERIOD		16
@@ -479,6 +479,7 @@ struct mdp4_statistic {
 	ulong weight;
 	ulong bucket;
 	ulong skip_count;
+	bool skip_first;
 #endif
 };
 
@@ -923,7 +924,7 @@ static inline void mdp4_overlay_dsi_video_start(void)
 
 static int mdp4_dsi_video_splash_done(void)
 {
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 	return 0;
 #endif	
 }

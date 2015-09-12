@@ -546,7 +546,7 @@ void __init apq8064_init_misc(void)
 	hw_rev_type lge_bd_rev = HW_REV_EVB1;
 #endif
 
-//LGE_CHANGE_S, ar0804.han@lge.com vreg_l9 is used only for sensor
+//                                                                
 #if 0  
 	int rc = 0;
     static struct regulator *vreg_l9 = NULL;
@@ -565,7 +565,7 @@ void __init apq8064_init_misc(void)
 	rc = regulator_set_voltage(vreg_l9, 3000000, 3000000);
        rc = regulator_enable(vreg_l9);
 #endif
-//LGE_CHANGE_E, ar0804.han@lge.com
+//                                
 #if defined(CONFIG_ANDROID_VIBRATOR)
 	vibrator_gpio_init();
 #endif

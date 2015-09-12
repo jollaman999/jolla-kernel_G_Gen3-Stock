@@ -1142,7 +1142,7 @@ static ssize_t pm8xxx_adc_show(struct device *dev,
 	if (rc)
 		return 0;
 
-/* [LGE_UPDATE_S for high temperature scaling]  only DCM*/
+/*                                                      */
 #if defined(CONFIG_MACH_APQ8064_L05E)
 	if (attr->index == 8){
 		if (highTemp_count > 3){
@@ -1159,7 +1159,7 @@ static ssize_t pm8xxx_adc_show(struct device *dev,
 		}
 	}
 #endif
-/* [LGE_UPDATE_# for high temperature scaling]  only DCM*/
+/*                                                      */
 
 #ifdef CUST_A_TOUCH
 	if(attr->index == CHANNEL_BATT_THERM){

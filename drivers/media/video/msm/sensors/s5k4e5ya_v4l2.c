@@ -31,11 +31,11 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_stop_settings[] = {
 };
 
 static struct msm_camera_i2c_reg_conf s5k4e5ya_groupon_settings[] = {
-//	{0x0104, 0x01},  /* LGE_CHANGE, for stability, 2012-12-05, donghyun.kwon@lge.com */
+//                                                                                    
 };
 
 static struct msm_camera_i2c_reg_conf s5k4e5ya_groupoff_settings[] = {
-//	{0x0104, 0x00},  /* LGE_CHANGE, for stability, 2012-12-05, donghyun.kwon@lge.com */
+//                                                                                    
 };
 
 #if 0
@@ -159,7 +159,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_prev_settings[] = {
 	
 	{0x0204, 0x00},    // analog gain
 	{0x0205, 0x20},
-//[LGE_Change_S] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 #if 0	
 	{0x0340, 0x07},   // Frame Length, Min frame lenth = Vsize + 12
 	{0x0341, 0x07},   // 720 + 12 = 732 dec = 2DCh
@@ -168,13 +168,13 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_prev_settings[] = {
 	{0x0340, 0x07},   // Frame Length, Min frame lenth = Vsize + 12
 	{0x0341, 0x25},   // 720 + 12 = 732 dec = 2DCh
 #endif
-//[LGE_Change_E] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 	{0x0342, 0x0C},    // Line Length, MIPI Non-Continuous mode : B30h 이상, Continous mode :AB2h 이상.] 
 	{0x0343, 0x6F},    // B30h 이상이면 모두 이상없음.
 	
 	// MIPI Size Setting
 	{0x30A9, 0x02},//Horizontal Binning On
-	{0x300E, 0x29},//EB},//Vertical Binning On    /*kwangsik83.kim@lge.comfor image string correction */
+	{0x300E, 0x29},//                                                                                   
 	{0x302B, 0x00}, // [0]blst_en, [1]sl_off
 	{0x3029, 0x74}, //04 RST_MX(ramp)(384) + ring oscillator
 	
@@ -318,7 +318,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_snap_settings[] = {
 	
 	{0x0204, 0x00},    // analog gain 
 	{0x0205, 0x20},  
-//[LGE_Change_S] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 #if 0	
 	{0x0340, 0x07},   // Frame Length, Min frame lenth = Vsize + 12
 	{0x0341, 0xB4},   //1960 + 12 = 1972 dec = 7B4h
@@ -327,7 +327,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_snap_settings[] = {
 	{0x0340, 0x08},   // Frame Length, Min frame lenth = Vsize + 12
 	{0x0341, 0x30},   //1952 + 12 = 1972 dec = 7A8h
 #endif
-//[LGE_Change_E] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 	{0x0342, 0x0A},    // Line Length, MIPI Non-Continuous mode : B30h 이상, Continous mode :AB2h 이상.] 
 	{0x0343, 0xB2},    // B30h 이상이면 모두 이상없음. 
 	// MIPI Size Setting
@@ -476,7 +476,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_video_settings[] = {
 	
 	{0x0204, 0x00},    // analog gain
 	{0x0205, 0x20},
-//[LGE_Change_S] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 #if 0	
 	{0x0340, 0x07},   // Frame Length, Min frame lenth = Vsize + 12
 	{0x0341, 0xB4},   //1960 + 12 = 1972 dec = 7B4h
@@ -485,7 +485,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_video_settings[] = {
 	{0x0340, 0x08},   
 	{0x0341, 0x30},   //1960 + 12 = 1972 dec = 7B4h
 #endif
-//[LGE_Change_E] for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+//                                                                   
 	{0x0342, 0x0A},    // Line Length, MIPI Non-Continuous mode : B30h 이상, Continous mode :AB2h 이상.] 
 	{0x0343, 0xC0},    // B30h 이상이면 모두 이상없음.
 	
@@ -516,7 +516,7 @@ static struct msm_camera_i2c_reg_conf s5k4e5ya_video_settings[] = {
 	{0x034C, 0x0A},//x_output_size
 	{0x034D, 0x00},
 	{0x034E, 0x05},//y_output_size
-	{0x034F, 0xA0},/*LGE_CHANGE, Change output size to 1080, 2013-07-02, gayoung85.lee@lge.com*/
+	{0x034F, 0xA0},/*                                                                         */
 };
 static struct msm_camera_i2c_reg_conf s5k4e5ya_recommend_settings[] = {
 #if 0
@@ -695,7 +695,7 @@ static struct msm_camera_i2c_conf_array s5k4e5ya_init_conf[] = {
 static struct msm_camera_i2c_conf_array s5k4e5ya_confs[] = {
 	{&s5k4e5ya_snap_settings[0],
 	ARRAY_SIZE(s5k4e5ya_snap_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0
 	{&s5k4e5ya_prev_settings[0],
 	ARRAY_SIZE(s5k4e5ya_prev_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
@@ -703,32 +703,32 @@ static struct msm_camera_i2c_conf_array s5k4e5ya_confs[] = {
 	{&s5k4e5ya_snap_settings[0],
 	ARRAY_SIZE(s5k4e5ya_snap_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
 #endif	
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 	{&s5k4e5ya_video_settings[0],
 	ARRAY_SIZE(s5k4e5ya_video_settings), 0, MSM_CAMERA_I2C_BYTE_DATA},
 };
 
 
-//LGE_CHANGE 2012-09-19 kwangsik83.kim@lge.com all value set as default in DATASHEET
+//                                                                                  
 static struct msm_sensor_output_info_t s5k4e5ya_dimensions[] = {
-	/* LGE_CHANGE, ZSL PREVIEW, SNAPSHOT, 11-15, kwangsik83.kim@lge.com*/
+	/*                                                                 */
 	{
 		.x_output = 0x0A30,
 		.y_output = 0x07A0,
 		.line_length_pclk = 0x0B30,
-		.frame_length_lines = 0x7D5, // 0x07B4, for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+		.frame_length_lines = 0x7D5, //                                                             
 		.vt_pixel_clk = 171200000,	//856Mhz/5=171.2Mhz		
 		.op_pixel_clk = 266667000,	//848Mhz/5=169.6Mhz
 		.binning_factor = 1,
 	},
-/* LGE_CHANGE_S, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
+/*                                                                                               */
 #if 0	
-	/* LGE_CHANGE, Non PREVIEW, HD Recording Preview, 11-15, kwangsik83.kim@lge.com*/
+	/*                                                                             */
 	{
-		.x_output = 0x0500,		/* LGE_CHANGE, change initial code for non-zsl preview mode , 2012-11-27, donghyun.kwon@lge.com */
-		.y_output = 0x03C0, 	/* LGE_CHANGE, change initial code for non-zsl preview mode , 2012-11-27, donghyun.kwon@lge.com */
-		.line_length_pclk = 0x0C6F, 	/* LGE_CHANGE, change initial code for non-zsl preview mode , 2012-11-27, donghyun.kwon@lge.com */
-		.frame_length_lines = 0x725, // 0x0707,for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+		.x_output = 0x0500,		/*                                                                                              */
+		.y_output = 0x03C0, 	/*                                                                                              */
+		.line_length_pclk = 0x0C6F, 	/*                                                                                              */
+		.frame_length_lines = 0x725, //                                                            
 		.vt_pixel_clk = 169600000,	//848Mhz/5=169.6Mhz
 		.op_pixel_clk = 169600000,	//848Mhz/5=169.6Mhz
 		.binning_factor = 1,
@@ -738,26 +738,26 @@ static struct msm_sensor_output_info_t s5k4e5ya_dimensions[] = {
 		.x_output = 0x0A30,
 		.y_output = 0x07A0,
 		.line_length_pclk = 0x0B30,
-		.frame_length_lines = 0x7D5, // 0x07B4, for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+		.frame_length_lines = 0x7D5, //                                                             
 		.vt_pixel_clk = 171200000,	//856Mhz/5=171.2Mhz		
 		.op_pixel_clk = 266667000,	//848Mhz/5=169.6Mhz
 		.binning_factor = 1,
 	},
 #endif
-/* LGE_CHANGE_E, Change dimension setting for preview quality, 2013-07-04, gayoung85.lee@lge.com */
-	/* LGE_CHANGE, FHD Recording PREVIEW, 11-15, kwangsik83.kim@lge.com*/
+/*                                                                                               */
+	/*                                                                 */
 	{
 		.x_output = 0x0A00,
 		.y_output = 0x05A0,
 		.line_length_pclk = 0x0B30,
-		.frame_length_lines = 0x7D5, // 0x07B4, for Flicker_Auto , 2013-02-26 , hyunjin.jeon@lge.com
+		.frame_length_lines = 0x7D5, //                                                             
 		.vt_pixel_clk = 171200000,	//856Mhz/5=171.2Mhz		
 		.op_pixel_clk = 266667000,	//848Mhz/5=169.6Mhz
 		.binning_factor = 1,
 	},
 };
 
-//LGE_CHANGE 2012-09-19 kwangsik83.kim@lge.com all value set as default in DATASHEET
+//                                                                                  
 static struct msm_sensor_output_reg_addr_t s5k4e5ya_reg_addr = {
 	.x_output = 0x034C,
 	.y_output = 0x034E,
@@ -765,7 +765,7 @@ static struct msm_sensor_output_reg_addr_t s5k4e5ya_reg_addr = {
 	.frame_length_lines = 0x0340,
 };
 
-//LGE_CHANGE 2012-09-19 kwangsik83.kim@lge.com
+//                                            
 static struct msm_sensor_id_info_t s5k4e5ya_id_info = {
 	.sensor_id_reg_addr = 0x0000,
 	.sensor_id = 0x4E50,

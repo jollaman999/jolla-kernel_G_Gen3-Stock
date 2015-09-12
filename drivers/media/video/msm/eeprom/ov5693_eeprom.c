@@ -49,64 +49,64 @@ static struct v4l2_subdev_ops ov5693_eeprom_subdev_ops = {
 
 uint8_t ov5693_wbcalib_data[6];
 struct msm_calib_wb ov5693_wb_data;
-uint8_t ov5693_lsccalib_data[886]; //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+uint8_t ov5693_lsccalib_data[886]; //                                                                    
 struct msm_calib_lsc ov5693_lsc_data;
 uint8_t ov5693_afcalib_data[4];
 struct msm_calib_af ov5693_af_data;
 
-/* LGE_CHANGE_S, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+/*                                                                                                         */
 uint8_t ov5693_idcalib_data;
 struct msm_calib_id ov5693_id_data;
-/* LGE_CHANGE_E, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+/*                                                                                                         */
 
 static struct msm_camera_eeprom_info_t ov5693_calib_supp_info = {
 	{ TRUE, 4, 2, 1}, // af
-	{ TRUE, 6, 0, 1024},  // wb //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
-	{ TRUE, 886, 1, 255}, // lsc  //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
-	{ TRUE, 1, 3, 1}, // id /* LGE_CHANGE, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+	{ TRUE, 6, 0, 1024},  //                                                                          
+	{ TRUE, 886, 1, 255}, //                                                                            
+	{ TRUE, 1, 3, 1}, //                                                                                                               
 	{FALSE, 0, 0, 1},
 	{FALSE, 0, 0, 1},
 };
 
 static struct msm_camera_eeprom_read_t ov5693_eeprom_read_tbl[] = {
 	{0x3f, &ov5693_wbcalib_data[0], 6, 1},
-	{0x4c, &ov5693_lsccalib_data[0], 886, 0}, //LSC //[QCT_Change] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+	{0x4c, &ov5693_lsccalib_data[0], 886, 0}, //                                                                          
 	{0x45, &ov5693_afcalib_data[0], 4, 1},
-	{0x00, &ov5693_idcalib_data, 1, 0}, /* LGE_CHANGE, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+	{0x00, &ov5693_idcalib_data, 1, 0}, /*                                                                                                       */
 };
 
 static struct msm_camera_eeprom_data_t ov5693_eeprom_data_tbl[] = {
 	{&ov5693_wb_data, sizeof(struct msm_calib_wb)},
 	{&ov5693_lsc_data, sizeof(struct msm_calib_lsc)},
 	{&ov5693_af_data, sizeof(struct msm_calib_af)},
-	{&ov5693_id_data, sizeof(struct msm_calib_id)}, /* LGE_CHANGE, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+	{&ov5693_id_data, sizeof(struct msm_calib_id)}, /*                                                                                                       */
 };
 
-/* LGE_CHANGE_S, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+/*                                                                                                         */
 static void ov5693_format_iddata(void)
 {
 	ov5693_id_data.sensor_id= (uint16_t)ov5693_idcalib_data;
 	//pr_err("ov5693_id_data.sensor_id = 0x%x \n", ov5693_id_data.sensor_id);
 }
-/* LGE_CHANGE_E, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+/*                                                                                                         */
 
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 #define R_OVER_G_TYP 561 // 692 // 20140401 Andy moidified
 #define B_OVER_G_TYP 575 // 671 // 20140401 Andy moidified
 #define GR_OVER_GB_TYP 1024
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 static void ov5693_format_wbdata(void)
 {
 
 #if 1
-	/* QCT_CHANGE_S, change order  for calibration error, 2013-02-20, donghyun.kwon@lge.com */
+	/*                                                                                      */
 	ov5693_wb_data.r_over_g = (uint16_t)(ov5693_wbcalib_data[0] << 8) |
 		ov5693_wbcalib_data[1];
 	ov5693_wb_data.b_over_g = (uint16_t)(ov5693_wbcalib_data[2] << 8) |
 		ov5693_wbcalib_data[3];
 	ov5693_wb_data.gr_over_gb = (uint16_t)(ov5693_wbcalib_data[4] << 8) |
 		ov5693_wbcalib_data[5];
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
     if (ov5693_wb_data.r_over_g > R_OVER_G_TYP + (R_OVER_G_TYP >> 2) || /* +- 25% */
 		ov5693_wb_data.r_over_g < R_OVER_G_TYP - (R_OVER_G_TYP >> 2) ||
 		ov5693_wb_data.b_over_g > B_OVER_G_TYP + (R_OVER_G_TYP >> 2) ||
@@ -119,8 +119,8 @@ static void ov5693_format_wbdata(void)
 			ov5693_wb_data.gr_over_gb);
 	  ov5693_calib_supp_info.wb.is_supported = FALSE;
     }
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
-	/* QCT_CHANGE_E, change order for calibration error, 2013-02-20, donghyun.kwon@lge.com */
+//                                                                      
+	/*                                                                                     */
 #else
 	ov5693_wb_data.r_over_g = (uint16_t)(ov5693_wbcalib_data[1] << 8) |
 		ov5693_wbcalib_data[0];
@@ -137,7 +137,7 @@ static void ov5693_format_wbdata(void)
 static void ov5693_format_lscdata(void)
 {
   int i;
-//[QCT_Change_S] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
   uint16_t r_sum = 0, gr_sum = 0, gb_sum = 0, b_sum = 0;
   uint16_t total_check_sum = 0, total_check_sum_of_eeprom = 0;
 
@@ -166,7 +166,7 @@ static void ov5693_format_lscdata(void)
 
     ov5693_calib_supp_info.lsc.is_supported = FALSE;
   }
-//[QCT_Change_E] for EEPROM , by randy, 2013-03-12, hyunjin.jeon@lge.com
+//                                                                      
 }
 
 static void ov5693_format_afdata(void)
@@ -180,7 +180,7 @@ static void ov5693_format_afdata(void)
 
 void ov5693_format_calibrationdata(void)
 {
-	ov5693_format_iddata(); /* LGE_CHANGE, add sensor_id check I/F to verify s5k4e5ya and ov5693, 2014-03-11, jungryoul.choi@lge.com */
+	ov5693_format_iddata(); /*                                                                                                       */
 	ov5693_format_wbdata();
 	ov5693_format_lscdata();
 	ov5693_format_afdata();

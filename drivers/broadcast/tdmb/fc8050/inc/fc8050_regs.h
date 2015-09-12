@@ -365,7 +365,7 @@ extern "C" {
 #define CH0_BUF_END 				(CH0_BUF_START + CH0_BUF_LENGTH -1)
 
 // Modified by suyong.han 20110921
-/* LGE Add for using DMA in QCT platform : 20120704*/
+/*                                                 */
 /* QCT DMA Max. transfer size is smaller than 4K-64, so FCI buffer must be 188x16, 4 buffers */
 /* 188x32 (6016) is not allowed in Qualcomm DMA */
 #define USE_QCT_DMA_LGE

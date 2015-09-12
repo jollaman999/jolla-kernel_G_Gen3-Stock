@@ -137,7 +137,7 @@ static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 		},
 	},
 #endif
-/* LGE_CHANGE_START youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                  */
 #if 0
 	{
 		.gpio = GPIO_CAM2_RST_N, /* 28 */
@@ -146,7 +146,7 @@ static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 			[GPIOMUX_SUSPENDED] = &cam_settings[0],
 		},
 	},
-/* LGE_CHANGE_END youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                */
 
 	{
 		.gpio = GPIO_CAM1_RST_N, /* 27 */
@@ -172,7 +172,7 @@ static struct msm_gpiomux_config apq8064_cam_common_configs[] = {
 	},
 };
 
-#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /*                                                                                   */
 static struct msm_gpiomux_config apq8064_cam_2d_configs[] = {
 };
 
@@ -201,7 +201,7 @@ static struct msm_bus_vectors cam_preview_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 94003200, // org. 27648000 /* LGE_CHANGE, increase preview vector EBI bus band width, 2012.09.26, jungryoul.choi@lge.com */
+		.ab  = 94003200, //                                                                                                               
 		.ib  = 110592000,
 	},
 	{
@@ -243,8 +243,8 @@ static struct msm_bus_vectors cam_snapshot_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 411635520,  // org 274423680  /* LGE_CHANGE, increase VFE-EBI bandwidth for fix UI-freezing, 2012.12.27, seongjo.kim@lge.com */
-		.ib  = 1646542080, // org 1097694720 /* LGE_CHANGE, increase VFE-EBI bandwidth for fix UI-freezing, 2012.12.27, seongjo.kim@lge.com */
+		.ab  = 411635520,  //                                                                                                                 
+		.ib  = 1646542080, //                                                                                                                 
 	},
 	{
 		.src = MSM_BUS_MASTER_VPE,
@@ -264,7 +264,7 @@ static struct msm_bus_vectors cam_zsl_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_VFE,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 411635520, // 302071680  /* LGE_CHANGE, increase absolute bandwidth to avoid vfe overflow, 2013-06-21, john.park@lge.com */
+		.ab  = 411635520, //                                                                                                              
 		.ib  = 1812430080,
 	},
 	{
@@ -276,7 +276,7 @@ static struct msm_bus_vectors cam_zsl_vectors[] = {
 	{
 		.src = MSM_BUS_MASTER_JPEG_ENC,
 		.dst = MSM_BUS_SLAVE_EBI_CH0,
-		.ab  = 810000000, // org 540000000, /* LGE_CHANGE, increase JPEG_ENC ab value for fix TMS Issue, 2013.01.13, seongjo.kim@lge.com */
+		.ab  = 810000000, //                                                                                                               
 		.ib  = 2025000000,
 	},
 };
@@ -419,21 +419,21 @@ static struct camera_vreg_t apq_8064_back_cam_vreg[] = {
 	{"cam1_vio", REG_VS, 0, 0, 0, 0}, // VREG_LVS5_1P8 , 1.8V 5M CAM IOVDD		
 };
 
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 static struct camera_vreg_t apq_8064_back_cam_vreg_revA[] = {
 	{"cam1_vdig_revA", REG_LDO, 1500000, 1500000, 105000, 0}, // VREG_L12, 1.5V DVDD
 	{"cam1_vana", REG_LDO, 2800000, 2850000, 85600, 0}, // VREG_L11, 2.8V AVDD
 	{"cam1_vio", REG_VS, 0, 0, 0, 0}, // LVS5, 1.8V IOVDD
 };
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
-/* LGE_CHANGE_S, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 static struct camera_vreg_t apq_8064_ov5693_cam_vreg[] = {
 	{"cam1_vana", REG_LDO, 2800000, 2850000, 85600, 0}, // VREG_L12, 2.8V AVDD
 	{"cam1_vio", REG_VS, 0, 0, 0, 0}, // LVS5, 1.8V IOVDD
 	{"cam1_vdig", REG_LDO, 1500000, 1500000, 105000, 0}, // VREG_L12, 1.2V DVDD // New OV5693 sensor does not use vdig. It uses internal LDO
 };
-/* LGE_CHANGE_E, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 #endif
 
 #ifdef CONFIG_IMX119
@@ -445,7 +445,7 @@ static struct camera_vreg_t apq_8064_front_cam_vreg[] = {
 };
 #endif
 
-#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+#if defined(CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /*                                                                                   */
 static struct gpio apq8064_common_cam_gpio[] = {
 	{12, GPIOF_DIR_IN, "CAMIF_I2C_DATA"},
 	{13, GPIOF_DIR_IN, "CAMIF_I2C_CLK"},
@@ -471,7 +471,7 @@ static struct msm_camera_gpio_conf apq8064_back_cam_gpio_conf = {
 static struct gpio apq8064_front_cam_gpio[] = {
 	{GPIO_CAM_MCLK2, GPIOF_DIR_IN, "CAMIF_MCLK"},
 };
-/* LGE_CHANGE_START youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                  */
 #if 0
 {GPIO_CAM2_RST_N, GPIOF_DIR_OUT, "CAM_RESET"},
 };
@@ -481,7 +481,7 @@ static struct msm_gpio_set_tbl apq8064_front_cam_gpio_set_tbl[] = {
 	{GPIO_CAM2_RST_N, GPIOF_OUT_INIT_HIGH, 10000},
 };
 #endif
-/* LGE_CHANGE_END youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                */
 
 static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf = {
 	.cam_gpiomux_conf_tbl = apq8064_cam_2d_configs,
@@ -490,16 +490,16 @@ static struct msm_camera_gpio_conf apq8064_front_cam_gpio_conf = {
 	.cam_gpio_common_tbl_size = ARRAY_SIZE(apq8064_common_cam_gpio),
 	.cam_gpio_req_tbl = apq8064_front_cam_gpio,
 	.cam_gpio_req_tbl_size = ARRAY_SIZE(apq8064_front_cam_gpio),
-/* LGE_CHANGE_START youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                  */
 #if 0
 	.cam_gpio_set_tbl = apq8064_front_cam_gpio_set_tbl,
 	.cam_gpio_set_tbl_size = ARRAY_SIZE(apq8064_front_cam_gpio_set_tbl),
 #endif
-/* LGE_CHANGE_END youngwook.song 2013-03-04, we do not use GPIO_28 of AP, but of PM8921 for VTCAM */
+/*                                                                                                */
 };
 #endif
 
-#if defined (CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+#if defined (CONFIG_S5K4E5YA) || defined (CONFIG_OV5693) /*                                                                                   */
 static struct msm_camera_i2c_conf apq8064_back_cam_i2c_conf = {
 	.use_i2c_mux = 1,
 	.mux_dev = &msm8960_device_i2c_mux_gsbi4,
@@ -508,7 +508,7 @@ static struct msm_camera_i2c_conf apq8064_back_cam_i2c_conf = {
 #endif
 
 
-#if defined (CONFIG_S5K4E5YA_ACT) || defined (CONFIG_OV5693_ACT) /* LGE_CHANGE, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+#if defined (CONFIG_S5K4E5YA_ACT) || defined (CONFIG_OV5693_ACT) /*                                                                                   */
 static struct i2c_board_info msm_act_main_cam_i2c_info = {
 	I2C_BOARD_INFO("msm_actuator", I2C_SLAVE_ADDR_S5K4E5YA_ACT), /* 0x18 */ // OV5693 uses same actuator with S5K4E5YA
 };
@@ -541,7 +541,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_s5k4e5ya = {
 	.csi_lane_params = &s5k4e5ya_csi_lane_params,
 };
 
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 static struct msm_camera_sensor_platform_info sensor_board_info_s5k4e5ya_revA = {
 	.mount_angle	= 90,
 	.cam_vreg = apq_8064_back_cam_vreg_revA,
@@ -550,7 +550,7 @@ static struct msm_camera_sensor_platform_info sensor_board_info_s5k4e5ya_revA = 
 	.i2c_conf = &apq8064_back_cam_i2c_conf,
 	.csi_lane_params = &s5k4e5ya_csi_lane_params,
 };
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
 
 static struct i2c_board_info s5k4e5ya_eeprom_i2c_info = {
@@ -576,7 +576,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_s5k4e5ya_data = {
 	.eeprom_info = &s5k4e5ya_eeprom_info,
 };
 
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 static struct msm_camera_sensor_info msm_camera_sensor_s5k4e5ya_data_revA = {
 	.sensor_name	= "s5k4e5ya",
 	.pdata	= &msm_camera_csi_device_data[0],
@@ -590,11 +590,11 @@ static struct msm_camera_sensor_info msm_camera_sensor_s5k4e5ya_data_revA = {
 #endif
 	.eeprom_info = &s5k4e5ya_eeprom_info,
 };
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
 #endif
 
-/* LGE_CHANGE_S, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_OV5693
 static struct msm_camera_sensor_flash_data flash_ov5693 = {
 	.flash_type	= MSM_CAMERA_FLASH_NONE,
@@ -637,7 +637,7 @@ static struct msm_camera_sensor_info msm_camera_sensor_ov5693_data = {
 	.eeprom_info = &ov5693_eeprom_info,
 };
 #endif
-/* LGE_CHANGE_E, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 
 #ifdef CONFIG_IMX119
 static struct msm_camera_i2c_conf apq8064_front_cam_i2c_conf = {
@@ -770,7 +770,7 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 	},
 #endif
 };
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 static struct i2c_board_info apq8064_camera_i2c_boardinfo_revA[] = {
 #ifdef CONFIG_S5K4E5YA
 	{
@@ -778,14 +778,14 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo_revA[] = {
 		.platform_data = &msm_camera_sensor_s5k4e5ya_data_revA,
 	},
 #endif
-/* LGE_CHANGE_S, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_OV5693
 	{
 		I2C_BOARD_INFO("ov5693", 0x20 << 1), /* 0x20 << 1 */
 		.platform_data = &msm_camera_sensor_ov5693_data, // OV5693 does not support EVB board.
 	},
 #endif
-/* LGE_CHANGE_E, bring-up ov5693 for dual sourcing, 2014-03-05, jungryoul.choi@lge.com */
+/*                                                                                     */
 #ifdef CONFIG_IMX119
 	{
 		I2C_BOARD_INFO("imx119", I2C_SLAVE_ADDR_IMX119), /* 0x6E */
@@ -793,7 +793,7 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo_revA[] = {
 	},
 #endif
 };
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
 
 /* Enabling flash LED for camera */
@@ -808,12 +808,12 @@ struct msm_camera_board_info apq8064_camera_board_info = {
 	.board_info = apq8064_camera_i2c_boardinfo,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_camera_i2c_boardinfo),
 };
-/* LGE_CHANGE_S, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 struct msm_camera_board_info apq8064_camera_board_info_revA = {
 	.board_info = apq8064_camera_i2c_boardinfo_revA,
 	.num_i2c_board_info = ARRAY_SIZE(apq8064_camera_i2c_boardinfo_revA),
 };
-/* LGE_CHANGE_E, For awifi Rev.A bring-up , 2013-06-11, seungmin.hong@lge.com */
+/*                                                                            */
 
 /* Enabling flash LED for camera */
 struct msm_camera_board_info apq8064_lge_camera_board_info = {

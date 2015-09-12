@@ -587,12 +587,12 @@ static void iriap_getvaluebyclass_response(struct iriap_cb *self,
 	fp[n++] = GET_VALUE_BY_CLASS | IAP_LST;
 	fp[n++] = ret_code;
 
-/* LGE_CHANGE
- * When responding to IAS getValuuByClass query,
- * if there's no matched CLASS or ATTRIBUTE
- * no other bytes except RESPONSE CODE are needed.
- * <for IrDA authentication>
- * 2012-04-20, woochan.hong@lge.com
+/*           
+                                                
+                                           
+                                                  
+                            
+                                   
  */
 #ifdef CONFIG_LGE_IRDA
 	if ((ret_code == IAS_CLASS_UNKNOWN) || (ret_code == IAS_ATTRIB_UNKNOWN)) {
@@ -600,7 +600,7 @@ static void iriap_getvaluebyclass_response(struct iriap_cb *self,
 		skb_trim(tx_skb, 2);
 		goto packet_done;
 	}
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 	/* Insert list length (MSB first) */
 	tmp_be16 = htons(0x0001);
 	memcpy(fp+n, &tmp_be16, 2);  n += 2;
@@ -643,7 +643,7 @@ static void iriap_getvaluebyclass_response(struct iriap_cb *self,
 	}
 #ifdef CONFIG_LGE_IRDA
 packet_done:
-#endif /* CONFIG_LGE_IRDA */
+#endif /*                 */
 	iriap_do_r_connect_event(self, IAP_CALL_RESPONSE, tx_skb);
 
 	/* Drop reference count - see state_r_execute(). */

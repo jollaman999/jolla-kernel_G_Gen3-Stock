@@ -180,7 +180,7 @@ static int __init lge_hsd_fsa8008_init(void)
     lge_bd_rev = lge_get_board_revno();
 
     if (lge_bd_rev == HW_REV_F) {
-        lge_hs_pdata.set_headset_mic_bias = NULL; //2012-08-24 mikyoung.chang@lge.com mic bias is controlled by mic_en
+        lge_hs_pdata.set_headset_mic_bias = NULL; //                                                                  
         printk(KERN_INFO "lge_bd_rev : %d, >= bd_rev : %d, so set set_headset_mic_bias = NULL!!!\n", lge_bd_rev, bd_rev);
     }
     else {

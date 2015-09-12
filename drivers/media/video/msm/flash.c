@@ -43,8 +43,8 @@ enum msm_cam_flash_stat{
 };
 
 
-/* [patch for Enabling flash LED for camera]
-  * 2012-03-14, jinsool.lee@lge.com
+/*                                          
+                                   
   */
 extern int lm3559_flash_set_led_state(int state);
 
@@ -806,10 +806,10 @@ int msm_flash_ctrl(struct msm_camera_sensor_info *sdata,
 	switch (flash_info->flashtype) {
 	case LED_FLASH:
 	#if !defined(CONFIG_LGE_GK_CAMERA)
-		/* [patch for Enabling flash LED for camera]
-		* 2012-03-14, jinsool.lee@lge.com
-		*  This feature is for G... 
-		*/
+		/*                                          
+                                   
+                              
+  */
 
 		rc = lm3559_flash_set_led_state(flash_info->ctrl_data.led_state);
 

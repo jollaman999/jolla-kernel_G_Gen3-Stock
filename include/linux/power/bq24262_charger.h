@@ -51,7 +51,7 @@ struct bq24262_platform_data {
 	int *thermal_mitigation;
 	int thermal_levels;
 	unsigned int max_bat_chg_current;
-	int regulation_mV;
+    int regulation_mV;
 };
 
 

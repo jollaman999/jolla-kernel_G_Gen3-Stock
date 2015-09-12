@@ -28,7 +28,7 @@
 #include <linux/platform_data/hds_fsa8008.h>
 #include <mach/board_lge.h>
 #endif
-#ifdef CONFIG_SWITCH_MAX1462X
+#ifdef CONFIG_SWITCH_MAX1462X 
 #include <linux/platform_data/hds_max1462x.h>
 #include <mach/board_lge.h>
 #endif
@@ -180,7 +180,7 @@ static int __init lge_hsd_fsa8008_init(void)
     lge_bd_rev = lge_get_board_revno();
 
     if (lge_bd_rev == HW_REV_F) {
-        lge_hs_pdata.set_headset_mic_bias = NULL; //2012-08-24 mikyoung.chang@lge.com mic bias is controlled by mic_en
+        lge_hs_pdata.set_headset_mic_bias = NULL; //                                                                  
         printk(KERN_INFO "lge_bd_rev : %d, >= bd_rev : %d, so set set_headset_mic_bias = NULL!!!\n", lge_bd_rev, bd_rev);
     }
     else {
@@ -206,15 +206,13 @@ static struct max1462x_platform_data lge_hs_pdata = {
 
 	.gpio_mode	= GPIO_EAR_MIC_EN,		              // .gpio_mic_en = GPIO_EAR_MIC_EN,
 	.gpio_det	= GPIO_EAR_SENSE_N,		              // .gpio_detect = GPIO_EAR_SENSE_N,
-	.gpio_swd	= GPIO_EAR_KEY_INT,		       // .gpio_key    = GPIO_EAR_KEY_INT,
+	.gpio_swd	= GPIO_EAR_KEY_INT,		       // .gpio_key    = GPIO_EAR_KEY_INT,										
 	.external_ldo_mic_bias	= GPIO_MIC_BIAS_CONTROL,	// .gpio_jpole  = GPIO_EARPOL_DETECT
 
 	//.gpio_set_value_func = gpio_set_value_cansleep,         //If gpio connect the PMIC, function use cansleep
-	//.gpio_get_value_func = gpio_get_value,                  //if gpio connect the AP, function don't use cansleep
+	.gpio_get_value_func = gpio_get_value,                  //if gpio connect the AP, function don't use cansleep
 	.latency_for_detection = 75,
 	.latency_for_key = 50,                                 //latency for key detect (ms)
-    .adc_mpp_num = PM8XXX_AMUX_MPP_1,   /* PMIC adc mpp number to read adc level on MIC */
-    .adc_channel = ADC_MPP_1_AMUX6,     /* PMIC adc channel to read adc level on MIC */
 };
 
 static struct platform_device lge_hsd_device = {

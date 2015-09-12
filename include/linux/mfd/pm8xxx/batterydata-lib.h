@@ -18,7 +18,7 @@
 #define FCC_CC_COLS		5
 #define FCC_TEMP_COLS		8
 
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 #define PC_CC_ROWS             30
 #define PC_CC_COLS             13
 #define PC_TEMP_ROWS		31
@@ -80,7 +80,7 @@ enum battery_type {
 	BATT_PALLADIUM,
 	BATT_DESAY,
 #ifdef CONFIG_LGE_PM
-	BATT_LGE, /* LGE_UPDATE jungshik.park@lge.com 2012-04-18 battery type add */
+	BATT_LGE, /*                                                              */
 	BATT_1900_LGE,
 	BATT_2100_LGE,
 	BATT_2200_LGE,
@@ -123,7 +123,7 @@ extern struct bms_battery_data  palladium_1500_data;
 extern struct bms_battery_data  desay_5200_data;
 
 #ifdef CONFIG_LGE_PM
-#ifdef CONFIG_MACH_APQ8064_AWIFI
+#if defined(CONFIG_MACH_APQ8064_AWIFI) || defined(CONFIG_MACH_APQ8064_ALTEV)
 extern struct bms_battery_data  LGE_4600_PMH_data;
 #else
 extern struct bms_battery_data  lge_1900_data;

@@ -212,6 +212,9 @@ enum pm8921_charger_source {
 	PM8921_CHG_SRC_NONE,
 	PM8921_CHG_SRC_USB,
 	PM8921_CHG_SRC_DC,
+#ifdef CONFIG_WIRELESS_CHARGER
+	PM8921_CHG_SRC_WIRELESS,
+#endif
 };
 #ifdef CONFIG_BATTERY_MAX17043
 void pm8921_charger_force_update_batt_psy(void);
@@ -252,9 +255,9 @@ int pm8921_is_dc_chg_plugged_in(void);
  */
 int pm8921_is_battery_present(void);
 #ifdef CONFIG_LGE_PM
-/*LGE_S jungwoo.yun@lge.com 2012-08-07 check battery preset regardless of factory cable*/
+/*                                                                                     */
 int pm8921_is_real_battery_present(void);
-/*LGE_E jungwoo.yun@lge.com 2012-08-07 check battery preset regardless of factory cable*/
+/*                                                                                     */
 int pm8921_chg_get_fsm_state(void);
 #endif
 
@@ -357,11 +360,14 @@ int pm8921_get_batt_health(void);
  */
 int pm8921_is_batfet_closed(void);
 
-/* LGE_CHANGE_E 2012-09-22 */
+/*                         */
 int pm8921_chg_batfet_set_ext(int on);
 int pm8921_chg_batfet_get_ext(void);
-/* LGE_CHANGE_E 2012-09-22 */
+/*                         */
 
+#ifdef CONFIG_WIRELESS_CHARGER
+int set_wireless_power_supply_control(int value);
+#endif
 #else
 static inline void pm8921_charger_vbus_draw(unsigned int mA)
 {

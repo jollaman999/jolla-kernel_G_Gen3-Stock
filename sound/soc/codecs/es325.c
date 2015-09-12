@@ -1187,7 +1187,7 @@ static int es325_build_algo_read_msg(char *msg, int *msg_len,
 	unsigned int index = reg & ES325_ADDR_MASK;
 	unsigned int paramid;
 
-	if (index >= ARRAY_SIZE(es325_algo_paramid))
+	if (index > ARRAY_SIZE(es325_algo_paramid))
 		return -EINVAL;
 
 	paramid = es325_algo_paramid[index];
@@ -1211,7 +1211,7 @@ static int es325_build_algo_write_msg(char *msg, int *msg_len,
 	unsigned int cmd;
 	unsigned int paramid;
 
-	if (index >= ARRAY_SIZE(es325_algo_paramid))
+	if (index > ARRAY_SIZE(es325_algo_paramid))
 		return -EINVAL;
 
 	paramid = es325_algo_paramid[index];
@@ -2693,10 +2693,10 @@ static int es325_put_internal_route_config(struct snd_kcontrol *kcontrol,
 #endif
 
 		/* Flag to setup slimbus channel for es325 */
-		/* jeremy.pi@lge.com
-		*   blocked ch mapping flag
-		*   controled by UCM
-		*/
+		/*                  
+                             
+                      
+  */
 //		es325_rx1_route_ena = 1;
 //		es325_tx1_route_ena = 1;
 //		es325_rx2_route_ena = 1;
