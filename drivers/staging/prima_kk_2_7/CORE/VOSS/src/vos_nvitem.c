@@ -110,7 +110,7 @@ typedef struct
 // cache of country info table;
 // this is re-initialized from data on binary file
 // loaded on driver initialization if available
-/*                                                                                 */
+/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [START] */
 #ifdef CUSTOMER_LGE
 static CountryInfoTable_t countryInfoTable =
 {
@@ -176,7 +176,7 @@ static CountryInfoTable_t countryInfoTable =
         { REGDOMAIN_ETSI,    {'D', 'K'}},  //DENMARK
         { REGDOMAIN_WORLD,   {'D', 'M'}},  //DOMINICA
         { REGDOMAIN_WORLD/*REGDOMAIN_APAC*/,    {'D', 'O'}},  //DOMINICAN REPUBLIC
-        { REGDOMAIN_ETSI,    {'D', 'Z'}},  //       
+        { REGDOMAIN_ETSI,    {'D', 'Z'}},  //ALGERIA
         { REGDOMAIN_WORLD/*REGDOMAIN_APAC*/,    {'E', 'C'}},  //ECUADOR
         { REGDOMAIN_ETSI,    {'E', 'E'}},  //ESTONIA
         { REGDOMAIN_N_AMER_EXC_FCC, {'E', 'G'}},  //EGYPT
@@ -377,7 +377,7 @@ static CountryInfoTable_t countryInfoTable =
         { REGDOMAIN_WORLD,   {'W', 'S'}},  //SOMOA
     }
 };
-#else  //            
+#else  //CUSTOMER_LGE
 static CountryInfoTable_t countryInfoTable =
 {
     254,
@@ -442,7 +442,7 @@ static CountryInfoTable_t countryInfoTable =
         { REGDOMAIN_ETSI,    {'D', 'K'}},  //DENMARK
         { REGDOMAIN_WORLD,   {'D', 'M'}},  //DOMINICA
         { REGDOMAIN_APAC,    {'D', 'O'}},  //DOMINICAN REPUBLIC
-        { REGDOMAIN_ETSI,    {'D', 'Z'}},  //       
+        { REGDOMAIN_ETSI,    {'D', 'Z'}},  //ALGERIA
         { REGDOMAIN_APAC,    {'E', 'C'}},  //ECUADOR
         { REGDOMAIN_ETSI,    {'E', 'E'}},  //ESTONIA
         { REGDOMAIN_N_AMER_EXC_FCC, {'E', 'G'}},  //EGYPT
@@ -638,8 +638,8 @@ static CountryInfoTable_t countryInfoTable =
         { REGDOMAIN_ETSI,    {'Z', 'W'}},  //ZIMBABWE
     }
 };
-#endif //            
-/*                                                                               */
+#endif //CUSTOMER_LGE
+/* 2013.07.31 real-wifi@lge.com[awifi,wo0gi] QCT patch : Regulatory Domain [END] */
 typedef struct nvEFSTable_s
 {
    v_U32_t    nvValidityBitmap;
@@ -763,11 +763,11 @@ VOS_STATUS vos_nv_open(void)
     v_SIZE_t bufSize;
     v_SIZE_t nvReadBufSize;
     v_BOOL_t itemIsValid = VOS_FALSE;
-/*                                                                  */
+/* 2013.07.11 moon-wifi@lge.com[formmh.kim] Add CountryCode [START] */
 #ifdef CUSTOMER_LGE
 	hdd_context_t *pHddCtx = NULL;
 #endif
-/*                                                                */ 
+/* 2013.07.11 moon-wifi@lge.com[formmh.kim] Add CountryCode [END] */ 
     /*Get the global context */
     pVosContext = vos_get_global_context(VOS_MODULE_ID_SYS, NULL);
     
@@ -885,7 +885,7 @@ VOS_STATUS vos_nv_open(void)
                 NULL, sizeof(sDefaultCountry) ) !=  VOS_STATUS_SUCCESS)
                     goto error;
             }
-/*                                                                  */					
+/* 2013.07.16 moon-wifi@lge.com[formmh.kim] Add CountryCode [START] */					
 #ifdef CUSTOMER_LGE
             pHddCtx = vos_get_context(VOS_MODULE_ID_HDD, pVosContext);
             if (!vos_mem_compare(pHddCtx->cfg_ini->overrideCountryCode,
@@ -895,7 +895,7 @@ VOS_STATUS vos_nv_open(void)
                         3);
             }
 #endif
-/*                                                                */
+/* 2013.07.16 moon-wifi@lge.com[formmh.kim] Add CountryCode [END] */
         }
     
         if (vos_nv_getValidity(VNV_TPC_POWER_TABLE, &itemIsValid) == 
@@ -2612,7 +2612,7 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
     int i,j,k,m;
     wiphy_dbg(wiphy, "info: cfg80211 reg_notifier callback for country"
                      " %c%c\n", request->alpha2[0], request->alpha2[1]);
-    if (pHddCtx->isLoadUnloadInProgress)
+    if (pHddCtx->isLogpInProgress)
     {
        wiphy_dbg(wiphy, "info: %s: Unloading/Loading in Progress. Ignore!!!",
                  __func__);
@@ -2802,6 +2802,8 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
           {
              for (j=0; j<wiphy->bands[IEEE80211_BAND_5GHZ]->n_channels; j++)
              {
+                /*LGE_UPDATE, 20131021, cheolsook.lee@lge.com, dismiss to enable P2P_GC on UNII-1 band */
+                #if 0
                  // UNII-1 band channels are passive when domain is FCC.
                 if ((wiphy->bands[IEEE80211_BAND_5GHZ ]->channels[j].center_freq == 5180 ||
                                wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5200 ||
@@ -2819,6 +2821,18 @@ int wlan_hdd_crda_reg_notifier(struct wiphy *wiphy,
                 {
                    wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
                 }
+                #else
+                if ((wiphy->bands[IEEE80211_BAND_5GHZ ]->channels[j].center_freq == 5180 ||
+                        wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5200 ||
+                        wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5220 ||
+                        wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].center_freq == 5240)
+                    )
+                {
+                      VOS_TRACE(VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR, "freq:%u unset PASSIVE_SCAN by lge",
+                          wiphy->bands[IEEE80211_BAND_5GHZ ]->channels[j].center_freq );
+                      wiphy->bands[IEEE80211_BAND_5GHZ]->channels[j].flags &= ~IEEE80211_CHAN_PASSIVE_SCAN;
+                }
+              #endif  
              }
           }
           if (request->initiator == NL80211_REGDOM_SET_BY_CORE)

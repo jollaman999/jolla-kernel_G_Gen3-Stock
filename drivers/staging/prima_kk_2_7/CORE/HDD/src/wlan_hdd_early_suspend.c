@@ -876,7 +876,7 @@ static void hdd_conf_suspend_ind(hdd_context_t* pHddCtx,
       vos_mem_malloc(sizeof(tSirWlanSuspendParam));
 
     if (VOS_FALSE == pHddCtx->sus_res_mcastbcast_filter_valid) {
-/*                                                                                                 */
+/* LGE_UPDATE, 20131031, real-wifi@lge.com by beaver, restore the configuredMcastBcastFilter value */
 #ifdef CUSTOMER_LGE
         if (pHddCtx->configuredMcastBcastFilter != pHddCtx->cfg_ini->mcastBcastFilterSetting) {
            pHddCtx->configuredMcastBcastFilter = pHddCtx->cfg_ini->mcastBcastFilterSetting;
@@ -1109,7 +1109,7 @@ static void hdd_PowerStateChangedCB
    if((newState == BMPS) &&  pHddCtx->hdd_wlan_suspended) {
       spin_unlock(&pHddCtx->filter_lock);
       if (VOS_FALSE == pHddCtx->sus_res_mcastbcast_filter_valid) {
-/*                                                                                                 */
+/* LGE_UPDATE, 20131031, real-wifi@lge.com by beaver, restore the configuredMcastBcastFilter value */
 #ifdef CUSTOMER_LGE
           if (pHddCtx->configuredMcastBcastFilter != pHddCtx->cfg_ini->mcastBcastFilterSetting) {
              pHddCtx->configuredMcastBcastFilter = pHddCtx->cfg_ini->mcastBcastFilterSetting;
